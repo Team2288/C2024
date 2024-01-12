@@ -14,26 +14,38 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import frc.lib.util.COTSTalonFXSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
-import frc.robot.subsystems.LightStates;
 
 public final class Constants {
-    public static final String LIGHT_STATE_OFF =  "{'on':false}";
-    public static final String LIGHT_STATE_ON =  "{'on':true}";
-    public static final String LIGHT_STATES_CHANGE_COLOR_YELLOW= "{'seg':[{'col': [[255, 200, 59, 0], [0, 0, 0, 0], [0, 0, 0, 0]]}]}";
-    public static final String LIGHT_STATES_CHANGE_COLOR_PURPLE= "{'seg':[{'col': [[255, 0, 255, 0], [0, 0, 0, 0], [0, 0, 0, 0]]}]}";
-    public static final String LIGHT_STATES_CHANGE_COLOR_ORANGE= "{'seg':[{'col': [[255, 129, 10, 0],[0, 0, 0, 0], [0, 0, 0, 0]]}]}";
-    public static final String DEFAULT_LIGHT_STATE = LIGHT_STATE_OFF;
-    public static final Map<LightStates,String> LIGHT_STATES;
     public static final double stickDeadband = 0.1;
 
-    static {
-        LIGHT_STATES = new HashMap<>();
-        LIGHT_STATES.put(LightStates.OFF,LIGHT_STATE_OFF);
-        LIGHT_STATES.put(LightStates.ON, LIGHT_STATE_ON);
-        LIGHT_STATES.put(LightStates.ORANGE,LIGHT_STATES_CHANGE_COLOR_ORANGE);
-        LIGHT_STATES.put(LightStates.YELLOW,LIGHT_STATES_CHANGE_COLOR_YELLOW);
-        LIGHT_STATES.put(LightStates.PURPLE, LIGHT_STATES_CHANGE_COLOR_PURPLE);
+
+    public final class Lights {
+        public static final String LIGHT_STATE_OFF =  "{'on':false}";
+        public static final String LIGHT_STATE_ON =  "{'on':true}";
+        public static final String LIGHT_STATES_CHANGE_COLOR_YELLOW= "{'seg':[{'col': [[255, 200, 59, 0], [0, 0, 0, 0], [0, 0, 0, 0]]}]}";
+        public static final String LIGHT_STATES_CHANGE_COLOR_PURPLE= "{'seg':[{'col': [[255, 0, 255, 0], [0, 0, 0, 0], [0, 0, 0, 0]]}]}";
+        public static final String LIGHT_STATES_CHANGE_COLOR_ORANGE= "{'seg':[{'col': [[255, 129, 10, 0],[0, 0, 0, 0], [0, 0, 0, 0]]}]}";
+        public static final String DEFAULT_LIGHT_STATE = LIGHT_STATE_OFF;
+        public static final Map<LightStates,String> HASHMAP_LIGHT_STATES;
+
+        public enum LightStates {
+            OFF,
+            ON,
+            YELLOW,
+            PURPLE, 
+            ORANGE
+        };
+        
+        static {
+            HASHMAP_LIGHT_STATES = new HashMap<>();
+            HASHMAP_LIGHT_STATES.put(LightStates.OFF,LIGHT_STATE_OFF);
+            HASHMAP_LIGHT_STATES.put(LightStates.ON, LIGHT_STATE_ON);
+            HASHMAP_LIGHT_STATES.put(LightStates.ORANGE, LIGHT_STATES_CHANGE_COLOR_ORANGE);
+            HASHMAP_LIGHT_STATES.put(LightStates.YELLOW, LIGHT_STATES_CHANGE_COLOR_YELLOW);
+            HASHMAP_LIGHT_STATES.put(LightStates.PURPLE, LIGHT_STATES_CHANGE_COLOR_PURPLE);
+        }
     }
+
     public static final class Swerve {
         public static final int pigeonID = 13;
 
