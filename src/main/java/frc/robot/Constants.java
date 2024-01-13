@@ -21,10 +21,10 @@ public final class Constants {
     // All buttons for the driver 
 
     public final class Buttons {
-        // LED Control (Buttons 0, 1, and 2)
-        public static final int LED_ORANGE = 0;
-        public static final int LED_YELLOW = 1;
-        public static final int LED_PURPLE = 2;
+        // LED Control
+        public static final int LED_ORANGE = 1;
+        public static final int LED_YELLOW = 2;
+        public static final int LED_PURPLE = 3;
     }
 
     // Lights Constants (Used in Lights.java)

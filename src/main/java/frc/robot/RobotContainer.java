@@ -8,10 +8,13 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.Constants;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -43,8 +46,14 @@ public class RobotContainer {
     private final Swerve s_Swerve = new Swerve();
     private final Lights s_Lights = new Lights();
 
+    // Auto Chooser
+
+    SendableChooser<Command> autoChooser = new SendableChooser<>();
+
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
+        // Subsystems
+
         s_Swerve.setDefaultCommand(
             new TeleopSwerve(
                 s_Swerve, 
@@ -57,9 +66,16 @@ public class RobotContainer {
 
         s_Lights.setDefaultCommand(
             new InstantCommand(
-                () -> s_Lights.off()
+                () -> s_Lights.off(),
+                s_Lights
             )
         );
+
+        // Auto Chooser
+
+        autoChooser.setDefaultOption("Example", new exampleAuto(s_Swerve));
+        autoChooser.addOption("No Auto", new WaitCommand(0));
+        SmartDashboard.putData(autoChooser);
 
         // Configure the button bindings
         configureButtonBindings();
@@ -108,6 +124,6 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-        return new exampleAuto(s_Swerve);
+        return autoChooser.getSelected();
     }
 }
