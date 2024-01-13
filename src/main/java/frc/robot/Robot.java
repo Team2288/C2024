@@ -18,12 +18,8 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class Robot extends TimedRobot {
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
-
   private Command m_autonomousCommand;
-
   private RobotContainer m_robotContainer;
-  private Lights lights;
-  private Joystick joystick;
 
   /**
    * This function is run when the robot is first started up and should be used for any

@@ -18,8 +18,19 @@ import frc.lib.util.SwerveModuleConstants;
 public final class Constants {
     public static final double stickDeadband = 0.1;
 
+    // All buttons for the driver 
+
+    public final class Buttons {
+        // LED Control (Buttons 0, 1, and 2)
+        public static final int LED_ORANGE = 0;
+        public static final int LED_YELLOW = 1;
+        public static final int LED_PURPLE = 2;
+    }
+
+    // Lights Constants (Used in Lights.java)
 
     public final class Lights {
+        // Lights states (console commands)
         public static final String LIGHT_STATE_OFF =  "{'on':false}";
         public static final String LIGHT_STATE_ON =  "{'on':true}";
         public static final String LIGHT_STATES_CHANGE_COLOR_YELLOW= "{'seg':[{'col': [[255, 200, 59, 0], [0, 0, 0, 0], [0, 0, 0, 0]]}]}";
@@ -28,14 +39,16 @@ public final class Constants {
         public static final String DEFAULT_LIGHT_STATE = LIGHT_STATE_OFF;
         public static final Map<LightStates,String> HASHMAP_LIGHT_STATES;
 
+        // States to be used to interface with Hashmap
         public enum LightStates {
             OFF,
             ON,
             YELLOW,
             PURPLE, 
             ORANGE
-        };
+        }
         
+        // Lights hashmap
         static {
             HASHMAP_LIGHT_STATES = new HashMap<>();
             HASHMAP_LIGHT_STATES.put(LightStates.OFF,LIGHT_STATE_OFF);
@@ -49,7 +62,7 @@ public final class Constants {
     public static final class Swerve {
         public static final int pigeonID = 13;
 
-        public static final COTSTalonFXSwerveConstants chosenModule =  //TODO: This must be tuned to specific robot
+        public static final COTSTalonFXSwerveConstants chosenModule =
         COTSTalonFXSwerveConstants.SDS.MK4i.Falcon500(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L2);
 
         /* Drivetrain Constants */
