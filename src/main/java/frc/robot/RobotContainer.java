@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autos.*;
@@ -74,9 +75,29 @@ public class RobotContainer {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
 
-        orangeLED.onTrue(new InstantCommand(() -> s_Lights.orange()));
-        yellowLED.onTrue(new InstantCommand(() -> s_Lights.yellow()));
-        purpleLED.onTrue(new InstantCommand(() -> s_Lights.purple()));
+        orangeLED.toggleOnTrue(
+            new StartEndCommand( // StartEndCommand: Press once to turn on lights, press again to turn off lights
+                () -> s_Lights.orange(), // First
+                () -> s_Lights.off(), // Second
+                s_Lights // Subsystem that is needed
+            )
+        );
+        
+        yellowLED.toggleOnTrue(
+            new StartEndCommand(
+                () -> s_Lights.yellow(),
+                () -> s_Lights.off(),
+                s_Lights
+            )
+        );
+
+        purpleLED.toggleOnTrue(
+            new StartEndCommand(
+                () -> s_Lights.purple(),
+                () -> s_Lights.off(),
+                s_Lights
+            )
+        );
 
     }
 
