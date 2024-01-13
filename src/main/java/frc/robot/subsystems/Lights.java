@@ -5,9 +5,10 @@ import java.util.HashMap;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.SerialPort.Parity;
 import edu.wpi.first.wpilibj.SerialPort.StopBits;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Lights {
+public class Lights extends SubsystemBase {
     private SerialPort port;
 
     public Lights() {

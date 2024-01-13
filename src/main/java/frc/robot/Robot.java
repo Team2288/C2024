@@ -18,12 +18,8 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class Robot extends TimedRobot {
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
-
   private Command m_autonomousCommand;
-
   private RobotContainer m_robotContainer;
-  private Lights lights;
-  private Joystick joystick;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -34,9 +30,6 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    joystick = new Joystick(0);
-    lights = new Lights();
-    lights.off();
   }
 
   /**
@@ -91,15 +84,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    if(joystick.getRawButtonPressed(0)){
-      lights.yellow();
-    }
-    if(joystick.getRawButtonPressed(1)){
-      lights.orange();
-    }
-    if(joystick.getRawButtonPressed(2)){
-      lights.purple();
-    }
+
   }
 
   @Override
