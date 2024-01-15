@@ -59,7 +59,7 @@ public class Intake extends SubsystemBase {
         return new FunctionalCommand(
             () -> driveNeo.stopMotor(), 
             () -> flipIntake(position),
-            interrupted -> flipIntake(0); setDriveIntakeSpeed(0),
+            interrupted -> {flipIntake(0); driveNeo.stopMotor()},
             () -> Math.abs(getPosition() - position) < 100 && hasNote == false,
             this
         );
