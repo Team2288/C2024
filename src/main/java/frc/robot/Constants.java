@@ -27,11 +27,6 @@ public final class Constants {
         public static final int LED_PURPLE = 3;
     }
 
-    public static final class Shooter {
-        public static final int RIGHT_MOTOR = 9;
-        public static final int LEFT_MOTOR = 21;
-    }
-
     public static final class Intake {
         public static final int DRIVE_MOTOR = 0;
         public static final int SWIVEL_MOTOR = 0;
@@ -43,9 +38,17 @@ public final class Constants {
         public static final double UP_POSITION = 0.0;
     }
 
+
+    public static final class Shooter {
+        public static final int LEFT_MOTOR_ID = 1;
+        public static final int RIGHT_MOTOR_ID = 2;
+
+        public static final int SHOOTER_SENSOR = 3;
+    }
+
     // Lights Constants (Used in Lights.java)
 
-    public static final class Lights {
+    public final class Lights {
         // Lights states (console commands)
         public static final String LIGHT_STATE_OFF =  "{'on':false}";
         public static final String LIGHT_STATE_ON =  "{'on':true}";
