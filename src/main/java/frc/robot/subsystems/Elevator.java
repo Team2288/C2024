@@ -29,8 +29,8 @@ public class Elevator extends SubsystemBase {
     public Elevator() {
         super();
         // Initialize motors, motor controllers, and settings
-        leader = new CANSparkMax(Constants.Elevator.LEAD_ELEVATOR_ID, MotorType.kBrushless);
-        follower = new CANSparkMax(Constants.Elevator.FOLLOW_ELEVATOR_ID, MotorType.kBrushless);
+        leader = new CANSparkMax(Constants.Elevator.LEAD_MOTOR_ID, MotorType.kBrushless);
+        follower = new CANSparkMax(Constants.Elevator.FOLLOWER_MOTOR_ID, MotorType.kBrushless);
 
         leaderController = leader.getPIDController();
         leaderEncoder = leader.getEncoder();
