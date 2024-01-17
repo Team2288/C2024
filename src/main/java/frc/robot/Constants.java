@@ -27,6 +27,11 @@ public final class Constants {
         public static final int LED_PURPLE = 3;
     }
 
+    public static final class Elevator {
+        public static final int FOLLOWER_MOTOR_ID = 0;
+        public static final int LEAD_MOTOR_ID = 0;
+    }
+
     public static final class Intake {
         public static final int DRIVE_MOTOR = 0;
         public static final int SWIVEL_MOTOR = 0;
