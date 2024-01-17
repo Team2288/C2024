@@ -20,11 +20,30 @@ public final class Constants {
 
     // All buttons for the driver 
 
-    public final class Buttons {
-        // LED Control (Buttons 0, 1, and 2)
-        public static final int LED_ORANGE = 0;
-        public static final int LED_YELLOW = 1;
-        public static final int LED_PURPLE = 2;
+    public static final class Buttons {
+        // LED Control
+        public static final int LED_ORANGE = 1;
+        public static final int LED_YELLOW = 2;
+        public static final int LED_PURPLE = 3;
+    }
+
+    public static final class Intake {
+        public static final int DRIVE_MOTOR = 0;
+        public static final int SWIVEL_MOTOR = 0;
+        public static final int SWIVEL_KP = 0;
+        public static final int SWIVEL_KI = 0;
+        public static final int SWIVEL_KD = 0;
+        
+        public static final double DOWN_POSITION = 0.0;
+        public static final double UP_POSITION = 0.0;
+    }
+
+
+    public static final class Shooter {
+        public static final int LEFT_MOTOR_ID = 1;
+        public static final int RIGHT_MOTOR_ID = 2;
+
+        public static final int SHOOTER_SENSOR = 3;
     }
 
     // Lights Constants (Used in Lights.java)
