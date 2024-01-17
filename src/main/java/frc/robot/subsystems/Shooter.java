@@ -15,15 +15,15 @@ public class Shooter extends SubsystemBase {
 
     public Shooter() {
         shootersensor = new ColorSensor();
-        motorLeft = new CANSparkMax(Constants.Shooter.LEFT_MOTOR, MotorType.kBrushless);
-        motorRight = new CANSParkMax(Constants.Shooter.RIGHT_MOTOR, MotorType.kBrushless);
+        motorLeft = new CANSparkMax(Constants.Shooter.LEFT_MOTOR_ID, MotorType.kBrushless);
+        motorRight = new CANSparkMax(Constants.Shooter.RIGHT_MOTOR_ID, MotorType.kBrushless);
 
         motorLeft.follow(motorRight);
     }
 
     public Command getShooterCommand(double speed) {
         return new FunctionalCommand(
-            this.ready = true, // assuming note already loaded
+            () -> this.ready = true, // assuming note already loaded
             () -> motorRight.set(speed),
             interrupted -> motorRight.set(0),
             () -> !ready, // finishes when sensor no longer has a note

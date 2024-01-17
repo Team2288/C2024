@@ -12,7 +12,6 @@ public class ColorSensor {
     ColorMatch colorMatcher;
     Color notecolor;
 
-
     public ColorSensor() {
         i2cPort = I2C.Port.kOnboard;
 
@@ -29,5 +28,4 @@ public class ColorSensor {
 
         return match.color.equals(notecolor);
     }
-    
 }

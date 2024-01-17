@@ -30,6 +30,10 @@ public final class Constants {
     public static final class Elevator {
         public static final int FOLLOWER_MOTOR_ID = 0;
         public static final int LEAD_MOTOR_ID = 0;
+
+        public static final double ELEVATOR_KP = 0.0;
+        public static final double ELEVATOR_KI = 0.0;
+        public static final double ELEVATOR_KD = 0.0;
     }
 
     public static final class Intake {

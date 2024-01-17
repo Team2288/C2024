@@ -74,6 +74,7 @@ public class RobotContainer {
         // Auto Chooser
 
         autoChooser.setDefaultOption("Example", new exampleAuto(s_Swerve));
+        autoChooser.setDefaultOption("3PieceCenterNote", new WaitCommand(0)); // placeholders
         autoChooser.addOption("No Auto", new WaitCommand(0));
         SmartDashboard.putData(autoChooser);
 
