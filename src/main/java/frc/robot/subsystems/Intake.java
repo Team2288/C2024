@@ -12,7 +12,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
 public class Intake extends SubsystemBase {
-    CANSparkMax driveNeo, swivelNeo, // motors
+    CANSparkMax driveNeo, swivelNeo; // motors
     SparkPIDController swivelPID;
     RelativeEncoder neoEncoder;
     ColorSensor intakesensor;
@@ -49,7 +49,7 @@ public class Intake extends SubsystemBase {
         return new FunctionalCommand(
             () -> setDriveIntakeSpeed(1), // at start: turn on intake
             () -> flipIntake(position), // go to position
-            interrupted -> {flipIntake(0); driveNeo.stopMotor()}, 
+            interrupted -> {flipIntake(0); driveNeo.stopMotor();}, 
             () -> Math.abs(getPosition() - position) < 100 && hasNote == true, // if close enough to position and intake has Note, we are done
             this
         );
@@ -59,7 +59,7 @@ public class Intake extends SubsystemBase {
         return new FunctionalCommand(
             () -> driveNeo.stopMotor(), 
             () -> flipIntake(position),
-            interrupted -> {flipIntake(0); driveNeo.stopMotor()},
+            interrupted -> {flipIntake(0); driveNeo.stopMotor();},
             () -> Math.abs(getPosition() - position) < 100 && hasNote == false,
             this
         );
