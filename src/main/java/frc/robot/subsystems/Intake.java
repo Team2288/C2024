@@ -44,7 +44,7 @@ public class Intake extends SubsystemBase {
     public double getPosition() {
         return neoEncoder.getPosition();
     }
-    
+    // Runnable _Consumer _Supplier -> Needs a lambda expression
     public Command getintakeDownCommand(double position) {
         return new FunctionalCommand(
             () -> setDriveIntakeSpeed(1), // at start: turn on intake
