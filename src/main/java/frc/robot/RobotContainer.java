@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -45,10 +47,13 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final Lights s_Lights = new Lights();
+    private final Intake s_Intake = new Intake();
+    private final Elevator s_Elevator = new Elevator();
+    private final Shooter s_Shooter = new Shooter();
 
-    // Auto Chooser
+    /* Auto Chooser */
 
-    SendableChooser<Command> autoChooser = new SendableChooser<>();
+    private SendableChooser<Command> autoChooser;
 
     /* The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -71,11 +76,15 @@ public class RobotContainer {
             )
         );
 
+        /* Set Events for Path planning */
+
+        NamedCommands.registerCommand("Intake Routine", s_Intake.getIntakeRoutineCommand());
+        NamedCommands.registerCommand("Shoot Note", s_Shooter.getShooterCommand(1.0));
+
         // Auto Chooser
 
-        autoChooser.setDefaultOption("Example", new exampleAuto(s_Swerve));
-        autoChooser.addOption("No Auto", new WaitCommand(0));
-        SmartDashboard.putData(autoChooser);
+        autoChooser = AutoBuilder.buildAutoChooser();
+        SmartDashboard.putData("Auto Chooser", autoChooser);
 
         // Configure the button bindings
         configureButtonBindings();

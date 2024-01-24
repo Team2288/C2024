@@ -33,13 +33,9 @@ public class Lights extends SubsystemBase {
         }
     }
 
-    public void on() {
-        this.setState(Constants.Lights.LightStates.ON);
-    }
-
-    public void off() {
-        this.setState(Constants.Lights.LightStates.OFF);
-    }    
+    public void on() { this.setState(Constants.Lights.LightStates.ON); } 
+    
+    public void off() { this.setState(Constants.Lights.LightStates.OFF); }    
 
     public void yellow(){
         on();

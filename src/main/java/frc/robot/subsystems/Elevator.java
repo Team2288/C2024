@@ -23,7 +23,6 @@ public class Elevator extends SubsystemBase {
     private RelativeEncoder leaderEncoder, followerEncoder;
     public double kP, kI, kD, kF, kMaxOutput, kMinOutput;
 
-    public Logger logger;
     public ArrayList<String[]> loggingData;
 
     public Elevator() {
@@ -40,12 +39,9 @@ public class Elevator extends SubsystemBase {
         follower.follow(leader, true);
         followerEncoder = follower.getEncoder();
 
-        leaderController.setP(Constants.e_KP, 0);
-        leaderController.setI(Constants.e_KI, 0);
-        leaderController.setD(Constants.e_KD, 0);
-        leaderController.setFF(Constants.e_KF, 0);
-        leaderController.setOutputRange(Constants.e_OUTPUT_MIN, Constants.e_OUTPUT_MAX, 0);
-
+        leaderController.setP(Constants.Elevator.ELEVATOR_KP, 0);
+        leaderController.setI(Constants.Elevator.ELEVATOR_KI, 0);
+        leaderController.setD(Constants.Elevator.ELEVATOR_KD, 0);
     }
 
     @Override
@@ -63,7 +59,7 @@ public class Elevator extends SubsystemBase {
     // Create base subsystem commands
     public FunctionalCommand getPositionCommand(double position) {
         return new FunctionalCommand(
-            () -> goingTo = position,
+            () -> System.out.println("Elevator going to pos: " + position),
             () -> setPosition(position),
             interrupted -> System.out.println("Ended driving elevator"),
             () -> Math.abs(getPosition() - position) <= 300
