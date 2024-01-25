@@ -33,7 +33,8 @@ public class RobotContainer {
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
     private final int strafeAxis = XboxController.Axis.kLeftX.value;
-    private final int rotationAxis = XboxController.Axis.kRightX.value;
+    private final int rotationAxis = 2;
+    
 
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
@@ -46,10 +47,10 @@ public class RobotContainer {
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
-    private final Lights s_Lights = new Lights();
-    private final Intake s_Intake = new Intake();
-    private final Elevator s_Elevator = new Elevator();
-    private final Shooter s_Shooter = new Shooter();
+    // private final Lights s_Lights = new Lights();
+    // private final Intake s_Intake = new Intake();
+    // private final Elevator s_Elevator = new Elevator();
+    // private final Shooter s_Shooter = new Shooter();
 
     /* Auto Chooser */
 
@@ -69,6 +70,7 @@ public class RobotContainer {
             )
         );
 
+        /* 
         s_Lights.setDefaultCommand(
             new InstantCommand(
                 () -> s_Lights.off(),
@@ -78,9 +80,9 @@ public class RobotContainer {
 
         /* Set Events for Path planning */
 
-        NamedCommands.registerCommand("Intake Routine", s_Intake.getIntakeRoutineCommand());
-        NamedCommands.registerCommand("Shoot Note", s_Shooter.getShooterCommand(1.0));
-
+        NamedCommands.registerCommand("Intake Routine", new WaitCommand(0)); // s_Intake.getIntakeRoutineCommand()
+        NamedCommands.registerCommand("Shoot", new WaitCommand(0)); // s_Shooter.getShooterCommand()
+        
         // Auto Chooser
 
         autoChooser = AutoBuilder.buildAutoChooser();
@@ -99,7 +101,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-
+        /* 
         orangeLED.toggleOnTrue(
             new StartEndCommand( // StartEndCommand: Press once to turn on lights, press again to turn off lights
                 () -> s_Lights.orange(), // First
@@ -123,6 +125,7 @@ public class RobotContainer {
                 s_Lights
             )
         );
+        */
 
     }
 
@@ -133,6 +136,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-        return autoChooser.getSelected();
+        // return autoChooser.getSelected();
+        return new exampleAuto(s_Swerve);
     }
 }
