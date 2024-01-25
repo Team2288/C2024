@@ -1,13 +1,13 @@
 package frc.robot.commands;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.subsystems.Lights;
 
 
-public class LightsCommand extends Command {
+public class LightsCommand extends StartEndCommand {
     private Lights s_Lights;
-
-    public LightsCommand(Lights s_Lights){
-        this.s_Lights = s_Lights;
+    
+    public LightsCommand(Runnable onInit, Runnable onEnd) {
+        super(onInit, onEnd);
         addRequirements(s_Lights);
     }
 
@@ -17,9 +17,7 @@ public class LightsCommand extends Command {
     }
 
     @Override
-    public void execute(){
-        Command setOrange = s_Lights.runOnce(() -> s_Lights.orange());
-        Command setPurple = s_Lights.runOnce(() -> s_Lights.purple());
-        Command setYellow = s_Lights.runOnce(() -> s_Lights.yellow());
+    public boolean isFinished(){
+        return true;
     }
 }
