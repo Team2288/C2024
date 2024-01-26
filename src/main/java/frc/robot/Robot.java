@@ -23,12 +23,6 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
 
-  private CANSparkMax sparkshooterright = new CANSparkMax(30, MotorType.kBrushless);
-  private CANSparkMax sparkshooterleft = new CANSparkMax(32, MotorType.kBrushless);
-  private CANSparkMax feedermotor = new CANSparkMax(31, MotorType.kBrushless);
-  private CANSparkMax intakemotor = new CANSparkMax(33, MotorType.kBrushless);
-  private CANSparkMax intakepivotmotor = new CANSparkMax(34, MotorType.kBrushless);
-
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -92,10 +86,8 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    sparkshooterleft.set(0.8);
-    sparkshooterright.set(-0.8);
-    feedermotor.set(-0.5);
-    intakemotor.set(0.8);
+    m_robotContainer.s_Intake.setDriveIntakeSpeed(0.8);
+    m_robotContainer.s_Shooter.shoot(0.8);
   }
 
   @Override

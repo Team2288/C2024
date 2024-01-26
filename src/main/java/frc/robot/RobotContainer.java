@@ -47,11 +47,11 @@ public class RobotContainer {
     private final Trigger purpleLED = codriver.button(Constants.Buttons.LED_PURPLE);
 
     /* Subsystems */
-    private final Swerve s_Swerve = new Swerve();
+    public final Swerve s_Swerve = new Swerve();
     // private final Lights s_Lights = new Lights();
-    // private final Intake s_Intake = new Intake();
+    public final Intake s_Intake = new Intake();
     // private final Elevator s_Elevator = new Elevator();
-    // private final Shooter s_Shooter = new Shooter();
+    public final Shooter s_Shooter = new Shooter();
 
     /* Auto Chooser */
 

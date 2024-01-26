@@ -12,15 +12,15 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
 public class Intake extends SubsystemBase {
-    CANSparkMax driveNeo, swivelNeo; // motors
+    CANSparkMax driveNeo, swivelNeo, feederNeo; // motors
     SparkPIDController swivelPID;
     RelativeEncoder neoEncoder;
-    ColorSensor intakesensor;
     boolean hasNote;
 
     public Intake() {
         driveNeo = new CANSparkMax(Constants.Intake.DRIVE_MOTOR, MotorType.kBrushless);
         swivelNeo = new CANSparkMax(Constants.Intake.SWIVEL_MOTOR, MotorType.kBrushless);
+        feederNeo = new CANSparkMax(Constants.Intake.FEEDER_MOTOR, MotorType.kBrushless);
         swivelPID = swivelNeo.getPIDController();
         neoEncoder = swivelNeo.getEncoder();
 
@@ -29,12 +29,11 @@ public class Intake extends SubsystemBase {
         swivelPID.setD(Constants.Intake.SWIVEL_KD);
         swivelPID.setOutputRange(-1, 1);
 
-        intakesensor = new ColorSensor();
         hasNote = false;
     }
 
-    public void setDriveIntakeSpeed(int speed) {
-        driveNeo.set(speed);
+    public void setDriveIntakeSpeed(double speed) {
+        driveNeo.set(speed); feederNeo.set(-speed);
     }
 
     public void flipIntake(double position) {
@@ -44,6 +43,7 @@ public class Intake extends SubsystemBase {
     public double getPosition() {
         return neoEncoder.getPosition();
     }
+
     // Runnable _Consumer _Supplier -> Needs a lambda expression
     public Command getintakeDownCommand(double position) {
         return new FunctionalCommand(
@@ -75,6 +75,6 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
-        hasNote = intakesensor.getNoteDetected();
+
     }
 }

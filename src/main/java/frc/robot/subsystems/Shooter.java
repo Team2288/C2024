@@ -11,14 +11,10 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 public class Shooter extends SubsystemBase {
     CANSparkMax motorLeft, motorRight;
     boolean ready;
-    ColorSensor shootersensor;
 
     public Shooter() {
-        shootersensor = new ColorSensor();
         motorLeft = new CANSparkMax(Constants.Shooter.LEFT_MOTOR_ID, MotorType.kBrushless);
         motorRight = new CANSparkMax(Constants.Shooter.RIGHT_MOTOR_ID, MotorType.kBrushless);
-
-        motorLeft.follow(motorRight);
     }
 
     public Command getShooterCommand(double speed) {
@@ -31,8 +27,13 @@ public class Shooter extends SubsystemBase {
         );
     } 
 
+    public void shoot(double speed) {
+        motorLeft.set(speed);
+        motorRight.set(-speed);
+    }
+
     @Override
     public void periodic() {
-        ready = shootersensor.getNoteDetected();
+
     }
 }
