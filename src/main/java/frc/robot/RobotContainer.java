@@ -72,9 +72,9 @@ public class RobotContainer {
 
         /* 
         s_Lights.setDefaultCommand(
-            new InstantCommand(
+            new LightsCommand(
                 () -> s_Lights.off(),
-                s_Lights
+                null
             )
         );
 
@@ -103,26 +103,23 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
         /* 
         orangeLED.toggleOnTrue(
-            new StartEndCommand( // StartEndCommand: Press once to turn on lights, press again to turn off lights
+            new LightsCommand( // Press once to turn on lights, press again to turn off lights
                 () -> s_Lights.orange(), // First
-                () -> s_Lights.off(), // Second
-                s_Lights // Subsystem that is needed
+                () -> s_Lights.off() // Second
             )
         );
         
         yellowLED.toggleOnTrue(
-            new StartEndCommand(
+            new LightsCommand(
                 () -> s_Lights.yellow(),
-                () -> s_Lights.off(),
-                s_Lights
+                () -> s_Lights.off()
             )
         );
 
         purpleLED.toggleOnTrue(
-            new StartEndCommand(
+            new LightsCommand(
                 () -> s_Lights.purple(),
-                () -> s_Lights.off(),
-                s_Lights
+                () -> s_Lights.off()
             )
         );
         */
