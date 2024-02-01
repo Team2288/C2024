@@ -39,12 +39,15 @@ public class RobotContainer {
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-
+    
     public final TOFSensor sensor = new TOFSensor(20);
     // LEDs (Triggers are the same thing as buttons)
-    private final Trigger orangeLED = codriver.button(Constants.Buttons.LED_ORANGE);
-    private final Trigger yellowLED = codriver.button(Constants.Buttons.LED_YELLOW);
-    private final Trigger purpleLED = codriver.button(Constants.Buttons.LED_PURPLE);
+    //private final Trigger shoot = codriver.button(Constants.Buttons.LED_ORANGE);
+    //private final Trigger intake = codriver.button(Constants.Buttons.LED_YELLOW);
+   // private final Trigger purpleLED = codriver.button(Constants.Buttons.LED_PURPLE);
+
+   private final Trigger intake_on = codriver.button(Constants.Buttons.INTAKE_ON);
+
 
     /* Subsystems */
     public final Swerve s_Swerve = new Swerve();
@@ -79,6 +82,20 @@ public class RobotContainer {
             )
         );
 
+        */
+
+        s_Shooter.setDefaultCommand( // the default command is not to shoot lmao
+            new InstantCommand(
+                () -> s_Shooter.shoot(0.0)
+            )
+        );
+
+        s_Intake.setDefaultCommand(
+            new InstantCommand(
+                () -> s_Intake.flipIntake(Constants.Intake.UP_POSITION) // be neutral
+            )
+        );
+
         /* Set Events for Path planning */
 
         NamedCommands.registerCommand("Intake Routine", new WaitCommand(0)); // s_Intake.getIntakeRoutineCommand()
@@ -102,6 +119,16 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
+
+        intake_on.toggleOnTrue(
+            new StartEndCommand(
+                () -> {s_Shooter.shoot(1.0); s_Intake.setDriveIntakeSpeed(1.0);},
+                () -> {s_Shooter.shoot(0.0); s_Intake.setDriveIntakeSpeed(0.0);},
+                s_Intake,
+                s_Shooter
+            )
+        );
+
         /* 
         orangeLED.toggleOnTrue(
             new LightsCommand( // Press once to turn on lights, press again to turn off lights

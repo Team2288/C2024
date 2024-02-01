@@ -25,6 +25,9 @@ public final class Constants {
         public static final int LED_ORANGE = 1;
         public static final int LED_YELLOW = 2;
         public static final int LED_PURPLE = 3;
+
+        public static final int INTAKE_ON = 1;
+        public static final int INTAKE_OFF = 2;
     }
 
     public static final class Elevator {
@@ -40,12 +43,15 @@ public final class Constants {
         public static final int DRIVE_MOTOR = 33;
         public static final int FEEDER_MOTOR = 31;
         public static final int SWIVEL_MOTOR = 34;
-        public static final int SWIVEL_KP = 0;
-        public static final int SWIVEL_KI = 0;
-        public static final int SWIVEL_KD = 0;
+        public static final double SWIVEL_KP = 0.008174;
+        public static final double SWIVEL_KI = 0;
+        public static final double SWIVEL_KD = 0;
+        public static final double SWIVEL_KV = 0.047754;
+        public static final double MOTMAGMAXACCEL = 6827;
+        public static final double MOTMAGMAXVEL = 34133;
         
-        public static final double DOWN_POSITION = 0.0;
-        public static final double UP_POSITION = 0.0;
+        public static final double DOWN_POSITION = 0; // in encoder ticks
+        public static final double UP_POSITION = -78.58;
     }
 
 
@@ -54,6 +60,10 @@ public final class Constants {
         public static final int RIGHT_MOTOR_ID = 30;
 
         public static final int SHOOTER_SENSOR = 3;
+
+
+        public static double SHOOTER_KP = 0.0001;
+        public static double SHOOTER_KF = 0.0001;
     }
 
     // Lights Constants (Used in Lights.java)

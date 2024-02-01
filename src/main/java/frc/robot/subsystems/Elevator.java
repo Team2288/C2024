@@ -1,25 +1,18 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import com.revrobotics.SparkPIDController;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import com.revrobotics.CANSparkLowLevel.MotorType;
 import java.util.ArrayList;
-import java.io.IOException;
 import java.lang.System;
-
 import frc.robot.Constants;
 
 public class Elevator extends SubsystemBase {
     public CANSparkMax leader, follower;
-    private SparkMaxPIDController leaderController;
+    private SparkPIDController leaderController;
     private RelativeEncoder leaderEncoder, followerEncoder;
     public double kP, kI, kD, kF, kMaxOutput, kMinOutput;
 
@@ -52,6 +45,7 @@ public class Elevator extends SubsystemBase {
     public void setPosition(double position) {
         leaderController.setReference(position, CANSparkMax.ControlType.kPosition);
     }
+
     public double getPosition() {
         return leaderEncoder.getPosition();
     }

@@ -10,25 +10,42 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import com.ctre.phoenix6.hardware.TalonFX;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 
 public class Intake extends SubsystemBase {
-    CANSparkMax driveNeo, swivelNeo, feederNeo; // motors
-    SparkPIDController swivelPID;
-    RelativeEncoder neoEncoder;
+    CANSparkMax driveNeo, feederNeo; // motors
+    TalonFX swivelFalcon;
     boolean hasNote;
+    final MotionMagicVoltage motMag;
 
     public Intake() {
         driveNeo = new CANSparkMax(Constants.Intake.DRIVE_MOTOR, MotorType.kBrushless);
-        swivelNeo = new CANSparkMax(Constants.Intake.SWIVEL_MOTOR, MotorType.kBrushless);
+        swivelFalcon = new TalonFX(Constants.Intake.SWIVEL_MOTOR);
         feederNeo = new CANSparkMax(Constants.Intake.FEEDER_MOTOR, MotorType.kBrushless);
-        swivelPID = swivelNeo.getPIDController();
-        neoEncoder = swivelNeo.getEncoder();
 
-        swivelPID.setP(Constants.Intake.SWIVEL_KP);
-        swivelPID.setI(Constants.Intake.SWIVEL_KI);
-        swivelPID.setD(Constants.Intake.SWIVEL_KD);
-        swivelPID.setOutputRange(-1, 1);
+        motMag = new MotionMagicVoltage(0);
+        motMag.Slot = 0;
+        var talonFXConfigs = new TalonFXConfiguration();
 
+        swivelFalcon.getConfigurator().apply(new TalonFXConfiguration()); // set factory default
+
+        talonFXConfigs.Slot0.kV = Constants.Intake.SWIVEL_KV * 2048 / 1023;
+
+        talonFXConfigs.Slot0.kP = Constants.Intake.SWIVEL_KP * 2048 / 1023; // per new phoenix 6 units
+        talonFXConfigs.Slot0.kI = Constants.Intake.SWIVEL_KI * 2048 / 1023 * 1000;
+        talonFXConfigs.Slot0.kD = Constants.Intake.SWIVEL_KD * 2048 / 1023 / 1000;
+
+        talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.Intake.MOTMAGMAXVEL / 2048 * 10; // rps cruise velocity
+        talonFXConfigs.MotionMagic.MotionMagicAcceleration = Constants.Intake.MOTMAGMAXACCEL / 2048 * 10; // rps/s acceleration 
+        talonFXConfigs.MotionMagic.MotionMagicJerk = 800; // rps/s^2 jerk 
+        
+        swivelFalcon.getConfigurator().apply(talonFXConfigs, 0.050);
         hasNote = false;
     }
 
@@ -36,12 +53,17 @@ public class Intake extends SubsystemBase {
         driveNeo.set(speed); feederNeo.set(-speed);
     }
 
-    public void flipIntake(double position) {
-        swivelPID.setReference(position, CANSparkMax.ControlType.kPosition);
+    public void testSwivel(double speed) {
+        swivelFalcon.set(speed);
     }
 
-    public double getPosition() {
-        return neoEncoder.getPosition();
+    public void flipIntake(double position) {
+        swivelFalcon.setControl(motMag.withPosition(position));
+    }
+
+    public double getPosition() { // returns rotations
+        swivelFalcon.getRotorPosition().refresh();
+        return swivelFalcon.getRotorPosition().getValueAsDouble();
     }
 
     // Runnable _Consumer _Supplier -> Needs a lambda expression
@@ -54,6 +76,13 @@ public class Intake extends SubsystemBase {
             this
         );
     }
+
+    public Command getIntakeFeedCommand(double speed) {
+        return new InstantCommand(
+            () -> driveNeo.set(speed)
+        );
+    }
+
 
     public Command getintakeUpCommand(double position) {
         return new FunctionalCommand(
@@ -75,6 +104,6 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
-
+        SmartDashboard.putNumber("Swivel Falcon Encoder", getPosition());
     }
 }
