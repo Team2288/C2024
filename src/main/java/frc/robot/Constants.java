@@ -40,8 +40,8 @@ public final class Constants {
     }
 
     public static final class Intake {
-        public static final int DRIVE_MOTOR = 33;
-        public static final int FEEDER_MOTOR = 31;
+        public static final int DRIVE_MOTOR = 21;
+        public static final int FEEDER_MOTOR = 33;
         public static final int SWIVEL_MOTOR = 34;
         public static final double SWIVEL_KP = 0.008174;
         public static final double SWIVEL_KI = 0;
@@ -56,14 +56,15 @@ public final class Constants {
 
 
     public static final class Shooter {
-        public static final int LEFT_MOTOR_ID = 32;
+        public static final int LEFT_MOTOR_ID = 40;
         public static final int RIGHT_MOTOR_ID = 30;
 
         public static final int SHOOTER_SENSOR = 3;
 
-
-        public static double SHOOTER_KP = 0.0001;
-        public static double SHOOTER_KF = 0.0001;
+        public static double SHOOTER_KP = 10;
+        public static double SHOOTER_KF = 0.01;
+        public static double SHOOTER_KI = 0.000001;
+        public static double SHOOTER_KD = 0.01;
     }
 
     // Lights Constants (Used in Lights.java)

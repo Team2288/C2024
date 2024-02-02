@@ -44,10 +44,9 @@ public class RobotContainer {
     // LEDs (Triggers are the same thing as buttons)
     //private final Trigger shoot = codriver.button(Constants.Buttons.LED_ORANGE);
     //private final Trigger intake = codriver.button(Constants.Buttons.LED_YELLOW);
-   // private final Trigger purpleLED = codriver.button(Constants.Buttons.LED_PURPLE);
+    //private final Trigger purpleLED = codriver.button(Constants.Buttons.LED_PURPLE);
 
-   private final Trigger intake_on = codriver.button(Constants.Buttons.INTAKE_ON);
-
+    private final Trigger intake_on = codriver.button(Constants.Buttons.INTAKE_ON);
 
     /* Subsystems */
     public final Swerve s_Swerve = new Swerve();
@@ -86,13 +85,8 @@ public class RobotContainer {
 
         s_Shooter.setDefaultCommand( // the default command is not to shoot lmao
             new InstantCommand(
-                () -> s_Shooter.shoot(0.0)
-            )
-        );
-
-        s_Intake.setDefaultCommand(
-            new InstantCommand(
-                () -> s_Intake.flipIntake(Constants.Intake.UP_POSITION) // be neutral
+                () -> s_Shooter.shoot(0.0),
+                s_Shooter
             )
         );
 
