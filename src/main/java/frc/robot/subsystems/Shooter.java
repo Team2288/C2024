@@ -44,10 +44,10 @@ public class Shooter extends SubsystemBase {
         return new InstantCommand(() -> shoot(speed));
     } 
 
-    public void setVelocity(double pct) {
-        double vel = 4500;
-        motorLeftController.setReference(vel, ControlType.kVelocity);
-        motorRightController.setReference(vel, ControlType.kVelocity);
+    public void setVelocity(double rpm) {
+        //double vel = 4500;
+        motorLeftController.setReference(rpm, ControlType.kVelocity);
+        motorRightController.setReference(-rpm, ControlType.kVelocity);
     }
 
     public void shoot(double speed) {

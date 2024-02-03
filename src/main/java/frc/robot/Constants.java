@@ -61,10 +61,10 @@ public final class Constants {
 
         public static final int SHOOTER_SENSOR = 3;
 
-        public static double SHOOTER_KP = 10;
-        public static double SHOOTER_KF = 0.01;
-        public static double SHOOTER_KI = 0.000001;
-        public static double SHOOTER_KD = 0.01;
+        public static double SHOOTER_KP = 0.0005;
+        public static double SHOOTER_KF = 0.00011;
+        public static double SHOOTER_KI = 0.00000025;
+        public static double SHOOTER_KD = 0.0001;
     }
 
     // Lights Constants (Used in Lights.java)

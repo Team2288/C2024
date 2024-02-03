@@ -82,14 +82,14 @@ public class RobotContainer {
         );
 
         */
-
+        /*
         s_Shooter.setDefaultCommand( // the default command is not to shoot lmao
             new InstantCommand(
                 () -> s_Shooter.shoot(0.0),
                 s_Shooter
             )
         );
-
+        */
         /* Set Events for Path planning */
 
         NamedCommands.registerCommand("Intake Routine", new WaitCommand(0)); // s_Intake.getIntakeRoutineCommand()

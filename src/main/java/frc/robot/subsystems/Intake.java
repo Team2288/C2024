@@ -50,7 +50,8 @@ public class Intake extends SubsystemBase {
     }
 
     public void setDriveIntakeSpeed(double speed) {
-        driveNeo.set(speed); feederNeo.set(-speed);
+        driveNeo.set(speed); 
+        feederNeo.set(-speed);
     }
 
     public void testSwivel(double speed) {
