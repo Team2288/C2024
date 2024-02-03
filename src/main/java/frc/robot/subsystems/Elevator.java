@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import java.util.ArrayList;
 import java.lang.System;
 import frc.robot.Constants;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Elevator extends SubsystemBase {
     public CANSparkMax leader, follower;
@@ -39,7 +40,12 @@ public class Elevator extends SubsystemBase {
 
     @Override
     public void periodic() {
-
+        SmartDashboard.putNumber("Leader Elevator Voltage", leader.getBusVoltage());
+        SmartDashboard.putNumber("Follower Elevator Voltage", follower.getBusVoltage());
+        SmartDashboard.putNumber("Leader Elevator Velocity", leaderEncoder.getVelocity());
+        SmartDashboard.putNumber("Follower Elevator Velocity", followerEncoder.getVelocity());
+        SmartDashboard.putNumber("Leader Elevator Position", leaderEncoder.getPosition());
+        SmartDashboard.putNumber("Follower Elevator Position", followerEncoder.getPosition());
     }
 
     public void setPosition(double position) {

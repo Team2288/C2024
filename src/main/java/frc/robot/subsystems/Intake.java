@@ -23,6 +23,7 @@ public class Intake extends SubsystemBase {
     TalonFX swivelFalcon;
     boolean hasNote;
     final MotionMagicVoltage motMag;
+    private RelativeEncoder driveNeoEncoder, feederNeoEncoder;
 
     public Intake() {
         driveNeo = new CANSparkMax(Constants.Intake.DRIVE_MOTOR, MotorType.kBrushless);
@@ -47,6 +48,11 @@ public class Intake extends SubsystemBase {
         
         swivelFalcon.getConfigurator().apply(talonFXConfigs, 0.050);
         hasNote = false;
+        
+        driveNeoEncoder = driveNeo.getEncoder();
+        feederNeoEncoder = feederNeo.getEncoder();
+
+
     }
 
     public void setDriveIntakeSpeed(double speed) {
@@ -106,5 +112,11 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Swivel Falcon Encoder", getPosition());
+        SmartDashboard.putNumber("Drive Neo Voltage", driveNeo.getBusVoltage());
+        SmartDashboard.putNumber("Feeder Neo Voltage", feederNeo.getBusVoltage());
+        SmartDashboard.putNumber("Feeder Neo Velocity", feederNeoEncoder.getVelocity());
+        SmartDashboard.putNumber("Drive Neo Velocity", driveNeoEncoder.getVelocity());
+        SmartDashboard.putNumber("Drive Neo Position", driveNeoEncoder.getPosition());
+         SmartDashboard.putNumber("Feed Neo Position", feederNeoEncoder.getPosition());
     }
 }

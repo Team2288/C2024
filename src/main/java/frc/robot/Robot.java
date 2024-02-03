@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Lights;
@@ -13,7 +12,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -26,8 +24,6 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   private GenericHID codriver = new GenericHID(1);
-
-  private XboxController controller = new XboxController(3);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -101,18 +97,6 @@ public class Robot extends TimedRobot {
     if (codriver.getRawButtonPressed(2)) {
       m_robotContainer.s_Shooter.shoot(0);
       m_robotContainer.s_Intake.setDriveIntakeSpeed(0);
-    }
-
-    if(controller.getAButton()) {
-      m_robotContainer.s_Shooter.setVelocity(4500);
-    }
-    if(controller.getXButton()) {
-      m_robotContainer.s_Intake.setDriveIntakeSpeed(.8);
-
-    }
-    if(controller.getBButton()) {
-      m_robotContainer.s_Shooter.shoot(0.0);
-      m_robotContainer.s_Intake.setDriveIntakeSpeed(0.0);
     }
   }
 

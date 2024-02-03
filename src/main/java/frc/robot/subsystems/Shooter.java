@@ -15,7 +15,6 @@ public class Shooter extends SubsystemBase {
     boolean ready;
     RelativeEncoder motorEncoderLeft, motorEncoderRight;
     SparkPIDController motorLeftController, motorRightController;
-
     public Shooter() {
         motorLeft = new CANSparkMax(Constants.Shooter.LEFT_MOTOR_ID, MotorType.kBrushless);
         motorRight = new CANSparkMax(Constants.Shooter.RIGHT_MOTOR_ID, MotorType.kBrushless);
@@ -59,6 +58,10 @@ public class Shooter extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("Left Motor Velocity", motorEncoderLeft.getVelocity());
         SmartDashboard.putNumber("Right Motor Velocity", motorEncoderRight.getVelocity());
+        SmartDashboard.putNumber("Motor Left Voltage", motorLeft.getBusVoltage());
+        SmartDashboard.putNumber("Motor Right Voltage", motorRight.getBusVoltage());
+        SmartDashboard.putNumber("Motor Left Position", motorEncoderLeft.getPosition());
+        SmartDashboard.putNumber("Motor Right Position", motorEncoderRight.getPosition());
 
         /* 
         double p = SmartDashboard.getNumber("P gain", 0);
