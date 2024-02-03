@@ -34,7 +34,6 @@ public class Lights extends SubsystemBase {
         }
     }
 
-
     public FunctionalCommand getLightsCommand(Constants.Lights.LightStates state) {
         return new FunctionalCommand(
             () -> {this.off(); this.on();},

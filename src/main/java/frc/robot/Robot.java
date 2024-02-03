@@ -88,32 +88,13 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
+    m_robotContainer.s_Intake.setPosition(Constants.Intake.UP_POSITION);
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    if (codriver.getRawButtonPressed(1)) {
-      m_robotContainer.s_Intake.setDriveIntakeSpeed(0.8);
-      m_robotContainer.s_Shooter.shoot(0.8);
-    }
 
-    if (codriver.getRawButtonPressed(2)) {
-      m_robotContainer.s_Shooter.shoot(0);
-      m_robotContainer.s_Intake.setDriveIntakeSpeed(0);
-    }
-
-    if(controller.getAButton()) {
-      m_robotContainer.s_Shooter.setVelocity(4500);
-    }
-    if(controller.getXButton()) {
-      m_robotContainer.s_Intake.setDriveIntakeSpeed(.8);
-
-    }
-    if(controller.getBButton()) {
-      m_robotContainer.s_Shooter.shoot(0.0);
-      m_robotContainer.s_Intake.setDriveIntakeSpeed(0.0);
-    }
   }
 
   @Override

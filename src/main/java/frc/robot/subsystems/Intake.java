@@ -2,14 +2,10 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import edu.wpi.first.wpilibj.DigitalInput;
-import frc.robot.ColorSensor;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -17,17 +13,20 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import frc.robot.TOFSensor;
 
 public class Intake extends SubsystemBase {
-    CANSparkMax driveNeo, feederNeo; // motors
+    CANSparkMax driveNeo; // motors
     TalonFX swivelFalcon;
-    boolean hasNote;
+    boolean hasNote, isRunning;
+    TOFSensor sensor; 
     final MotionMagicVoltage motMag;
 
     public Intake() {
         driveNeo = new CANSparkMax(Constants.Intake.DRIVE_MOTOR, MotorType.kBrushless);
         swivelFalcon = new TalonFX(Constants.Intake.SWIVEL_MOTOR);
-        feederNeo = new CANSparkMax(Constants.Intake.FEEDER_MOTOR, MotorType.kBrushless);
+
+        sensor = new TOFSensor(Constants.Intake.INTAKE_SENSOR_ID);
 
         motMag = new MotionMagicVoltage(0);
         motMag.Slot = 0;
@@ -47,18 +46,20 @@ public class Intake extends SubsystemBase {
         
         swivelFalcon.getConfigurator().apply(talonFXConfigs, 0.050);
         hasNote = false;
+        isRunning = false;
     }
 
     public void setDriveIntakeSpeed(double speed) {
+        if (speed != 0.0) {this.isRunning = true;} else {this.isRunning = false;}
+
         driveNeo.set(speed); 
-        feederNeo.set(-speed);
     }
 
     public void testSwivel(double speed) {
         swivelFalcon.set(speed);
     }
 
-    public void flipIntake(double position) {
+    public void setPosition(double position) {
         swivelFalcon.setControl(motMag.withPosition(position));
     }
 
@@ -67,12 +68,11 @@ public class Intake extends SubsystemBase {
         return swivelFalcon.getRotorPosition().getValueAsDouble();
     }
 
-    // Runnable _Consumer _Supplier -> Needs a lambda expression
-    public Command getintakeDownCommand(double position) {
+    public Command getIntakeDownCommand(double position) {
         return new FunctionalCommand(
             () -> setDriveIntakeSpeed(1), // at start: turn on intake
-            () -> flipIntake(position), // go to position
-            interrupted -> {flipIntake(0); driveNeo.stopMotor();}, 
+            () -> setPosition(position), // go to position
+            interrupted -> {setPosition(0); driveNeo.stopMotor();}, 
             () -> Math.abs(getPosition() - position) < 100 && hasNote == true, // if close enough to position and intake has Note, we are done
             this
         );
@@ -85,11 +85,11 @@ public class Intake extends SubsystemBase {
     }
 
 
-    public Command getintakeUpCommand(double position) {
+    public Command getIntakeUpCommand(double position) {
         return new FunctionalCommand(
             () -> driveNeo.stopMotor(), 
-            () -> flipIntake(position),
-            interrupted -> {flipIntake(0); driveNeo.stopMotor();},
+            () -> setPosition(position),
+            interrupted -> {setPosition(0); driveNeo.stopMotor();},
             () -> Math.abs(getPosition() - position) < 100 && hasNote == false,
             this
         );
@@ -97,14 +97,18 @@ public class Intake extends SubsystemBase {
 
     public Command getIntakeRoutineCommand() {
         return new StartEndCommand(
-            () -> getintakeDownCommand(Constants.Intake.DOWN_POSITION),
-            () -> getintakeUpCommand(Constants.Intake.UP_POSITION),
+            () -> getIntakeDownCommand(Constants.Intake.DOWN_POSITION),
+            () -> getIntakeUpCommand(Constants.Intake.UP_POSITION),
             this
         );
     }
 
     @Override
     public void periodic() {
+        if (this.isRunning && this.sensor.getNoteDetected()){
+            setDriveIntakeSpeed(0.0);
+        }
+
         SmartDashboard.putNumber("Swivel Falcon Encoder", getPosition());
     }
 }

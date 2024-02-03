@@ -9,10 +9,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.TOFSensor;
 
 public class Shooter extends SubsystemBase {
     CANSparkMax motorLeft, motorRight;
-    boolean ready;
+    boolean is_running;
     RelativeEncoder motorEncoderLeft, motorEncoderRight;
     SparkPIDController motorLeftController, motorRightController;
 
@@ -45,7 +46,8 @@ public class Shooter extends SubsystemBase {
     } 
 
     public void setVelocity(double rpm) {
-        //double vel = 4500;
+        if (rpm > 0) {is_running = true;} else {is_running = false;}
+
         motorLeftController.setReference(rpm, ControlType.kVelocity);
         motorRightController.setReference(-rpm, ControlType.kVelocity);
     }

@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+
 import frc.lib.util.COTSTalonFXSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
@@ -41,25 +42,23 @@ public final class Constants {
 
     public static final class Intake {
         public static final int DRIVE_MOTOR = 21;
-        public static final int FEEDER_MOTOR = 33;
         public static final int SWIVEL_MOTOR = 34;
-        public static final double SWIVEL_KP = 0.008174;
+        public static final int INTAKE_SENSOR_ID = 3;
+
+        public static final double SWIVEL_KP = 0.04;
         public static final double SWIVEL_KI = 0;
         public static final double SWIVEL_KD = 0;
-        public static final double SWIVEL_KV = 0.047754;
-        public static final double MOTMAGMAXACCEL = 6827;
-        public static final double MOTMAGMAXVEL = 34133;
+        public static final double SWIVEL_KV = 0.058252;
+        public static final double MOTMAGMAXACCEL = 34130 * 3; //6827
+        public static final double MOTMAGMAXVEL = 34130 * 6; //34133
         
-        public static final double DOWN_POSITION = 0; // in encoder ticks
-        public static final double UP_POSITION = -78.58;
+        public static final double DOWN_POSITION = 16.6; 
+        public static final double UP_POSITION = 0;
     }
-
 
     public static final class Shooter {
         public static final int LEFT_MOTOR_ID = 40;
         public static final int RIGHT_MOTOR_ID = 30;
-
-        public static final int SHOOTER_SENSOR = 3;
 
         public static double SHOOTER_KP = 0.0005;
         public static double SHOOTER_KF = 0.00011;
