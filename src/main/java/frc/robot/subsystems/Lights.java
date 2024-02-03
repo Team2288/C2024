@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.SerialPort.Parity;
 import edu.wpi.first.wpilibj.SerialPort.StopBits;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import frc.robot.Constants;
 
 public class Lights extends SubsystemBase {
@@ -34,20 +33,6 @@ public class Lights extends SubsystemBase {
         }
     }
 
-
-    public FunctionalCommand getLightsCommand(Constants.Lights.LightStates state) {
-        return new FunctionalCommand(
-            () -> {this.off(); this.on();},
-            () -> this.setState(state),
-            interrupt -> this.off(),
-            () -> falseSupplier()
-        );
-    }
-
-    public boolean falseSupplier() {
-        return false;
-    }
-
     public void on() { this.setState(Constants.Lights.LightStates.ON); } 
     
     public void off() { this.setState(Constants.Lights.LightStates.OFF); }    
@@ -65,5 +50,10 @@ public class Lights extends SubsystemBase {
     public void orange(){
         on();
         this.setState(Constants.Lights.LightStates.ORANGE);
+    }
+
+    @Override
+    public void periodic(){
+        //get current light state
     }
 }

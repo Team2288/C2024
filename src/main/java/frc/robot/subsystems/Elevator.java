@@ -1,18 +1,28 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
+import com.revrobotics.SparkMaxPIDController;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+
 import java.util.ArrayList;
+
+import javax.swing.text.Position;
+
+import java.io.IOException;
 import java.lang.System;
+
 import frc.robot.Constants;
 
 public class Elevator extends SubsystemBase {
     public CANSparkMax leader, follower;
-    private SparkPIDController leaderController;
+    private SparkMaxPIDController leaderController;
     private RelativeEncoder leaderEncoder, followerEncoder;
     public double kP, kI, kD, kF, kMaxOutput, kMinOutput;
 
@@ -23,7 +33,7 @@ public class Elevator extends SubsystemBase {
         // Initialize motors, motor controllers, and settings
         leader = new CANSparkMax(Constants.Elevator.LEAD_MOTOR_ID, MotorType.kBrushless);
         follower = new CANSparkMax(Constants.Elevator.FOLLOWER_MOTOR_ID, MotorType.kBrushless);
-
+        
         leaderController = leader.getPIDController();
         leaderEncoder = leader.getEncoder();
         leaderEncoder.setPositionConversionFactor(100);
@@ -38,14 +48,22 @@ public class Elevator extends SubsystemBase {
     }
 
     @Override
-    public void periodic() {
-
+    public void periodic() { 
+        double position_leader = leaderEncoder.getPosition();
+        double position_follower = followerEncoder.getPosition();
+        double velocity_leader = leaderEncoder.getVelocity();
+        double velocity_follower = followerEncoder.getVelocity();
+        SmartDashboard.putNumber("Leader Voltage", leader.getBusVoltage());
+        SmartDashboard.putNumber("Follower Voltage", follower.getBusVoltage());
+        SmartDashboard.putNumber("Leader Position", position_leader);
+        SmartDashboard.putNumber("Follower Position", position_follower);
+        SmartDashboard.putNumber("Leader Velocity", velocity_leader);
+        SmartDashboard.putNumber("Follower Velocity", velocity_follower);
     }
 
     public void setPosition(double position) {
         leaderController.setReference(position, CANSparkMax.ControlType.kPosition);
     }
-
     public double getPosition() {
         return leaderEncoder.getPosition();
     }
@@ -69,4 +87,6 @@ public class Elevator extends SubsystemBase {
     public double getOutput() {
         return leader.getOutputCurrent();
     }    
+
+
 }

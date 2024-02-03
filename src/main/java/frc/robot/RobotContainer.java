@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,28 +34,23 @@ public class RobotContainer {
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
     private final int strafeAxis = XboxController.Axis.kLeftX.value;
-    private final int rotationAxis = 2;
-    
+    private final int rotationAxis = XboxController.Axis.kRightX.value;
 
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-    
-    public final TOFSensor sensor = new TOFSensor(20);
+
     // LEDs (Triggers are the same thing as buttons)
-    //private final Trigger shoot = codriver.button(Constants.Buttons.LED_ORANGE);
-    //private final Trigger intake = codriver.button(Constants.Buttons.LED_YELLOW);
-   // private final Trigger purpleLED = codriver.button(Constants.Buttons.LED_PURPLE);
-
-   private final Trigger intake_on = codriver.button(Constants.Buttons.INTAKE_ON);
-
+    private final Trigger orangeLED = codriver.button(Constants.Buttons.LED_ORANGE);
+    private final Trigger yellowLED = codriver.button(Constants.Buttons.LED_YELLOW);
+    private final Trigger purpleLED = codriver.button(Constants.Buttons.LED_PURPLE);
 
     /* Subsystems */
-    public final Swerve s_Swerve = new Swerve();
-    // private final Lights s_Lights = new Lights();
-    public final Intake s_Intake = new Intake();
-    // private final Elevator s_Elevator = new Elevator();
-    public final Shooter s_Shooter = new Shooter();
+    private final Swerve s_Swerve = new Swerve();
+    private final Lights s_Lights = new Lights();
+    private final Intake s_Intake = new Intake();
+    private final Elevator s_Elevator = new Elevator();
+    private final Shooter s_Shooter = new Shooter();
 
     /* Auto Chooser */
 
@@ -74,33 +70,18 @@ public class RobotContainer {
             )
         );
 
-        /* 
         s_Lights.setDefaultCommand(
-            new LightsCommand(
+            new LightCommands(
                 () -> s_Lights.off(),
-                null
-            )
-        );
-
-        */
-
-        s_Shooter.setDefaultCommand( // the default command is not to shoot lmao
-            new InstantCommand(
-                () -> s_Shooter.shoot(0.0)
-            )
-        );
-
-        s_Intake.setDefaultCommand(
-            new InstantCommand(
-                () -> s_Intake.flipIntake(Constants.Intake.UP_POSITION) // be neutral
-            )
+                s_Lights
+            );
         );
 
         /* Set Events for Path planning */
 
-        NamedCommands.registerCommand("Intake Routine", new WaitCommand(0)); // s_Intake.getIntakeRoutineCommand()
-        NamedCommands.registerCommand("Shoot", new WaitCommand(0)); // s_Shooter.getShooterCommand()
-        
+        NamedCommands.registerCommand("Intake Routine", s_Intake.getIntakeRoutineCommand());
+        NamedCommands.registerCommand("Shoot Note", s_Shooter.getShooterCommand(1.0));
+
         // Auto Chooser
 
         autoChooser = AutoBuilder.buildAutoChooser();
@@ -120,37 +101,29 @@ public class RobotContainer {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
 
-        intake_on.toggleOnTrue(
-            new StartEndCommand(
-                () -> {s_Shooter.shoot(1.0); s_Intake.setDriveIntakeSpeed(1.0);},
-                () -> {s_Shooter.shoot(0.0); s_Intake.setDriveIntakeSpeed(0.0);},
-                s_Intake,
-                s_Shooter
-            )
-        );
-
-        /* 
         orangeLED.toggleOnTrue(
-            new LightsCommand( // Press once to turn on lights, press again to turn off lights
+            new LightCommands( // StartEndCommand: Press once to turn on lights, press again to turn off lights
                 () -> s_Lights.orange(), // First
-                () -> s_Lights.off() // Second
+                () -> s_Lights.off(), // Second
+                s_Lights // Subsystem that is needed
             )
         );
         
         yellowLED.toggleOnTrue(
-            new LightsCommand(
+            new LightCommands(
                 () -> s_Lights.yellow(),
-                () -> s_Lights.off()
+                () -> s_Lights.off(),
+                s_Lights
             )
         );
 
         purpleLED.toggleOnTrue(
-            new LightsCommand(
+            new LightCommands(
                 () -> s_Lights.purple(),
-                () -> s_Lights.off()
+                () -> s_Lights.off(),
+                s_Lights
             )
         );
-        */
 
     }
 
@@ -161,7 +134,6 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-        // return autoChooser.getSelected();
-        return new exampleAuto(s_Swerve);
+        return autoChooser.getSelected();
     }
 }

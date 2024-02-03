@@ -16,10 +16,14 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.revrobotics.RelativeEncoder;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 
 public class Intake extends SubsystemBase {
     CANSparkMax driveNeo, feederNeo; // motors
+    RelativeEncoder feederEncoder;
+    RelativeEncoder driveEncoder;
+    
     TalonFX swivelFalcon;
     boolean hasNote;
     final MotionMagicVoltage motMag;
@@ -29,8 +33,11 @@ public class Intake extends SubsystemBase {
         swivelFalcon = new TalonFX(Constants.Intake.SWIVEL_MOTOR);
         feederNeo = new CANSparkMax(Constants.Intake.FEEDER_MOTOR, MotorType.kBrushless);
 
+        feederEncoder = feederNeo.getEncoder();
+        driveEncoder = driveNeo.getEncoder();
+
         motMag = new MotionMagicVoltage(0);
-        motMag.Slot = 0;
+        motMag.Slot = 0;                            // remember these
         var talonFXConfigs = new TalonFXConfiguration();
 
         swivelFalcon.getConfigurator().apply(new TalonFXConfiguration()); // set factory default
@@ -104,6 +111,20 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
+        double velocity_falcon = swivelFalcon.getVelocity().getValueAsDouble();
+        double velocity_feeder = feederEncoder.getVelocity();
+        double velocity_drive = driveEncoder.getVelocity();
+        double position_drive = driveEncoder.getPosition();
+        double position_feeder = feederEncoder.getPosition();
+        double voltage = swivelFalcon.getMotorVoltage().getValueAsDouble();
         SmartDashboard.putNumber("Swivel Falcon Encoder", getPosition());
+        SmartDashboard.putNumber("DriveNeo position", position_drive);
+        SmartDashboard.putNumber("Feeder Position", position_feeder);
+        SmartDashboard.putNumber("Swivel falcon Voltage", voltage);
+        SmartDashboard.putNumber("DriveNeo Voltage", driveNeo.getBusVoltage());
+        SmartDashboard.putNumber("FeederNeo Voltage", feederNeo.getBusVoltage());
+        SmartDashboard.putNumber("DriveNeo Volocity", velocity_drive);
+        SmartDashboard.putNumber("Swivel Falcon Velocity", velocity_falcon);
+        SmartDashboard.putNumber("Feeder Neo Velocity", velocity_feeder);
     }
 }

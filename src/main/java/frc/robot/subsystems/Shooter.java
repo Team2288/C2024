@@ -45,6 +45,7 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-
+        //get motor velocities and positions with encoders
+        //get voltages
     }
 }
