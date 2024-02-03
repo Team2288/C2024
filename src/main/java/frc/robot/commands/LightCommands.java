@@ -7,7 +7,6 @@ public class LightCommands extends StartEndCommand{
 
     public LightCommands(Runnable onInit, Runnable onEnd, Lights requirements) {
         super(onInit, onEnd, requirements);
-
     }
     
     @Override
