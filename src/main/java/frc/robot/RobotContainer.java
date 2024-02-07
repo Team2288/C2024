@@ -40,7 +40,6 @@ public class RobotContainer {
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
     
-    public final TOFSensor sensor = new TOFSensor(20);
     // LEDs (Triggers are the same thing as buttons)
     //private final Trigger shoot = codriver.button(Constants.Buttons.LED_ORANGE);
     //private final Trigger intake = codriver.button(Constants.Buttons.LED_YELLOW);

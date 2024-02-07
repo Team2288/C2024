@@ -43,7 +43,7 @@ public final class Constants {
     public static final class Intake {
         public static final int DRIVE_MOTOR = 21;
         public static final int SWIVEL_MOTOR = 34;
-        public static final int INTAKE_SENSOR_ID = 3;
+        public static final int INTAKE_SENSOR_ID = 0;
 
         public static final double SWIVEL_KP = 0.04;
         public static final double SWIVEL_KI = 0;
