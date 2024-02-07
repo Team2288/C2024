@@ -6,10 +6,15 @@ import frc.robot.Constants;
 import edu.wpi.first.wpilibj2.command.Command;
 import com.revrobotics.RelativeEncoder; 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.TOFSensor;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class Shooter extends SubsystemBase {
     CANSparkMax motorLeft, motorRight;
@@ -42,8 +47,31 @@ public class Shooter extends SubsystemBase {
     }
 
     public Command getShooterCommand(double speed) {
-        return new InstantCommand(() -> shoot(speed));
+        return new InstantCommand(() -> shoot(speed), this);
     } 
+
+    public Command rampVelocityPIDs(double rpm) {
+        return new FunctionalCommand(
+            () -> System.out.println("Ramping Shooter"),
+            () -> this.setVelocity(rpm),
+            interrupted -> {},
+            () -> (Math.abs(this.motorEncoderLeft.getVelocity() - rpm) < 100),
+            this
+        );
+    }
+
+    public Command getShooterRoutineCommand(Intake s_Intake) {
+        return new SequentialCommandGroup(
+            rampVelocityPIDs(4500),
+            new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(Constants.Intake.SPEED), s_Intake),
+            new WaitCommand(2),
+            new ParallelCommandGroup(
+                new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(0.0), s_Intake),
+                new InstantCommand(() -> this.shoot(0.0), this)
+            )
+
+        );
+    }
 
     public void setVelocity(double rpm) {
         if (rpm > 0) {is_running = true;} else {is_running = false;}

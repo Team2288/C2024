@@ -80,21 +80,19 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
 
     //m_robotContainer.s_Intake.setPosition(Constants.Intake.UP_POSITION);
+    m_robotContainer.s_Shooter.getShooterRoutineCommand(m_robotContainer.s_Intake).schedule();
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    if(controller.getBButton()) {
-      m_robotContainer.s_Shooter.shoot(0.0);
-      m_robotContainer.s_Intake.setDriveIntakeSpeed(0.0);
-    }
-
+    System.out.println(m_robotContainer.s_Intake.getSensor());
   }
 
   @Override

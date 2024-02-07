@@ -57,7 +57,7 @@ public class RobotContainer {
     /* Auto Chooser */
 
     private SendableChooser<Command> autoChooser;
-
+    Command auto;
     /* The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         // Subsystems
@@ -91,13 +91,14 @@ public class RobotContainer {
         */
         /* Set Events for Path planning */
 
-        NamedCommands.registerCommand("Intake Routine", new WaitCommand(0)); // s_Intake.getIntakeRoutineCommand()
+        NamedCommands.registerCommand("IntakeRoutine", s_Intake.getIntakeRoutineCommand()); // s_Intake.getIntakeRoutineCommand()
         NamedCommands.registerCommand("Shoot", new WaitCommand(0)); // s_Shooter.getShooterCommand()
         
         // Auto Chooser
 
-        autoChooser = AutoBuilder.buildAutoChooser();
-        SmartDashboard.putData("Auto Chooser", autoChooser);
+
+        auto = AutoBuilder.buildAuto("Test");
+        // SmartDashboard.putData("Auto Chooser", autoChooser);
 
         // Configure the button bindings
         configureButtonBindings();
@@ -155,6 +156,6 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
         // return autoChooser.getSelected();
-        return new exampleAuto(s_Swerve);
+        return this.auto;
     }
 }

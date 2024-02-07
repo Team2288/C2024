@@ -45,6 +45,8 @@ public final class Constants {
         public static final int SWIVEL_MOTOR = 34;
         public static final int INTAKE_SENSOR_ID = 0;
 
+        public static final double SPEED = 0.5;
+
         public static final double SWIVEL_KP = 0.04;
         public static final double SWIVEL_KI = 0;
         public static final double SWIVEL_KD = 0;
