@@ -8,10 +8,9 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix6.hardware.TalonFX;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import frc.robot.TOFSensor;
 
@@ -84,7 +83,6 @@ public class Intake extends SubsystemBase {
         );
     }
 
-
     public Command getIntakeUpCommand(double position) {
         return new FunctionalCommand(
             () -> driveNeo.stopMotor(), 
@@ -96,10 +94,9 @@ public class Intake extends SubsystemBase {
     }
 
     public Command getIntakeRoutineCommand() {
-        return new StartEndCommand(
-            () -> getIntakeDownCommand(Constants.Intake.DOWN_POSITION),
-            () -> getIntakeUpCommand(Constants.Intake.UP_POSITION),
-            this
+        return new SequentialCommandGroup(
+            getIntakeDownCommand(Constants.Intake.DOWN_POSITION),
+            getIntakeUpCommand(Constants.Intake.UP_POSITION)
         );
     }
 
