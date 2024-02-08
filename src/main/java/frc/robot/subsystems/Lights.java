@@ -8,7 +8,8 @@ import edu.wpi.first.wpilibj.SerialPort.StopBits;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-
+import frc.robot.Constants.Lights.LightStates;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Lights extends SubsystemBase {
     private SerialPort port;
@@ -18,6 +19,7 @@ public class Lights extends SubsystemBase {
 
         try {
             this.port = new SerialPort(115200, SerialPort.Port.kUSB1,8,Parity.kEven,StopBits.kOne);
+            SmartDashboard.putString("Current State", Constants.Lights.DEFAULT_LIGHT_STATE);
         }catch(Exception e){
             System.err.println("Error setting up serial port, lights will probably not work");
         }
@@ -30,6 +32,7 @@ public class Lights extends SubsystemBase {
             String command = Constants.Lights.HASHMAP_LIGHT_STATES.getOrDefault(state, Constants.Lights.DEFAULT_LIGHT_STATE);
             this.port.writeString(command);
             this.port.flush();
+            SmartDashboard.putString("Current State", state.toString());
         }catch(Exception e) {
             System.err.println("error setting light state for state: " + state.toString());
         }
@@ -52,7 +55,13 @@ public class Lights extends SubsystemBase {
     public void orange(){
         on();
         this.setState(Constants.Lights.LightStates.ORANGE);
-    }
 
+
+    }
+    
+    @Override
+    public void periodic(){
+    SmartDashboard.putString(LightStates); 
+    }
 
 }
