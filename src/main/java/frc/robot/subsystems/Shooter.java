@@ -60,19 +60,6 @@ public class Shooter extends SubsystemBase {
         );
     }
 
-    public Command getShooterRoutineCommand(Intake s_Intake) {
-        return new SequentialCommandGroup(
-            rampVelocityPIDs(4500),
-            new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(Constants.Intake.SPEED), s_Intake),
-            new WaitCommand(2),
-            new ParallelCommandGroup(
-                new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(0.0), s_Intake),
-                new InstantCommand(() -> this.shoot(0.0), this)
-            )
-
-        );
-    }
-
     public void setVelocity(double rpm) {
         if (rpm > 0) {is_running = true;} else {is_running = false;}
 

@@ -21,9 +21,7 @@ public class Robot extends TimedRobot {
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  private GenericHID codriver = new GenericHID(1);
-
-  private XboxController controller = new XboxController(3);
+  private XboxController codriver = new XboxController(0);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -85,14 +83,15 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
-    //m_robotContainer.s_Intake.setPosition(Constants.Intake.UP_POSITION);
-    m_robotContainer.s_Shooter.getShooterRoutineCommand(m_robotContainer.s_Intake).schedule();
+    //m_robotContainer.s_Intake.setPosition(Constants.Intake.UP_POSITION).schedule();
+
+    m_robotContainer.getIntakeAndShootCommand().schedule();
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    System.out.println(m_robotContainer.s_Intake.getSensor());
+    // System.out.println(m_robotContainer.s_Intake.getSensor());
   }
 
   @Override

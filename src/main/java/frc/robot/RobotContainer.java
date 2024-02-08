@@ -1,23 +1,27 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import frc.robot.autos.*;
-import frc.robot.commands.*;
-import frc.robot.subsystems.*;
-import frc.robot.Constants;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.TeleopSwerve;
+import frc.robot.subsystems.Intake;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Swerve;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -28,7 +32,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class RobotContainer {
     /* Controllers */
     private final Joystick driver = new Joystick(0);
-    private final CommandGenericHID codriver = new CommandGenericHID(1); 
+    private final CommandXboxController codriver = new CommandXboxController(1); 
 
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -45,7 +49,8 @@ public class RobotContainer {
     //private final Trigger intake = codriver.button(Constants.Buttons.LED_YELLOW);
     //private final Trigger purpleLED = codriver.button(Constants.Buttons.LED_PURPLE);
 
-    private final Trigger intake_on = codriver.button(Constants.Buttons.INTAKE_ON);
+    private final Trigger intake_on = codriver.a();
+    private final Trigger shoot = codriver.x();
 
     /* Subsystems */
     public final Swerve s_Swerve = new Swerve();
@@ -112,15 +117,15 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Driver Buttons */
+
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
 
-        intake_on.toggleOnTrue(
-            new StartEndCommand(
-                () -> {s_Shooter.shoot(1.0); s_Intake.setDriveIntakeSpeed(1.0);},
-                () -> {s_Shooter.shoot(0.0); s_Intake.setDriveIntakeSpeed(0.0);},
-                s_Intake,
-                s_Shooter
-            )
+        intake_on.onTrue(
+            this.s_Intake.getIntakeRoutineCommand()
+        );
+
+        shoot.onTrue(
+            this.getShootCommand()
         );
 
         /* 
@@ -147,6 +152,26 @@ public class RobotContainer {
         */
 
     }
+
+    public Command getIntakeAndShootCommand() {
+        return new SequentialCommandGroup(
+            this.s_Intake.getIntakeRoutineCommand(),
+            this.getShootCommand()
+        );
+    }
+
+    public Command getShootCommand() {
+        return new SequentialCommandGroup(
+            s_Shooter.rampVelocityPIDs(4500),
+            new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(Constants.Intake.SPEED), s_Intake),
+            new WaitCommand(2),
+            new ParallelCommandGroup(
+                new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(0.0), s_Intake),
+                new InstantCommand(() -> s_Shooter.shoot(0.0), s_Shooter)
+            )
+        );
+    }
+
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.

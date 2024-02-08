@@ -22,13 +22,11 @@ public final class Constants {
     // All buttons for the driver 
 
     public static final class Buttons {
-        // LED Control
-        public static final int LED_ORANGE = 1;
-        public static final int LED_YELLOW = 2;
-        public static final int LED_PURPLE = 3;
-
         public static final int INTAKE_ON = 1;
-        public static final int INTAKE_OFF = 2;
+        public static final int SHOOT = 2;
+
+        public static final int AMP_MECHANISM = 3;
+        public static final int CLIMB = 4;
     }
 
     public static final class Elevator {
