@@ -5,6 +5,7 @@ import java.util.HashMap;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.SerialPort.Parity;
 import edu.wpi.first.wpilibj.SerialPort.StopBits;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -16,6 +17,7 @@ public class Lights extends SubsystemBase {
 
         try {
             this.port = new SerialPort(115200, SerialPort.Port.kUSB1,8,Parity.kEven,StopBits.kOne);
+            SmartDashboard.putString("Current statae", Constants.Lights.DEFAULT_LIGHT_STATE);
         }catch(Exception e){
             System.err.println("Error setting up serial port, lights will probably not work");
         }
@@ -28,6 +30,7 @@ public class Lights extends SubsystemBase {
             String command = Constants.Lights.HASHMAP_LIGHT_STATES.getOrDefault(state, Constants.Lights.DEFAULT_LIGHT_STATE);
             this.port.writeString(command);
             this.port.flush();
+            SmartDashboard.putString("Current state", state.toString());
         }catch(Exception e) {
             System.err.println("error setting light state for state: " + state.toString());
         }
@@ -54,6 +57,7 @@ public class Lights extends SubsystemBase {
 
     @Override
     public void periodic(){
-        //get current light state
+        
+        //add current light state to smart dashboard
     }
 }

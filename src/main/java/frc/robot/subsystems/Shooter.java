@@ -3,6 +3,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import frc.robot.Constants;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import com.revrobotics.RelativeEncoder; 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -45,7 +46,17 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
+        double motorLeft_velocity = motorEncoderLeft.getVelocity();
+        double motorRight_velocity = motorEncoderLeft.getVelocity();
+        double motorLeft_position = motorEncoderLeft.getPosition();
+        double motorRight_position =  motorEncoderRight.getPosition();
+        SmartDashboard.putNumber("motor Left voltage", motorLeft.getBusVoltage());
+        SmartDashboard.putNumber("motor Right voltage", motorRight.getBusVoltage());
+        SmartDashboard.putNumber("motor left Velocity", motorLeft_velocity);
+        SmartDashboard.putNumber("motor right Velocity", motorRight_velocity);
+        SmartDashboard.putNumber("Get right motor position", motorLeft_position);
+        SmartDashboard.putNumber("Get left motor position", motorRight_position);
         //get motor velocities and positions with encoders
         //get voltages
     }
-}
+}//frogger!!!
