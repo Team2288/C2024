@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -22,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.robot.subsystems.Climber;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -58,6 +60,7 @@ public class RobotContainer {
     public final Intake s_Intake = new Intake();
     // private final Elevator s_Elevator = new Elevator();
     public final Shooter s_Shooter = new Shooter();
+    public final Climber s_Climber = new Climber();
 
     /* Auto Chooser */
 
@@ -74,6 +77,17 @@ public class RobotContainer {
                 () -> -driver.getRawAxis(strafeAxis), 
                 () -> -driver.getRawAxis(rotationAxis), 
                 () -> false // robotCentric.getAsBoolean()
+            )
+        );
+
+        /* 
+        s_Intake.setDefaultCommand(
+            new FunctionalCommand(
+                () -> System.out.println("Default intake command initialized"),
+                () -> s_Intake.setPosition(Constants.Intake.UP_POSITION),
+                interrupted -> System.out.println("Command scheduled for Intake"),
+                () -> false,
+                s_Intake
             )
         );
 
@@ -126,6 +140,7 @@ public class RobotContainer {
 
         shoot.onTrue(
             this.getShootCommand()
+            // new InstantCommand( () -> s_Shooter.setVelocity(5000))
         );
 
         /* 
@@ -162,12 +177,13 @@ public class RobotContainer {
 
     public Command getShootCommand() {
         return new SequentialCommandGroup(
-            s_Shooter.rampVelocityPIDs(4500),
+            s_Shooter.rampVelocityPIDs(5000),
+            new WaitCommand(1),
             new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(Constants.Intake.SPEED), s_Intake),
-            new WaitCommand(2),
+            new WaitCommand(1.5),
             new ParallelCommandGroup(
                 new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(0.0), s_Intake),
-                new InstantCommand(() -> s_Shooter.shoot(0.0), s_Shooter)
+                new InstantCommand(() -> s_Shooter.setVelocity(0), s_Shooter)
             )
         );
     }

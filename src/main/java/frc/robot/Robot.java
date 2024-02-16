@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.GenericHID;
-
+import edu.wpi.first.wpilibj.Joystick;
 /* 
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -21,8 +21,7 @@ public class Robot extends TimedRobot {
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  private XboxController codriver = new XboxController(0);
-
+  private Joystick tester = new Joystick(1);
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -84,8 +83,6 @@ public class Robot extends TimedRobot {
     }
 
     //m_robotContainer.s_Intake.setPosition(Constants.Intake.UP_POSITION).schedule();
-
-    m_robotContainer.getIntakeAndShootCommand().schedule();
   }
 
   /** This function is called periodically during operator control. */

@@ -19,31 +19,41 @@ import frc.lib.util.SwerveModuleConstants;
 public final class Constants {
     public static final double stickDeadband = 0.1;
 
-    // All buttons for the driver 
+    public static final class Climber {
+        public static final int MOTOR_ID = 30;
 
-    public static final class Buttons {
-        public static final int INTAKE_ON = 1;
-        public static final int SHOOT = 2;
+        public static final int UP_POSITION = 0;
+        public static final int DOWN_POSITION = -12 * 7 * 2048; // -12 (Gear ratio), 7 (rotations needed), 2048 (encoder ticks / rotation)
 
-        public static final int AMP_MECHANISM = 3;
-        public static final int CLIMB = 4;
+        public static final double kP = 0;
+        public static final double kI = 0;
+        public static final double kD = 0;
+        public static final double kF = 0;
     }
 
     public static final class Elevator {
-        public static final int FOLLOWER_MOTOR_ID = 0;
-        public static final int LEAD_MOTOR_ID = 0;
+        public static final int DRIVE_MOTOR_ID = 0;
+        public static final int POSITION_MOTOR_ID = 0;
+        public static final int MOTMAGMAXACCEL = 19240;
+        public static final int MOTMAGMAXVEL = 1924;
 
-        public static final double ELEVATOR_KP = 0.0;
+        public static final double SPEED = 0.9;
+        public static final int UP1 = 0;
+        public static final int UP2 = 0;
+        public static final int DOWN = 0;
+
+        public static final double ELEVATOR_KP = 0.00909488172;
         public static final double ELEVATOR_KI = 0.0;
         public static final double ELEVATOR_KD = 0.0;
+        public static final double ELEVATOR_KV = 0.05011894428;
     }
 
     public static final class Intake {
-        public static final int DRIVE_MOTOR = 21;
+        public static final int DRIVE_MOTOR = 33;
         public static final int SWIVEL_MOTOR = 34;
         public static final int INTAKE_SENSOR_ID = 0;
 
-        public static final double SPEED = 0.5;
+        public static final double SPEED = 0.8;
 
         public static final double SWIVEL_KP = 0.04;
         public static final double SWIVEL_KI = 0;
@@ -57,13 +67,13 @@ public final class Constants {
     }
 
     public static final class Shooter {
-        public static final int LEFT_MOTOR_ID = 40;
-        public static final int RIGHT_MOTOR_ID = 30;
+        public static final int LEFT_MOTOR_ID = 32;
+        public static final int RIGHT_MOTOR_ID = 21; 
 
-        public static double SHOOTER_KP = 0.0005;
-        public static double SHOOTER_KF = 0.00011;
-        public static double SHOOTER_KI = 0.00000025;
-        public static double SHOOTER_KD = 0.0001;
+        public static double SHOOTER_KP = 0.0004;
+        public static double SHOOTER_KF = 0.00019;
+        public static double SHOOTER_KI = 0.000000;
+        public static double SHOOTER_KD = 0.000;
     }
 
     // Lights Constants (Used in Lights.java)

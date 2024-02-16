@@ -46,10 +46,6 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("F Gain", Constants.Shooter.SHOOTER_KF);
     }
 
-    public Command getShooterCommand(double speed) {
-        return new InstantCommand(() -> shoot(speed), this);
-    } 
-
     public Command rampVelocityPIDs(double rpm) {
         return new FunctionalCommand(
             () -> System.out.println("Ramping Shooter"),
@@ -60,16 +56,16 @@ public class Shooter extends SubsystemBase {
         );
     }
 
+    public void setVelocityVoltageBased(double voltage) {
+        this.motorLeft.set(voltage);
+        this.motorRight.set(-voltage);
+    }
+
     public void setVelocity(double rpm) {
         if (rpm > 0) {is_running = true;} else {is_running = false;}
 
         motorLeftController.setReference(rpm, ControlType.kVelocity);
         motorRightController.setReference(-rpm, ControlType.kVelocity);
-    }
-
-    public void shoot(double speed) {
-        motorLeft.set(speed);
-        motorRight.set(-speed);
     }
 
     @Override

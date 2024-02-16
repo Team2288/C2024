@@ -44,7 +44,7 @@ public class Intake extends SubsystemBase {
 
         talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.Intake.MOTMAGMAXVEL / 2048 * 10; // rps cruise velocity
         talonFXConfigs.MotionMagic.MotionMagicAcceleration = Constants.Intake.MOTMAGMAXACCEL / 2048 * 10; // rps/s acceleration 
-        talonFXConfigs.MotionMagic.MotionMagicJerk = 800; // rps/s^2 jerk 
+        talonFXConfigs.MotionMagic.MotionMagicJerk = 1600; // rps/s^2 jerk 
         
         swivelFalcon.getConfigurator().apply(talonFXConfigs, 0.050);
         hasNote = false;
@@ -75,7 +75,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void stopEverything() {
-        System.out.println("Stopped");
+        System.out.println("Stopped Intake");
         setDriveIntakeSpeed(0.0);
         this.isRunning = false;
     }
@@ -104,24 +104,22 @@ public class Intake extends SubsystemBase {
         );
     }
 
-
     public Command getIntakeRoutineCommand() {
         return new SequentialCommandGroup(
-            getPosAndRunIntakeCommand(Constants.Intake.DOWN_POSITION, 0.5),
+            getPosAndRunIntakeCommand(Constants.Intake.DOWN_POSITION, Constants.Intake.SPEED),
             getPosAndRunIntakeCommand(Constants.Intake.UP_POSITION, 0.0)
         );
     }
 
     public Command getIntakeFeedCommand(double speed) {
         return new InstantCommand(
-            () -> driveNeo.set(speed)
+            () -> driveNeo.set(speed),
+            this
         );
     }
 
-
     @Override
     public void periodic() {
-
         SmartDashboard.putNumber("Swivel Falcon Encoder", getPosition());
     }
 }
