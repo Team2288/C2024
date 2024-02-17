@@ -32,20 +32,20 @@ public final class Constants {
     }
 
     public static final class Elevator {
-        public static final int DRIVE_MOTOR_ID = 0;
-        public static final int POSITION_MOTOR_ID = 0;
-        public static final int MOTMAGMAXACCEL = 19240;
-        public static final int MOTMAGMAXVEL = 1924;
+        public static final int DRIVE_MOTOR_ID = 40;
+        public static final int POSITION_MOTOR_ID = 1;
+        public static final int MOTMAGMAXACCEL = 1250; //19240
+        public static final int MOTMAGMAXVEL = 125; //1924
 
-        public static final double SPEED = 0.9;
-        public static final int UP1 = 0;
-        public static final int UP2 = 0;
+        public static final double SPEED = -0.3;
+        public static final int UP1 = -38;
+        public static final int UP2 = -277;
         public static final int DOWN = 0;
 
-        public static final double ELEVATOR_KP = 0.00909488172;
-        public static final double ELEVATOR_KI = 0.0;
+        public static final double ELEVATOR_KP = 0.04; //0.00909488172
+        public static final double ELEVATOR_KI = 0.0008;
         public static final double ELEVATOR_KD = 0.0;
-        public static final double ELEVATOR_KV = 0.05011894428;
+        public static final double ELEVATOR_KV = 0.08; //0.05011894428
     }
 
     public static final class Intake {

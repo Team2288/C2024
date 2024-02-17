@@ -21,7 +21,6 @@ public class Robot extends TimedRobot {
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  private Joystick tester = new Joystick(1);
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -89,6 +88,11 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     // System.out.println(m_robotContainer.s_Intake.getSensor());
+    
+    m_robotContainer.s_Elevator.SmartDashboard();
+
+   // m_robotContainer.s_Elevator.setElevatorSpeed(-0.3);
+    
   }
 
   @Override

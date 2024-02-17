@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.TOFSensor;
 import frc.robot.subsystems.Shooter;
@@ -34,6 +35,7 @@ public class Elevator extends SubsystemBase {
         driveMotor.setClosedLoopRampRate(.3);
 
         elevatorMotor = new TalonFX(Constants.Elevator.POSITION_MOTOR_ID);
+    
 
         motMag = new MotionMagicVoltage(0);
         motMag.Slot = 0;
@@ -65,16 +67,30 @@ public class Elevator extends SubsystemBase {
     public void setElevatorPosition(double rotations) {
         elevatorMotor.setControl(motMag.withPosition(rotations));
     }
+    
+    public void SmartDashboard() {
+        SmartDashboard.putNumber("Position", elevatorMotor.getPosition().getValue());
+    }
 
-    public Command getElevatorAmpRoutineCommand(Shooter s_Shooter) {
+    public Command getElevatorAmpRoutineCommand(Shooter s_Shooter, Intake s_Intake) {
         return new SequentialCommandGroup(
-            new FunctionalCommand( // on init, set both shooter and intake speed 
-                () -> {this.setElevatorSpeed(Constants.Elevator.SPEED); s_Shooter.setVelocity(500);},
-                () -> this.setElevatorPosition(Constants.Elevator.UP1), // go to the elevator position to get the note from shooter
-                interrupted -> {this.setElevatorSpeed(0.0); s_Shooter.setVelocityVoltageBased(0.0);}, // ended -> shut off shooter and intake
-                () -> Math.abs(this.getPosition() - Constants.Elevator.UP1) < 12 && this.sensor.getNoteDetected(), // shut down if we're at the shooter AND the sensor has a note
+            new FunctionalCommand( // on init, set both shooter and intake speed and move to get the note
+                () -> s_Intake.setDriveIntakeSpeed(Constants.Intake.SPEED),
+                () -> { // on exec
+                    this.setElevatorPosition(Constants.Elevator.UP1);
+                    s_Shooter.setVelocityVoltageBased(0.09 * 1.5);
+                    this.setElevatorSpeed(Constants.Elevator.SPEED * 1.5);
+                },
+                interrupted -> {
+                    this.setElevatorSpeed(0.0); 
+                    s_Shooter.setVelocityVoltageBased(0.0);
+                    s_Intake.setDriveIntakeSpeed(0.0);
+                }, // ended -> shut off shooter, intake, and elevator
+                () -> Math.abs(this.getPosition() - Constants.Elevator.UP1) < 4 && this.sensor.getNoteDetected(), // shut down if we're at the shooter AND the sensor has a note
+                            // I changed the error to 3 rotations, 12 is way too much -mo
                 this,
-                s_Shooter
+                s_Shooter,
+                s_Intake
             ),
             getElevatorPositionCommand(Constants.Elevator.UP2), // go to the amp
             new FunctionalCommand( // run intake, when note is not there anymore set speed to 0 and return to default position
@@ -92,7 +108,7 @@ public class Elevator extends SubsystemBase {
             () -> System.out.println("Running elevator"),
             () -> setElevatorPosition(rotations),
             interrupted -> {},
-            () -> Math.abs(getPosition() - rotations) < 12,
+            () -> Math.abs(getPosition() - rotations) < 4,
             this
         );
     }

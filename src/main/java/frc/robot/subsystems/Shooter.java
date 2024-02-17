@@ -26,19 +26,21 @@ public class Shooter extends SubsystemBase {
         motorLeft = new CANSparkMax(Constants.Shooter.LEFT_MOTOR_ID, MotorType.kBrushless);
         motorRight = new CANSparkMax(Constants.Shooter.RIGHT_MOTOR_ID, MotorType.kBrushless);
 
+        motorRight.follow(motorLeft, true);
+
         motorEncoderLeft = motorLeft.getEncoder();
-        motorEncoderRight = motorRight.getEncoder();
+        //motorEncoderRight = motorRight.getEncoder();
         
         motorLeftController = motorLeft.getPIDController();
-        motorRightController = motorRight.getPIDController(); 
+        //motorRightController = motorRight.getPIDController(); 
 
-        motorLeftController.setP(Constants.Shooter.SHOOTER_KP); motorRightController.setP(Constants.Shooter.SHOOTER_KP);
-        motorLeftController.setI(Constants.Shooter.SHOOTER_KI); motorRightController.setI(Constants.Shooter.SHOOTER_KI);
-        motorLeftController.setD(Constants.Shooter.SHOOTER_KD); motorRightController.setD(Constants.Shooter.SHOOTER_KD);
-        motorLeftController.setFF(Constants.Shooter.SHOOTER_KF); motorRightController.setFF(Constants.Shooter.SHOOTER_KF);
+        motorLeftController.setP(Constants.Shooter.SHOOTER_KP);// motorRightController.setP(Constants.Shooter.SHOOTER_KP);
+        motorLeftController.setI(Constants.Shooter.SHOOTER_KI);// motorRightController.setI(Constants.Shooter.SHOOTER_KI);
+        motorLeftController.setD(Constants.Shooter.SHOOTER_KD);// motorRightController.setD(Constants.Shooter.SHOOTER_KD);
+        motorLeftController.setFF(Constants.Shooter.SHOOTER_KF);// motorRightController.setFF(Constants.Shooter.SHOOTER_KF);
 
         motorLeftController.setOutputRange(-1, 1);
-        motorRightController.setOutputRange(-1, 1);
+        //motorRightController.setOutputRange(-1, 1);
 
         SmartDashboard.putNumber("P gain", Constants.Shooter.SHOOTER_KP);
         SmartDashboard.putNumber("I gain", Constants.Shooter.SHOOTER_KI);
@@ -51,27 +53,26 @@ public class Shooter extends SubsystemBase {
             () -> System.out.println("Ramping Shooter"),
             () -> this.setVelocity(rpm),
             interrupted -> {},
-            () -> (Math.abs(this.motorEncoderLeft.getVelocity() - rpm) < 100),
+            () -> (Math.abs(Math.abs(this.motorEncoderLeft.getVelocity()) - rpm) < 200),
             this
         );
     }
 
     public void setVelocityVoltageBased(double voltage) {
-        this.motorLeft.set(voltage);
-        this.motorRight.set(-voltage);
+        this.motorLeft.set(-voltage);
+       // this.motorRight.set(voltage);
     }
 
     public void setVelocity(double rpm) {
         if (rpm > 0) {is_running = true;} else {is_running = false;}
 
-        motorLeftController.setReference(rpm, ControlType.kVelocity);
-        motorRightController.setReference(-rpm, ControlType.kVelocity);
+        motorLeftController.setReference(-rpm, ControlType.kVelocity);
+       // motorRightController.setReference(rpm, ControlType.kVelocity);
     }
 
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Left Motor Velocity", motorEncoderLeft.getVelocity());
-        SmartDashboard.putNumber("Right Motor Velocity", motorEncoderRight.getVelocity());
 
         /* 
         double p = SmartDashboard.getNumber("P gain", 0);
