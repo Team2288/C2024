@@ -36,12 +36,12 @@ public final class Constants {
         public static final int POSITION_MOTOR_ID = 1;
         public static final int MOTMAGMAXACCEL = 1250; //19240
         public static final int MOTMAGMAXVEL = 125; //1924
-
+    
         public static final double SPEED = -0.3;
         public static final int UP1 = -38;
         public static final int UP2 = -277;
         public static final int DOWN = 0;
-
+    
         public static final double ELEVATOR_KP = 0.04; //0.00909488172
         public static final double ELEVATOR_KI = 0.0008;
         public static final double ELEVATOR_KD = 0.0;
@@ -67,8 +67,8 @@ public final class Constants {
     }
 
     public static final class Shooter {
-        public static final int LEFT_MOTOR_ID = 32;
-        public static final int RIGHT_MOTOR_ID = 21; 
+        public static final int LEFT_MOTOR_ID = 16;
+        public static final int RIGHT_MOTOR_ID =15; 
 
         public static double SHOOTER_KP = 0.0004;
         public static double SHOOTER_KF = 0.00019;

@@ -2,15 +2,21 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4149239409589933,
-      "y": 5.586882284875681
+      "x": 1.3070140425995143,
+      "y": 5.55593454044051
     },
-    "rotation": 180.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Shoot Preloaded"
+          }
+        },
         {
           "type": "named",
           "data": {
@@ -32,7 +38,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Get Top Note from Center"
+            "pathName": "Get Bottom Note From Center"
           }
         },
         {

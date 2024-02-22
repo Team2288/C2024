@@ -39,12 +39,8 @@ public class Lights extends SubsystemBase {
             () -> {this.off(); this.on();},
             () -> this.setState(state),
             interrupt -> this.off(),
-            () -> falseSupplier()
+            () -> {return false;}
         );
-    }
-
-    public boolean falseSupplier() {
-        return false;
     }
 
     public void on() { this.setState(Constants.Lights.LightStates.ON); } 

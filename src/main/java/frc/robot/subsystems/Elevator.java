@@ -17,6 +17,7 @@ import frc.robot.Constants;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.TOFSensor;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import frc.robot.subsystems.Shooter;
 
 public class Elevator extends SubsystemBase {
@@ -24,6 +25,7 @@ public class Elevator extends SubsystemBase {
     public double kP, kI, kD, kF, kMaxOutput, kMinOutput;
     private TalonFX elevatorMotor;
     public ArrayList<String[]> loggingData;
+    private CurrentLimitsConfigs currentConfigs;
     final MotionMagicVoltage motMag;
     TOFSensor sensor;
 
@@ -33,13 +35,16 @@ public class Elevator extends SubsystemBase {
         // Initialize motors, motor controllers, and settings
         driveMotor = new CANSparkMax(Constants.Elevator.DRIVE_MOTOR_ID, MotorType.kBrushless);
         driveMotor.setClosedLoopRampRate(.3);
-
+        driveMotor.setSmartCurrentLimit(15);
         elevatorMotor = new TalonFX(Constants.Elevator.POSITION_MOTOR_ID);
     
 
         motMag = new MotionMagicVoltage(0);
         motMag.Slot = 0;
         var talonFXConfigs = new TalonFXConfiguration();
+        currentConfigs = new CurrentLimitsConfigs();
+        currentConfigs.StatorCurrentLimit = 80;
+        currentConfigs.StatorCurrentLimitEnable = true;
 
         elevatorMotor.getConfigurator().apply(new TalonFXConfiguration()); // set factory default
 
@@ -53,6 +58,7 @@ public class Elevator extends SubsystemBase {
         talonFXConfigs.MotionMagic.MotionMagicAcceleration = Constants.Elevator.MOTMAGMAXACCEL; // rps/s acceleration 
         talonFXConfigs.MotionMagic.MotionMagicJerk = 3200; // rps/s^2 jerk 
         
+        talonFXConfigs.CurrentLimits = currentConfigs;
         elevatorMotor.getConfigurator().apply(talonFXConfigs, 0.050);
     }
 
@@ -78,12 +84,12 @@ public class Elevator extends SubsystemBase {
                 () -> s_Intake.setDriveIntakeSpeed(Constants.Intake.SPEED),
                 () -> { // on exec
                     this.setElevatorPosition(Constants.Elevator.UP1);
-                    s_Shooter.setVelocityVoltageBased(0.09 * 1.5);
+                    s_Shooter.setSpeed(0.09 * 1.5);
                     this.setElevatorSpeed(Constants.Elevator.SPEED * 1.5);
                 },
                 interrupted -> {
                     this.setElevatorSpeed(0.0); 
-                    s_Shooter.setVelocityVoltageBased(0.0);
+                    s_Shooter.setSpeed(0.0);
                     s_Intake.setDriveIntakeSpeed(0.0);
                 }, // ended -> shut off shooter, intake, and elevator
                 () -> Math.abs(this.getPosition() - Constants.Elevator.UP1) < 4 && this.sensor.getNoteDetected(), // shut down if we're at the shooter AND the sensor has a note

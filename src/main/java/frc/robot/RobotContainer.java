@@ -12,13 +12,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Limelight;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
@@ -55,11 +53,11 @@ public class RobotContainer {
     private final Trigger intake_on = codriver.a();
     private final Trigger shoot = codriver.x();
     private final Trigger intakeUp = codriver.y();
-    private final Trigger spitNoteOut = codriver.b();
+    //private final Trigger spitNoteOut = codriver.b();
     private final Trigger elevatorUp = codriver.rightBumper();
     private final Trigger elevatorDown = codriver.leftBumper();
 
-    private final Trigger slowMode = new Trigger(() -> driver.getTrigger());
+    private final Trigger slowModeTrigger = new Trigger(() -> driver.getTrigger());
 
     /* Subsystems */
     public final Swerve s_Swerve = new Swerve();
@@ -68,11 +66,14 @@ public class RobotContainer {
     public final Elevator s_Elevator = new Elevator();
     public final Shooter s_Shooter = new Shooter();
     public final Climber s_Climber = new Climber();
+    public final Limelight s_Limelight = new Limelight();
 
     /* Auto Chooser */
 
     private SendableChooser<Command> autoChooser;
     Command auto;
+    private boolean slowMode = false;
+
     /* The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         // Subsystems
@@ -87,7 +88,6 @@ public class RobotContainer {
             )
         );
 
-        /* 
         s_Intake.setDefaultCommand(
             new FunctionalCommand(
                 () -> System.out.println("Default intake command initialized"),
@@ -98,7 +98,7 @@ public class RobotContainer {
             )
         );
 
-        /* 
+        /*
         s_Lights.setDefaultCommand(
             new LightsCommand(
                 () -> s_Lights.off(),
@@ -117,14 +117,13 @@ public class RobotContainer {
         */
         /* Set Events for Path planning */
 
-        NamedCommands.registerCommand("IntakeRoutine", s_Intake.getIntakeRoutineCommand()); // s_Intake.getIntakeRoutineCommand()
-        NamedCommands.registerCommand("Shoot", new WaitCommand(0)); // s_Shooter.getShooterCommand()
+        NamedCommands.registerCommand("IntakeRoutine", this.s_Intake.getIntakeRoutineCommand()); // s_Intake.getIntakeRoutineCommand()
+        NamedCommands.registerCommand("Shoot", this.getShootCommandNoRamp()); // s_Shooter.getShooterCommand()
+        NamedCommands.registerCommand("IntakeDown", this.s_Intake.getPosAndRunIntakeCommand(Constants.Intake.DOWN_POSITION, 0.0));
+        NamedCommands.registerCommand("RampUp", this.s_Shooter.rampVelocityPIDs(0.4));
         
         // Auto Chooser
-
-
-        auto = AutoBuilder.buildAuto("Test");
-        // SmartDashboard.putData("Auto Chooser", autoChooser);
+        auto = AutoBuilder.buildAuto("4Note");
 
         // Configure the button bindings
         configureButtonBindings();
@@ -146,16 +145,17 @@ public class RobotContainer {
         );
 
         shoot.onTrue(
-            this.getShootCommand()
+            this.getShootCommandRamp()
             // new InstantCommand( () -> s_Shooter.setVelocity(5000))
         );
 
         intakeUp.onTrue(
             this.s_Intake.getPosAndRunIntakeCommand(Constants.Intake.UP_POSITION, 0.0)
         );
-
+/*
         spitNoteOut.whileTrue(
-            this.s_Intake.getIntakeDriveCommand(-0.8)
+            //this.s_Intake.getIntakeDriveCommand(-0.8)
+            new InstantCommand( () -> this.s_Shooter.setSpeed(0.5), s_Shooter)
         );
 
         /* 
@@ -214,19 +214,34 @@ public class RobotContainer {
     public Command getIntakeAndShootCommand() {
         return new SequentialCommandGroup(
             this.s_Intake.getIntakeRoutineCommand(),
-            this.getShootCommand()
+            this.getShootCommandRamp()
         );
     }
 
-    public Command getShootCommand() {
+    public Command getShootCommandNoRamp() {
         return new SequentialCommandGroup(
-            this.s_Shooter.rampVelocityPIDs(5000),
-            new WaitCommand(1.0),
             new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(Constants.Intake.SPEED), s_Intake),
-            new WaitCommand(1.5),
+            new WaitCommand(.5),
             new ParallelCommandGroup(
                 new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(0.0), s_Intake),
-                new InstantCommand(() -> s_Shooter.setVelocityVoltageBased(0), s_Shooter)
+                new InstantCommand(() -> s_Shooter.setSpeed(0.0), s_Shooter)
+            )
+        );
+    }
+
+    public Command getShootCommandRamp() {
+        return new SequentialCommandGroup(
+           // this.s_Elevator.getElevatorPositionCommand(-120),
+            //new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(Constants.Elevator.SPEED * 1.5), this.s_Elevator),
+            //this.s_Shooter.rampVelocityPIDsDifferentSpeeds(0.15, 0.15), // bottom top,
+            this.s_Shooter.rampVelocityPIDs(0.5),
+            new WaitCommand(1.0),
+            new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(Constants.Intake.SPEED), s_Intake),
+            new WaitCommand(.5),
+            new ParallelCommandGroup(
+                new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(0), this.s_Elevator),
+                new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(0.0), s_Intake),
+                new InstantCommand(() -> s_Shooter.setSpeed(0), s_Shooter)
             )
         );
     }

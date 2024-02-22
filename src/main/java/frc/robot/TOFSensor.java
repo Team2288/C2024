@@ -1,6 +1,5 @@
 package frc.robot;
 import com.playingwithfusion.TimeOfFlight;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TOFSensor {

@@ -1,5 +1,9 @@
 package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import frc.robot.Constants;
@@ -8,71 +12,90 @@ import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.TOFSensor;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 
 public class Shooter extends SubsystemBase {
-    CANSparkMax motorLeft, motorRight;
     boolean is_running;
-    RelativeEncoder motorEncoderLeft, motorEncoderRight;
-    SparkPIDController motorLeftController, motorRightController;
+    private TalonFX motorRight, motorLeft;
+    final VelocityVoltage velControl;
+    private CurrentLimitsConfigs currentLimits;
 
     public Shooter() {
-        motorLeft = new CANSparkMax(Constants.Shooter.LEFT_MOTOR_ID, MotorType.kBrushless);
-        motorRight = new CANSparkMax(Constants.Shooter.RIGHT_MOTOR_ID, MotorType.kBrushless);
+        motorLeft = new TalonFX(Constants.Shooter.LEFT_MOTOR_ID);
+        motorRight = new TalonFX(Constants.Shooter.RIGHT_MOTOR_ID);
 
-        motorRight.follow(motorLeft, true);
+        velControl = new VelocityVoltage(0);
+        velControl.Slot = 0;
+        var talonFXConfigs = new TalonFXConfiguration();
+        currentLimits = new CurrentLimitsConfigs();
 
-        motorEncoderLeft = motorLeft.getEncoder();
-        //motorEncoderRight = motorRight.getEncoder();
-        
-        motorLeftController = motorLeft.getPIDController();
-        //motorRightController = motorRight.getPIDController(); 
+        currentLimits.StatorCurrentLimit = 40;
+        currentLimits.StatorCurrentLimitEnable = true;
 
-        motorLeftController.setP(Constants.Shooter.SHOOTER_KP);// motorRightController.setP(Constants.Shooter.SHOOTER_KP);
-        motorLeftController.setI(Constants.Shooter.SHOOTER_KI);// motorRightController.setI(Constants.Shooter.SHOOTER_KI);
-        motorLeftController.setD(Constants.Shooter.SHOOTER_KD);// motorRightController.setD(Constants.Shooter.SHOOTER_KD);
-        motorLeftController.setFF(Constants.Shooter.SHOOTER_KF);// motorRightController.setFF(Constants.Shooter.SHOOTER_KF);
+        motorLeft.getConfigurator().apply(new TalonFXConfiguration()); // set factory default
+        motorRight.getConfigurator().apply(new TalonFXConfiguration()); // set factory default
 
-        motorLeftController.setOutputRange(-1, 1);
-        //motorRightController.setOutputRange(-1, 1);
+        talonFXConfigs.CurrentLimits = currentLimits;
 
-        SmartDashboard.putNumber("P gain", Constants.Shooter.SHOOTER_KP);
-        SmartDashboard.putNumber("I gain", Constants.Shooter.SHOOTER_KI);
-        SmartDashboard.putNumber("D gain", Constants.Shooter.SHOOTER_KD);
-        SmartDashboard.putNumber("F Gain", Constants.Shooter.SHOOTER_KF);
+        motorLeft.getConfigurator().apply(talonFXConfigs, 0.050);
+        motorRight.getConfigurator().apply(talonFXConfigs, 0.050);
     }
 
-    public Command rampVelocityPIDs(double rpm) {
+    public boolean isFinishedRamping(double pctspeed) {
+        return Math.abs(this.motorRight.getVelocity().getValueAsDouble() - (pctspeed * 1200 / 60)) < 300;
+    }
+
+    public void shootWhenClose(Limelight limelight, double pctspeed) {
+        if(limelight.distanceFromTarget() < 200 && limelight.distanceFromTarget() > 10) {
+            setSpeed(pctspeed);
+        }
+    }
+
+    public Command rampVelocityPIDs(double pctspeed) {
         return new FunctionalCommand(
             () -> System.out.println("Ramping Shooter"),
-            () -> this.setVelocity(rpm),
+            () -> this.setSpeed(pctspeed),
             interrupted -> {},
-            () -> (Math.abs(Math.abs(this.motorEncoderLeft.getVelocity()) - rpm) < 200),
+            () -> isFinishedRamping(pctspeed), // 
             this
         );
     }
 
-    public void setVelocityVoltageBased(double voltage) {
-        this.motorLeft.set(-voltage);
-       // this.motorRight.set(voltage);
+    public Command rampVelocityPIDsDifferentSpeeds(double pctspeedright, double pctspeedleft) {
+        return new FunctionalCommand(
+            () -> System.out.println("Ramping Shooter"),
+            () -> {this.motorLeft.set(pctspeedleft); this.motorRight.set(pctspeedright);},
+            interrupted -> {},
+            () -> isFinishedRamping(pctspeedright), // 
+            this
+        );
+    }
+
+    public void setSpeed(double pctspeed) {
+        this.motorLeft.set(pctspeed);
+        this.motorRight.set(pctspeed);
     }
 
     public void setVelocity(double rpm) {
         if (rpm > 0) {is_running = true;} else {is_running = false;}
 
-        motorLeftController.setReference(-rpm, ControlType.kVelocity);
-       // motorRightController.setReference(rpm, ControlType.kVelocity);
+
+        motorLeft.setControl(velControl.withVelocity(rpm));
+        motorRight.setControl(velControl.withVelocity(rpm));
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Left Motor Velocity", motorEncoderLeft.getVelocity());
+        SmartDashboard.putNumber("Left Motor Velocity", motorLeft.getVelocity().getValueAsDouble());
+        SmartDashboard.putNumber("Right Motor Velocity", motorRight.getVelocity().getValueAsDouble());
 
         /* 
         double p = SmartDashboard.getNumber("P gain", 0);

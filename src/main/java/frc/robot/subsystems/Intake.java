@@ -15,6 +15,8 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import frc.robot.TOFSensor;
 import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class Intake extends SubsystemBase {
     CANSparkMax driveNeo; // motors
@@ -22,17 +24,25 @@ public class Intake extends SubsystemBase {
     boolean hasNote, isRunning;
     TOFSensor sensor; 
     final MotionMagicVoltage motMag;
+    private CurrentLimitsConfigs currentLimits;
 
     public Intake() {
         driveNeo = new CANSparkMax(Constants.Intake.DRIVE_MOTOR, MotorType.kBrushless);
         driveNeo.setIdleMode(IdleMode.kBrake);
+        driveNeo.setSmartCurrentLimit(40);
+
         swivelFalcon = new TalonFX(Constants.Intake.SWIVEL_MOTOR);
+        currentLimits = new CurrentLimitsConfigs();
+
+        currentLimits.StatorCurrentLimit = 40; // amps
+        currentLimits.StatorCurrentLimitEnable = true;
 
         sensor = new TOFSensor(Constants.Intake.INTAKE_SENSOR_ID);
-
+        
         motMag = new MotionMagicVoltage(0);
         motMag.Slot = 0;
         var talonFXConfigs = new TalonFXConfiguration();
+        talonFXConfigs.CurrentLimits = currentLimits; // put current limiter in the configs
 
         swivelFalcon.getConfigurator().apply(new TalonFXConfiguration()); // set factory default
 
@@ -103,6 +113,7 @@ public class Intake extends SubsystemBase {
             this
         );
     }
+
 
     public Command getIntakeRoutineCommand() {
         return new SequentialCommandGroup(
