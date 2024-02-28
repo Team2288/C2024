@@ -14,7 +14,7 @@ public class TOFSensor {
     }
 
     public boolean getNoteDetected() {
-        return (this.sensor.getRange() <= 250); // distance (millimeters)
+        return (this.sensor.getRange() <= 150); // distance (millimeters)
     }
 
     public void SmartDashboard() {

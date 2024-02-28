@@ -17,6 +17,7 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.TOFSensor;
+import com.ctre.phoenix6.controls.Follower;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
@@ -37,7 +38,7 @@ public class Shooter extends SubsystemBase {
         var talonFXConfigs = new TalonFXConfiguration();
         currentLimits = new CurrentLimitsConfigs();
 
-        currentLimits.StatorCurrentLimit = 40;
+        currentLimits.StatorCurrentLimit = 60;
         currentLimits.StatorCurrentLimitEnable = true;
 
         motorLeft.getConfigurator().apply(new TalonFXConfiguration()); // set factory default
@@ -47,6 +48,8 @@ public class Shooter extends SubsystemBase {
 
         motorLeft.getConfigurator().apply(talonFXConfigs, 0.050);
         motorRight.getConfigurator().apply(talonFXConfigs, 0.050);
+
+        motorRight.setControl(new Follower(16, false));
     }
 
     public boolean isFinishedRamping(double pctspeed) {
@@ -54,8 +57,13 @@ public class Shooter extends SubsystemBase {
     }
 
     public void shootWhenClose(Limelight limelight, double pctspeed) {
-        if(limelight.distanceFromTarget() < 200 && limelight.distanceFromTarget() > 10) {
+        if(limelight.distanceFromTarget() < 250 && !(Math.abs(limelight.distanceFromTarget() - 113.8275) < 0.01)) {
+            //Second condition added because 113.8275 is the default distance due to the mount angle of the limelight
+            //that distance causes the shooter to run when the april tag flickers in and out of view
             setSpeed(pctspeed);
+            System.out.println("Distance: " + limelight.distanceFromTarget());
+        } else {
+            setSpeed(0.0);
         }
     }
 
@@ -81,7 +89,6 @@ public class Shooter extends SubsystemBase {
 
     public void setSpeed(double pctspeed) {
         this.motorLeft.set(pctspeed);
-        this.motorRight.set(pctspeed);
     }
 
     public void setVelocity(double rpm) {
@@ -89,7 +96,6 @@ public class Shooter extends SubsystemBase {
 
 
         motorLeft.setControl(velControl.withVelocity(rpm));
-        motorRight.setControl(velControl.withVelocity(rpm));
     }
 
     @Override

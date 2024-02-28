@@ -1,6 +1,11 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import org.photonvision.PhotonCamera;
+import org.photonvision.common.hardware.VisionLEDMode;
+import org.photonvision.targeting.PhotonPipelineResult;
+
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -13,7 +18,12 @@ public class Limelight extends SubsystemBase {
     double mountAngle; //degree
     double mountHeight, targetHeight; //inches
 
+    PhotonCamera limelight;
+    PhotonPipelineResult result;
+    boolean hasTargets;
+
     public Limelight() {
+        /*
         table = NetworkTableInstance.getDefault().getTable("limelight-ironman");
         tx = table.getEntry("tx");
         ty = table.getEntry("ty");
@@ -22,24 +32,28 @@ public class Limelight extends SubsystemBase {
         mountAngle = 15.0;
         mountHeight = 25.125;
         targetHeight = 55.625;
-
-        botpose = table.getEntry("botpose");
+        */
+        limelight = new PhotonCamera("photonvision");
+        limelight.setLED(VisionLEDMode.kOn);
     }
 
     //read values periodically
     @Override
     public void periodic() {
-        
+        /*
         x = tx.getDouble(0.0);
         y = ty.getDouble(0.0);
-        if(x == 0.0 && y == 0.0){
-            distance = 0;
+        if(Math.abs(y) < 0.1){
+            distance = 1000.0;
         } else {
             distanceFromTarget();
         }
         area = ta.getDouble(0.0);
         pose = botpose.getDouble(0.0);
         SmartDashboard(); 
+        */
+        result = limelight.getLatestResult();
+        hasTargets = result.hasTargets();
     }
 
     // find the horizontal distance(inches) from a target given
@@ -52,10 +66,12 @@ public class Limelight extends SubsystemBase {
 
     // post to smart dashboard
     public void SmartDashboard() {
+        /*
         SmartDashboard.putNumber("LimelightX", x);
         SmartDashboard.putNumber("LimelightY", y);
         SmartDashboard.putNumber("LimelightArea", area);
         SmartDashboard.putNumber("Distance", distance);
         SmartDashboard.putNumber("Pose", pose);
+        */
     } 
 }

@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import com.playingwithfusion.CANVenom;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 /* 
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -21,9 +21,8 @@ public class Robot extends TimedRobot {
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  private CANVenom venom;
-
   private XboxController controller = new XboxController(1);
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -75,12 +74,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-
-    venom = new CANVenom(3);
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+
+    m_robotContainer.s_Shooter.setSpeed(0.0);
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
@@ -95,9 +94,21 @@ public class Robot extends TimedRobot {
     // System.out.println(m_robotContainer.s_Intake.getSensor());
     
     //m_robotContainer.s_Elevator.SmartDashboard();
-   // m_robotContainer.s_Elevator.setElevatorSpeed(-0.3);
+    //m_robotContainer.s_Elevator.setElevatorSpeed(-0.3);
+    /*
     if(controller.getBButton()) {
-      m_robotContainer.s_Shooter.shootWhenClose(m_robotContainer.s_Limelight, 0.3);
+      m_robotContainer.s_Shooter.shootWhenClose(m_robotContainer.s_Limelight, .3);
+    } else {
+      m_robotContainer.s_Shooter.setSpeed(0.0);
+    }
+    */
+    if(controller.getBButton()) {
+      m_robotContainer.s_Elevator.setElevatorSpeed(0.2);
+    } else {
+      m_robotContainer.s_Elevator.setElevatorSpeed(0.0);
+    }
+    if(controller.getYButton()) {
+      m_robotContainer.s_Shooter.setSpeed(0.4);
     } else {
       m_robotContainer.s_Shooter.setSpeed(0.0);
     }

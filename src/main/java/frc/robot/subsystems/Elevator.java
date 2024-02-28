@@ -21,9 +21,8 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import frc.robot.subsystems.Shooter;
 
 public class Elevator extends SubsystemBase {
-    public CANSparkMax driveMotor;
     public double kP, kI, kD, kF, kMaxOutput, kMinOutput;
-    private TalonFX elevatorMotor;
+    private TalonFX driveMotor, elevatorMotor;
     public ArrayList<String[]> loggingData;
     private CurrentLimitsConfigs currentConfigs;
     final MotionMagicVoltage motMag;
@@ -33,12 +32,14 @@ public class Elevator extends SubsystemBase {
         super();
 
         // Initialize motors, motor controllers, and settings
+        /*
         driveMotor = new CANSparkMax(Constants.Elevator.DRIVE_MOTOR_ID, MotorType.kBrushless);
         driveMotor.setClosedLoopRampRate(.3);
         driveMotor.setSmartCurrentLimit(15);
+        */
+        driveMotor = new TalonFX(Constants.Elevator.DRIVE_MOTOR_ID);
         elevatorMotor = new TalonFX(Constants.Elevator.POSITION_MOTOR_ID);
     
-
         motMag = new MotionMagicVoltage(0);
         motMag.Slot = 0;
         var talonFXConfigs = new TalonFXConfiguration();
@@ -46,10 +47,10 @@ public class Elevator extends SubsystemBase {
         currentConfigs.StatorCurrentLimit = 80;
         currentConfigs.StatorCurrentLimitEnable = true;
 
+        driveMotor.getConfigurator().apply(new TalonFXConfiguration()); // set factory default
         elevatorMotor.getConfigurator().apply(new TalonFXConfiguration()); // set factory default
 
         talonFXConfigs.Slot0.kV = Constants.Elevator.ELEVATOR_KV;
-
         talonFXConfigs.Slot0.kP = Constants.Elevator.ELEVATOR_KP; 
         talonFXConfigs.Slot0.kI = Constants.Elevator.ELEVATOR_KI;
         talonFXConfigs.Slot0.kD = Constants.Elevator.ELEVATOR_KD;
@@ -63,7 +64,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public void setElevatorSpeed(double speed) {
-        driveMotor.set(speed);
+        driveMotor.set(-speed);
     }
 
     public double getPosition() {
