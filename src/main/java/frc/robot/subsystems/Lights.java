@@ -11,8 +11,9 @@ import frc.robot.Constants;
 
 public class Lights extends SubsystemBase {
     private SerialPort port;
+    private Limelight limelight;
 
-    public Lights() {
+    public Lights(Limelight limelight) {
         super();
 
         try {
@@ -20,6 +21,7 @@ public class Lights extends SubsystemBase {
         }catch(Exception e){
             System.err.println("Error setting up serial port, lights will probably not work");
         }
+        this.limelight = limelight;
     }
     /*
      * set state until state is set otherwise
@@ -60,5 +62,20 @@ public class Lights extends SubsystemBase {
     public void orange(){
         on();
         this.setState(Constants.Lights.LightStates.ORANGE);
+    }
+
+    @Override
+    public void periodic() {
+        if(limelight.distanceFromTarget() < 250 && limelight.distanceFromTarget() >= 200) {
+            this.setState(Constants.Lights.LightStates.SEG1);
+        } else if(limelight.distanceFromTarget() < 200 && limelight.distanceFromTarget() >= 150) {
+            this.setState(Constants.Lights.LightStates.SEG2);
+        } else if(limelight.distanceFromTarget() < 150 && limelight.distanceFromTarget() >= 100) {
+            this.setState(Constants.Lights.LightStates.SEG3);
+        } else if(limelight.distanceFromTarget() < 100 && limelight.distanceFromTarget() >= 50) {
+            this.setState(Constants.Lights.LightStates.SEG4);
+        } else {
+            this.setState(Constants.Lights.LightStates.OFF);
+        }
     }
 }
