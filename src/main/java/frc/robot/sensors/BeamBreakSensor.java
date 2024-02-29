@@ -1,6 +1,5 @@
 package frc.robot.sensors;
 
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 public class BeamBreakSensor {

@@ -103,14 +103,14 @@ public class Robot extends TimedRobot {
     }
     */
     if(controller.getBButton()) {
-      m_robotContainer.s_Elevator.setElevatorSpeed(0.2);
+      m_robotContainer.s_Climber.setSpeed(.2);
     } else {
-      m_robotContainer.s_Elevator.setElevatorSpeed(0.0);
+      m_robotContainer.s_Climber.setSpeed(0.0);
     }
     if(controller.getYButton()) {
-      m_robotContainer.s_Shooter.setSpeed(0.4);
+      m_robotContainer.s_Climber.setSpeed(-.2);
     } else {
-      m_robotContainer.s_Shooter.setSpeed(0.0);
+      m_robotContainer.s_Climber.setSpeed(0.0);
     }
   }
 

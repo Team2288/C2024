@@ -1,51 +1,45 @@
 package frc.robot.subsystems;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import frc.robot.Constants;
-import edu.wpi.first.wpilibj2.command.Command;
-import com.revrobotics.RelativeEncoder; 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkBase.ControlType;
-import com.revrobotics.SparkPIDController;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.TOFSensor;
-import com.ctre.phoenix6.controls.Follower;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 
+import frc.robot.Constants;
+
 public class Shooter extends SubsystemBase {
-    boolean is_running;
+
     private TalonFX motorRight, motorLeft;
     final VelocityVoltage velControl;
     private CurrentLimitsConfigs currentLimits;
+    boolean is_running;
 
     public Shooter() {
+        // Initialize motors, motor controllers, and motor settings
         motorLeft = new TalonFX(Constants.Shooter.LEFT_MOTOR_ID);
         motorRight = new TalonFX(Constants.Shooter.RIGHT_MOTOR_ID);
-
         velControl = new VelocityVoltage(0);
         velControl.Slot = 0;
-        var talonFXConfigs = new TalonFXConfiguration();
+
+        // Set factory defaults
+        motorLeft.getConfigurator().apply(new TalonFXConfiguration());
+        motorRight.getConfigurator().apply(new TalonFXConfiguration());
+
+        // Create and implement current limiter in configs
         currentLimits = new CurrentLimitsConfigs();
-
-        currentLimits.StatorCurrentLimit = 60;
+        currentLimits.StatorCurrentLimit = 60; //amps
         currentLimits.StatorCurrentLimitEnable = true;
-
-        motorLeft.getConfigurator().apply(new TalonFXConfiguration()); // set factory default
-        motorRight.getConfigurator().apply(new TalonFXConfiguration()); // set factory default
-
+        var talonFXConfigs = new TalonFXConfiguration();
         talonFXConfigs.CurrentLimits = currentLimits;
 
+        // Set motion control settings
         motorLeft.getConfigurator().apply(talonFXConfigs, 0.050);
         motorRight.getConfigurator().apply(talonFXConfigs, 0.050);
 

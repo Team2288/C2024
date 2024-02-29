@@ -1,5 +1,4 @@
 package frc.robot.sensors;
-
 import com.playingwithfusion.TimeOfFlight;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 

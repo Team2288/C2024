@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.common.hardware.VisionLEDMode;
@@ -8,7 +8,7 @@ import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Limelight extends SubsystemBase {
@@ -33,11 +33,10 @@ public class Limelight extends SubsystemBase {
         mountHeight = 25.125;
         targetHeight = 55.625;
         */
-        limelight = new PhotonCamera("photonvision");
-        limelight.setLED(VisionLEDMode.kOn);
+        //limelight = new PhotonCamera("photonvision");
+        //limelight.setLED(VisionLEDMode.kOn);
     }
 
-    //read values periodically
     @Override
     public void periodic() {
         /*
@@ -52,11 +51,11 @@ public class Limelight extends SubsystemBase {
         pose = botpose.getDouble(0.0);
         SmartDashboard(); 
         */
-        result = limelight.getLatestResult();
-        hasTargets = result.hasTargets();
+        //result = limelight.getLatestResult();
+        //hasTargets = result.hasTargets();
     }
 
-    // find the horizontal distance(inches) from a target given
+    // Find the horizontal distance(inches) from a target given
         // mount height(h1) and angle(a1), and target height(h2); a2(y)=angle from limelight to target(given by crosshair)
     public double distanceFromTarget() {
         //tan(a1+a2) = (h2-h1) / d  -->  d = (h2-h1) / tan(a1+a2)
@@ -64,7 +63,7 @@ public class Limelight extends SubsystemBase {
         return distance = (targetHeight - mountHeight) / Math.tan(angleToGoalRad);
     }
 
-    // post to smart dashboard
+    // Post to smart dashboard
     public void SmartDashboard() {
         /*
         SmartDashboard.putNumber("LimelightX", x);

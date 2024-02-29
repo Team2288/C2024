@@ -1,12 +1,11 @@
 package frc.robot.subsystems;
 
-import java.util.HashMap;
-
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.SerialPort.Parity;
 import edu.wpi.first.wpilibj.SerialPort.StopBits;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants;
 
 public class Lights extends SubsystemBase {
@@ -23,9 +22,8 @@ public class Lights extends SubsystemBase {
         }
         this.limelight = limelight;
     }
-    /*
-     * set state until state is set otherwise
-     */
+    
+    // Set state until state is set otherwise
     public void setState(Constants.Lights.LightStates state) {
         try {
             String command = Constants.Lights.HASHMAP_LIGHT_STATES.getOrDefault(state, Constants.Lights.DEFAULT_LIGHT_STATE);

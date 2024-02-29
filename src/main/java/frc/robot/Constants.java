@@ -17,69 +17,89 @@ import frc.lib.util.COTSTalonFXSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
+    /* Deadband on the joystick */
     public static final double stickDeadband = 0.1;
 
+    /* Climber Constants */
     public static final class Climber {
+        /* Climber CAN IDs */
         public static final int MOTOR_ID = 30;
 
-        public static final int UP_POSITION = 0;
-        public static final int DOWN_POSITION = -12 * 7 * 2048; // -12 (Gear ratio), 7 (rotations needed), 2048 (encoder ticks / rotation)
-
+        /* Climber PID Values */
         public static final double kP = 0;
         public static final double kI = 0;
         public static final double kD = 0;
         public static final double kF = 0;
+
+        /* Climber positions */
+        public static final int UP_POSITION = 0;
+        public static final int DOWN_POSITION = -12 * 7 * 2048;
+            // -12 (Gear ratio), 7 (rotations needed), 2048 (encoder ticks / rotation)
     }
 
+    /* Elevator Constants */
     public static final class Elevator {
+        /* Elevator CAN IDs */
         public static final int DRIVE_MOTOR_ID = 17;
         public static final int POSITION_MOTOR_ID = 1;
-        public static final int MOTMAGMAXACCEL = 1250; //19240
-        public static final int MOTMAGMAXVEL = 125; //1924
+        public static final int SENSOR_ID = 0;
     
-        public static final double SPEED = -0.3;
+        /* Elevator PID values */
+        public static final int MOTMAGMAXACCEL = 150; //19240
+        public static final int MOTMAGMAXVEL = 15; //1924        
+        public static final double ELEVATOR_KP = 0.04; //0.00909488172
+        public static final double ELEVATOR_KI = 0.0008;
+        public static final double ELEVATOR_KD = 0.0;
+        public static final double ELEVATOR_KV = 0.05; //0.05011894428
+
+        /* Elevator Positions (rotations) */
         public static final int UP1 = -38;
         public static final int UP2 = -277;
         public static final int DOWN = 0;
     
-        public static final double ELEVATOR_KP = 0.04; //0.00909488172
-        public static final double ELEVATOR_KI = 0.0008;
-        public static final double ELEVATOR_KD = 0.0;
-        public static final double ELEVATOR_KV = 0.08; //0.05011894428
+        /* Elevator Speed */
+        public static final double SPEED = -0.3;
     }
 
+    /* Intake Constants */
     public static final class Intake {
+        /* Intake CAN IDs */
         public static final int DRIVE_MOTOR = 33;
         public static final int SWIVEL_MOTOR = 34;
         public static final int INTAKE_SENSOR_ID = 0;
 
-        public static final double SPEED = 0.8;
-
+        /* Intake PID Values */
+        public static final double MOTMAGMAXACCEL = 34130 * 3; //6827
+        public static final double MOTMAGMAXVEL = 34130 * 6; //34133        
         public static final double SWIVEL_KP = 0.04;
         public static final double SWIVEL_KI = 0;
         public static final double SWIVEL_KD = 0;
         public static final double SWIVEL_KV = 0.058252;
-        public static final double MOTMAGMAXACCEL = 34130 * 3; //6827
-        public static final double MOTMAGMAXVEL = 34130 * 6; //34133
-        
+
+        /* Intake Positions */
         public static final double DOWN_POSITION = 16.6; 
         public static final double UP_POSITION = 0;
+
+        /* Intake Speed */
+        public static final double SPEED = 0.8;        
     }
 
+    /* Shooter Constants */
     public static final class Shooter {
+        /* Shooter CAN IDs */
         public static final int LEFT_MOTOR_ID = 16;
         public static final int RIGHT_MOTOR_ID =15; 
 
+        /* Shooter PID Values */
         public static double SHOOTER_KP = 0.0004;
         public static double SHOOTER_KF = 0.00019;
         public static double SHOOTER_KI = 0.000000;
         public static double SHOOTER_KD = 0.000;
     }
 
-    // Lights Constants (Used in Lights.java)
-
+    /* Lights Constants (Used in Lights.java) */
     public final class Lights {
-        // Lights states (console commands)
+        /* Light states (console commands) */
         public static final String LIGHT_STATE_OFF =  "{'on':false}";
         public static final String LIGHT_STATE_ON =  "{'on':true}";
         public static final String LIGHT_STATES_CHANGE_COLOR_YELLOW= "{'seg':[{'col': [[255, 200, 59, 0], [0, 0, 0, 0], [0, 0, 0, 0]]}]}";
@@ -92,7 +112,7 @@ public final class Constants {
         public static final String DEFAULT_LIGHT_STATE = LIGHT_STATE_OFF;
         public static final Map<LightStates,String> HASHMAP_LIGHT_STATES;
 
-        // States to be used to interface with Hashmap
+        /* States to be used to interface with Hashmap */
         public enum LightStates {
             OFF,
             ON,
@@ -105,7 +125,7 @@ public final class Constants {
             SEG4
         }
         
-        // Lights hashmap
+        /* Lights hashmap */
         static {
             HASHMAP_LIGHT_STATES = new HashMap<>();
             HASHMAP_LIGHT_STATES.put(LightStates.OFF,LIGHT_STATE_OFF);
@@ -120,6 +140,7 @@ public final class Constants {
         }
     }
 
+    /* Swerve Constants */
     public static final class Swerve {
         public static final int pigeonID = 14;
  
@@ -131,8 +152,8 @@ public final class Constants {
         public static final double wheelBase = Units.inchesToMeters(25);
         public static final double wheelCircumference = chosenModule.wheelCircumference;
 
-        /* Swerve Kinematics 
-         * No need to ever change this unless you are not doing a traditional rectangular/square 4 module swerve */
+        /* Swerve Kinematics */
+            // No need to ever change this unless you are not doing a traditional rectangular/square 4 module swerve
          public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
             new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
             new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
@@ -150,7 +171,7 @@ public final class Constants {
         /* Angle Encoder Invert */
         public static final SensorDirectionValue cancoderInvert = chosenModule.cancoderInvert;
 
-        /* Swerve Current Limiting */
+        /* Current Limiters */
         public static final int angleCurrentLimit = 25;
         public static final int angleCurrentThreshold = 40;
         public static final double angleCurrentThresholdTime = 0.1;
@@ -183,17 +204,17 @@ public final class Constants {
         public static final double driveKA = 0.98001;
 
         /* Swerve Profiling Values */
-        /** Meters per Second */
         public static final double maxSpeed = 4.5; //TODO: This must be tuned to specific robot
-        /** Radians per Second */
+            // ^ Meters per second
         public static final double maxAngularVelocity = 10.0; //TODO: This must be tuned to specific robot
+            // ^ radians per second
 
         /* Neutral Modes */
         public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Coast;
         public static final NeutralModeValue driveNeutralMode = NeutralModeValue.Brake;
 
         /* Module Specific Constants */
-        /* Front Left Module - Module 0 */
+        // Front Left Module - Module 0
         public static final class Mod0 { //TODO: This must be tuned to specific robot
             public static final int driveMotorID = 5;
             public static final int angleMotorID = 4;
@@ -203,7 +224,7 @@ public final class Constants {
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
 
-        /* Front Right Module - Module 1 */
+        // Front Right Module - Module 1
         public static final class Mod1 { 
             public static final int driveMotorID = 6;
             public static final int angleMotorID = 7;
@@ -213,7 +234,7 @@ public final class Constants {
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
         
-        /* Back Left Module - Module 2 */
+        // Back Left Module - Module 2
         public static final class Mod2 { 
             public static final int driveMotorID = 3;
             public static final int angleMotorID = 2;
@@ -223,7 +244,7 @@ public final class Constants {
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
 
-        /* Back Right Module - Module 3 */
+        // Back Right Module - Module 3
         public static final class Mod3 { 
             public static final int driveMotorID = 9;
             public static final int angleMotorID = 8;
@@ -234,6 +255,7 @@ public final class Constants {
         }
     }
 
+    /* Autonomous Constants */
     public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
         public static final double kMaxSpeedMetersPerSecond = 3;
         public static final double kMaxAccelerationMetersPerSecondSquared = 8;

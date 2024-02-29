@@ -1,63 +1,55 @@
 package frc.robot.subsystems;
 
-import java.util.ArrayList;
-
-import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.sensors.TOFSensor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import frc.robot.sensors.BeamBreakSensor;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
+import frc.robot.Constants;
+import frc.robot.sensors.BeamBreakSensor;
+import frc.robot.sensors.TOFSensor;
+
+import java.util.ArrayList;
+
 public class Elevator extends SubsystemBase {
-    public double kP, kI, kD, kF, kMaxOutput, kMinOutput;
+
     private TalonFX driveMotor, elevatorMotor;
-    public ArrayList<String[]> loggingData;
     private CurrentLimitsConfigs currentConfigs;
     final MotionMagicVoltage motMag;
+    public double kP, kI, kD, kF, kMaxOutput, kMinOutput;
     BeamBreakSensor sensor;
+    public ArrayList<String[]> loggingData;
 
     public Elevator() {
         super();
-
         // Initialize motors, motor controllers, and settings
-        /*
-        driveMotor = new CANSparkMax(Constants.Elevator.DRIVE_MOTOR_ID, MotorType.kBrushless);
-        driveMotor.setClosedLoopRampRate(.3);
-        driveMotor.setSmartCurrentLimit(15);
-        */
         driveMotor = new TalonFX(Constants.Elevator.DRIVE_MOTOR_ID);
         elevatorMotor = new TalonFX(Constants.Elevator.POSITION_MOTOR_ID);
-<<<<<<< HEAD
         sensor = new BeamBreakSensor(Constants.Elevator.SENSOR_ID);
 
-=======
-    
->>>>>>> 922c7fa22c2757df497c24f8d302690d3f82c006
         motMag = new MotionMagicVoltage(0);
         motMag.Slot = 0;
+
+        // Set factory defaults
+        driveMotor.getConfigurator().apply(new TalonFXConfiguration());
+        elevatorMotor.getConfigurator().apply(new TalonFXConfiguration());
+
+        // Create and implement current limiter in configs
         var talonFXConfigs = new TalonFXConfiguration();
         currentConfigs = new CurrentLimitsConfigs();
         currentConfigs.StatorCurrentLimit = 80;
         currentConfigs.StatorCurrentLimitEnable = true;
+        talonFXConfigs.CurrentLimits = currentConfigs;
 
-        driveMotor.getConfigurator().apply(new TalonFXConfiguration()); // set factory default
-        elevatorMotor.getConfigurator().apply(new TalonFXConfiguration()); // set factory default
-
+        // Set motion control settings
         talonFXConfigs.Slot0.kV = Constants.Elevator.ELEVATOR_KV;
         talonFXConfigs.Slot0.kP = Constants.Elevator.ELEVATOR_KP; 
         talonFXConfigs.Slot0.kI = Constants.Elevator.ELEVATOR_KI;
@@ -67,7 +59,6 @@ public class Elevator extends SubsystemBase {
         talonFXConfigs.MotionMagic.MotionMagicAcceleration = Constants.Elevator.MOTMAGMAXACCEL; // rps/s acceleration 
         talonFXConfigs.MotionMagic.MotionMagicJerk = 3200; // rps/s^2 jerk 
         
-        talonFXConfigs.CurrentLimits = currentConfigs;
         elevatorMotor.getConfigurator().apply(talonFXConfigs, 0.050);
     }
 
@@ -87,7 +78,8 @@ public class Elevator extends SubsystemBase {
         SmartDashboard.putNumber("Position", elevatorMotor.getPosition().getValue());
     }
 
-    public Command getElevatorAmpRoutineCommand(Shooter s_Shooter, Intake s_Intake) {
+    /*
+        public Command getElevatorAmpRoutineCommand(Shooter s_Shooter, Intake s_Intake) {
         return new SequentialCommandGroup(
             new FunctionalCommand( // on init, run everything
                 () -> s_Intake.setDriveIntakeSpeed(Constants.Intake.SPEED),
@@ -111,14 +103,13 @@ public class Elevator extends SubsystemBase {
                     s_Intake.setDriveIntakeSpeed(0.0);
                     this.setElevatorPosition(Constants.Elevator.UP);
                 },
-                
                 this,
                 s_Shooter,
                 s_Intake
             )
         );
     }
-    
+    */
 
     public Command getElevatorPositionCommand(double rotations) {
         return new FunctionalCommand(
@@ -136,6 +127,6 @@ public class Elevator extends SubsystemBase {
 
     @Override
     public void periodic() {
-
+        SmartDashboard();
     }
 }
