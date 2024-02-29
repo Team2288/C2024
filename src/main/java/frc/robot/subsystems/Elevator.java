@@ -42,12 +42,7 @@ public class Elevator extends SubsystemBase {
         */
         driveMotor = new TalonFX(Constants.Elevator.DRIVE_MOTOR_ID);
         elevatorMotor = new TalonFX(Constants.Elevator.POSITION_MOTOR_ID);
-<<<<<<< HEAD
-        sensor = new BeamBreakSensor(Constants.Elevator.SENSOR_ID);
-
-=======
     
->>>>>>> 922c7fa22c2757df497c24f8d302690d3f82c006
         motMag = new MotionMagicVoltage(0);
         motMag.Slot = 0;
         var talonFXConfigs = new TalonFXConfiguration();
@@ -92,13 +87,13 @@ public class Elevator extends SubsystemBase {
             new FunctionalCommand( // on init, run everything
                 () -> s_Intake.setDriveIntakeSpeed(Constants.Intake.SPEED),
                 () -> { // on exec, go up to the amp
-                    this.setElevatorPosition(Constants.Elevator.UP);
+                    this.setElevatorPosition(Constants.Elevator.UP1);
                 },
                 interrupted -> { // when its interrupted we know the elevator is at the amp, therefore we run the shooter and elevator to pass the note
                     s_Shooter.setSpeed(0.09 * 1.5);
                     this.setElevatorSpeed(Constants.Elevator.SPEED * 1.5);
                 }, 
-                () -> Math.abs(this.getPosition() - Constants.Elevator.UP) < 4,
+                () -> Math.abs(this.getPosition() - Constants.Elevator.UP2) < 4,
                 this,
                 s_Shooter,
                 s_Intake
@@ -109,7 +104,7 @@ public class Elevator extends SubsystemBase {
                     this.setElevatorSpeed(0.0); 
                     s_Shooter.setSpeed(0.0);
                     s_Intake.setDriveIntakeSpeed(0.0);
-                    this.setElevatorPosition(Constants.Elevator.UP);
+                    this.setElevatorPosition(Constants.Elevator.DOWN);
                 },
                 
                 this,

@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import frc.robot.TOFSensor;
+import frc.robot.sensors.TOFSensor;
 import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;

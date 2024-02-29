@@ -23,6 +23,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   private XboxController controller = new XboxController(1);
+  public Lights s_Lights;
 
   /**
    * This function is run when the robot is first started up and should be used for any

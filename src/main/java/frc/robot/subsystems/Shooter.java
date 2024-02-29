@@ -16,7 +16,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.TOFSensor;
+import frc.robot.sensors.TOFSensor;
 import com.ctre.phoenix6.controls.Follower;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -62,7 +62,6 @@ public class Shooter extends SubsystemBase {
             //Second condition added because 113.8275 is the default distance due to the mount angle of the limelight
             //that distance causes the shooter to run when the april tag flickers in and out of view
             setSpeed(pctspeed);
-            s_Lights.shooting();
             System.out.println("Distance: " + limelight.distanceFromTarget());
         } else {
             setSpeed(0.0);
@@ -91,6 +90,7 @@ public class Shooter extends SubsystemBase {
 
     public void setSpeed(double pctspeed) {
         this.motorLeft.set(pctspeed);
+        s_Lights.shooting();
     }
 
     public void setVelocity(double rpm) {
