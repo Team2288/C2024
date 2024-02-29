@@ -27,6 +27,7 @@ public class Shooter extends SubsystemBase {
     private TalonFX motorRight, motorLeft;
     final VelocityVoltage velControl;
     private CurrentLimitsConfigs currentLimits;
+    private Lights s_Lights;
 
     public Shooter() {
         motorLeft = new TalonFX(Constants.Shooter.LEFT_MOTOR_ID);
@@ -56,6 +57,7 @@ public class Shooter extends SubsystemBase {
     public void shootWhenClose(Limelight limelight, double pctspeed) {
         if(limelight.distanceFromTarget() < 200 && limelight.distanceFromTarget() > 10) {
             setSpeed(pctspeed);
+            s_Lights.shooting();
         }
     }
 

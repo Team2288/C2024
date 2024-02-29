@@ -1,9 +1,11 @@
 package frc.robot;
 import com.playingwithfusion.TimeOfFlight;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.Lights;
 
 public class TOFSensor {
     TimeOfFlight sensor;
+    Lights s_Lights;
 
     public TOFSensor(int canid) {
         sensor = new TimeOfFlight(canid);
@@ -14,6 +16,7 @@ public class TOFSensor {
     }
 
     public boolean getNoteDetected() {
+        s_Lights.holdingNote();
         return (this.sensor.getRange() <= 250); // distance (millimeters)
     }
 

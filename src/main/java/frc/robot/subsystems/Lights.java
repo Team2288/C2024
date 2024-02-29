@@ -64,18 +64,49 @@ public class Lights extends SubsystemBase {
         this.setState(Constants.Lights.LightStates.ORANGE);
     }
 
+    public void idle(){
+        on();
+        this.setState(Constants.Lights.LightStates.IDLE);
+    }
+
+    public void shooting(){
+        on();
+        this.setState(Constants.Lights.LightStates.SHOOTING);
+    }
+
+    public void holdingNote(){
+        on();
+        this.setState(Constants.Lights.LightStates.NOTE);
+    }
+
+    //light states representing distance from speaker
+    public void far(){
+        on();
+        this.setState(Constants.Lights.LightStates.FAR);
+    }
+
+    public void mid(){
+        on();
+        this.setState(Constants.Lights.LightStates.MID);
+    }
+
+    public void close(){
+        on();
+        this.setState(Constants.Lights.LightStates.CLOSE);
+    }
+
     @Override
     public void periodic() {
         if(limelight.distanceFromTarget() < 250 && limelight.distanceFromTarget() >= 200) {
-            this.setState(Constants.Lights.LightStates.SEG1);
+            far();
         } else if(limelight.distanceFromTarget() < 200 && limelight.distanceFromTarget() >= 150) {
-            this.setState(Constants.Lights.LightStates.SEG2);
+            far();
         } else if(limelight.distanceFromTarget() < 150 && limelight.distanceFromTarget() >= 100) {
-            this.setState(Constants.Lights.LightStates.SEG3);
+            mid();
         } else if(limelight.distanceFromTarget() < 100 && limelight.distanceFromTarget() >= 50) {
-            this.setState(Constants.Lights.LightStates.SEG4);
+            close();
         } else {
-            this.setState(Constants.Lights.LightStates.OFF);
+            off();
         }
     }
 }
