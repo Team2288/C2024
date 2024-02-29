@@ -32,7 +32,7 @@ public final class Constants {
     }
 
     public static final class Elevator {
-        public static final int DRIVE_MOTOR_ID = 40;
+        public static final int DRIVE_MOTOR_ID = 17;
         public static final int POSITION_MOTOR_ID = 1;
         public static final int MOTMAGMAXACCEL = 1250; //19240
         public static final int MOTMAGMAXVEL = 125; //1924
@@ -256,13 +256,13 @@ public final class Constants {
 
     public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
         public static final double kMaxSpeedMetersPerSecond = 3;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-        public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-        public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 8;
+        public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI * 2;
+        public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI * 2;
     
-        public static final double kPXController = 1;
-        public static final double kPYController = 1;
-        public static final double kPThetaController = 1;
+        public static final double kPXController = 1.2;
+        public static final double kPYController = 1.2;
+        public static final double kPThetaController = 13.2;
     
         /* Constraint for the motion profilied robot angle controller */
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints =

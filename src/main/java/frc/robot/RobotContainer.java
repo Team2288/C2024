@@ -52,7 +52,7 @@ public class RobotContainer {
 
     private final Trigger intake_on = codriver.a();
     private final Trigger shoot = codriver.x();
-    private final Trigger intakeUp = codriver.y();
+    //private final Trigger intakeUp = codriver.y();
     //private final Trigger spitNoteOut = codriver.b();
     private final Trigger elevatorUp = codriver.rightBumper();
     private final Trigger elevatorDown = codriver.leftBumper();
@@ -88,6 +88,8 @@ public class RobotContainer {
             )
         );
 
+        /* 
+
         s_Intake.setDefaultCommand(
             new FunctionalCommand(
                 () -> System.out.println("Default intake command initialized"),
@@ -118,9 +120,9 @@ public class RobotContainer {
         /* Set Events for Path planning */
 
         NamedCommands.registerCommand("IntakeRoutine", this.s_Intake.getIntakeRoutineCommand()); // s_Intake.getIntakeRoutineCommand()
-        NamedCommands.registerCommand("Shoot", this.getShootCommandNoRamp()); // s_Shooter.getShooterCommand()
-        NamedCommands.registerCommand("IntakeDown", this.s_Intake.getPosAndRunIntakeCommand(Constants.Intake.DOWN_POSITION, 0.0));
-        NamedCommands.registerCommand("RampUp", this.s_Shooter.rampVelocityPIDs(0.4));
+        NamedCommands.registerCommand("Shoot", this.s_Intake.getShootCommandNoRamp()); // s_Shooter.getShooterCommand()
+        NamedCommands.registerCommand("IntakeUp", this.s_Intake.getPosAndRunIntakeCommand(Constants.Intake.UP_POSITION, 0.0));
+        NamedCommands.registerCommand("RampUp", new SequentialCommandGroup(this.s_Shooter.rampVelocityPIDs(0.5), new WaitCommand(1)));
         
         // Auto Chooser
         auto = AutoBuilder.buildAuto("4Note");
@@ -149,13 +151,14 @@ public class RobotContainer {
             // new InstantCommand( () -> s_Shooter.setVelocity(5000))
         );
 
+        /*
         intakeUp.onTrue(
             this.s_Intake.getPosAndRunIntakeCommand(Constants.Intake.UP_POSITION, 0.0)
         );
-/*
+
         spitNoteOut.whileTrue(
-            //this.s_Intake.getIntakeDriveCommand(-0.8)
-            new InstantCommand( () -> this.s_Shooter.setSpeed(0.5), s_Shooter)
+            this.s_Intake.getIntakeDriveCommand(-0.8)
+            //new InstantCommand( () -> this.s_Shooter.setSpeed(0.5), s_Shooter)
         );
 
         /* 
@@ -215,17 +218,6 @@ public class RobotContainer {
         return new SequentialCommandGroup(
             this.s_Intake.getIntakeRoutineCommand(),
             this.getShootCommandRamp()
-        );
-    }
-
-    public Command getShootCommandNoRamp() {
-        return new SequentialCommandGroup(
-            new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(Constants.Intake.SPEED), s_Intake),
-            new WaitCommand(.5),
-            new ParallelCommandGroup(
-                new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(0.0), s_Intake),
-                new InstantCommand(() -> s_Shooter.setSpeed(0.0), s_Shooter)
-            )
         );
     }
 

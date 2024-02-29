@@ -17,12 +17,13 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 
 public class Intake extends SubsystemBase {
     CANSparkMax driveNeo; // motors
     TalonFX swivelFalcon;
     boolean hasNote, isRunning;
-    TOFSensor sensor; 
+    public TOFSensor sensor; 
     final MotionMagicVoltage motMag;
     private CurrentLimitsConfigs currentLimits;
 
@@ -38,7 +39,7 @@ public class Intake extends SubsystemBase {
         currentLimits.StatorCurrentLimitEnable = true;
 
         sensor = new TOFSensor(Constants.Intake.INTAKE_SENSOR_ID);
-        
+
         motMag = new MotionMagicVoltage(0);
         motMag.Slot = 0;
         var talonFXConfigs = new TalonFXConfiguration();
@@ -54,7 +55,7 @@ public class Intake extends SubsystemBase {
 
         talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.Intake.MOTMAGMAXVEL / 2048 * 10; // rps cruise velocity
         talonFXConfigs.MotionMagic.MotionMagicAcceleration = Constants.Intake.MOTMAGMAXACCEL / 2048 * 10; // rps/s acceleration 
-        talonFXConfigs.MotionMagic.MotionMagicJerk = 1600; // rps/s^2 jerk 
+        talonFXConfigs.MotionMagic.MotionMagicJerk = 3200; // rps/s^2 jerk 
         
         swivelFalcon.getConfigurator().apply(talonFXConfigs, 0.050);
         hasNote = false;
@@ -85,31 +86,88 @@ public class Intake extends SubsystemBase {
     }
 
     public void stopEverything() {
-        System.out.println("Stopped Intake");
+        System.out.println("Intake PosAndRun Command finished");
         setDriveIntakeSpeed(0.0);
         this.isRunning = false;
     }
 
     public boolean isCommandDone(double position) {
-        return ((Math.abs(getPosition() - position) < 1.5) && (this.isRunning && this.sensor.getNoteDetected()));
+        return ((Math.abs(getPosition() - position) < 4) && this.sensor.getNoteDetected());
+    }
+
+    public boolean isCommandDonePositionOnly(double position) {
+        return Math.abs(getPosition() - position) < 8;
     }
 
     public Command getPosAndRunIntakeCommand(double position, double speed) {
         return new FunctionalCommand(
-            () -> {System.out.println("working intake"); this.driveNeo.set(speed); this.isRunning = true;}, 
+            () -> {
+                System.out.println("Going to position:" + position + " At speed: " + speed); 
+                this.setDriveIntakeSpeed(speed); 
+            }, 
             () -> setPosition(position),
             interrupted -> stopEverything(),
             () -> isCommandDone(position),
             this
-        );
+        ).withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
     }
+
+    public Command getShootCommandNoRamp() {
+        SequentialCommandGroup seqgroup = new SequentialCommandGroup();
+
+        seqgroup.addCommands(
+            this.getIntakeDriveCommand(Constants.Intake.SPEED),
+            new WaitCommand(.7)
+        );
+
+        /* 
+
+        if (this.s_Intake.getPosition() < 4) {
+            seqgroup.addCommands(this.s_Intake.getIntakeDriveCommand(0.0));
+        } else {
+            seqgroup.addCommands(
+                this.s_Intake.getPositionCommand(Constants.Intake.UP_POSITION),
+                this.s_Intake.getIntakeDriveCommand(0.0)
+            );
+        }
+
+        */
+
+        seqgroup.addCommands(this.getIntakeDriveCommand(0.0));
+
+        seqgroup.addRequirements(this);
+        return seqgroup.withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
+
+    }
+
 
     public Command getIntakeDriveCommand(double speed) {
         return new FunctionalCommand(
-            () -> this.isRunning = true,
+            () -> {System.out.println("Starting Drive Cmd at speed: " + speed);},
             () -> setDriveIntakeSpeed(speed),
-            interrupted -> {setDriveIntakeSpeed(0.0); this.isRunning = false;},
-            () -> (this.isRunning && this.sensor.getNoteDetected()),
+            interrupted -> {System.out.println("Ended drive cmd whose speed was: " + speed);},
+            () -> (true),
+            this
+        ).withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
+    }
+
+    public Command getIntakeDriveCommandNeedsNote(double speed) {
+        return new FunctionalCommand(
+            () -> {System.out.println("Starting drive cmd needs note");},
+            () -> setDriveIntakeSpeed(speed),
+            interrupted -> {System.out.println("Ended drive cmd needs note");},
+            () -> (this.sensor.getNoteDetected()),
+            this
+        );
+    }
+
+
+    public Command getPositionCommand(double pos) {
+        return new FunctionalCommand(
+            () -> System.out.println("Running Position Command"),
+            () -> setPosition(pos),
+            interrupted -> {System.out.println("Done w/ position command");},
+            () -> isCommandDonePositionOnly(pos),
             this
         );
     }
@@ -119,18 +177,12 @@ public class Intake extends SubsystemBase {
         return new SequentialCommandGroup(
             getPosAndRunIntakeCommand(Constants.Intake.DOWN_POSITION, Constants.Intake.SPEED),
             getPosAndRunIntakeCommand(Constants.Intake.UP_POSITION, 0.0)
-        );
-    }
-
-    public Command getIntakeFeedCommand(double speed) {
-        return new InstantCommand(
-            () -> driveNeo.set(speed),
-            this
-        );
+        ).withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
     }
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("TOF Sensor", this.sensor.getRangeDebugger());
         SmartDashboard.putNumber("Swivel Falcon Encoder", getPosition());
     }
 }

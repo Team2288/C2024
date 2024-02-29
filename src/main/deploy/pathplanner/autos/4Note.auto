@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3070140425995143,
-      "y": 5.55593454044051
+      "x": 1.4389491636126137,
+      "y": 4.119307667186764
     },
     "rotation": 0
   },
@@ -12,9 +12,28 @@
     "data": {
       "commands": [
         {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "RampUp"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeUp"
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Shoot Preloaded"
+            "pathName": "Shoot Preloaded (Start Right)"
           }
         },
         {
@@ -26,7 +45,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Get Middle Note from Center"
+            "pathName": "Get Bottom Note From Right"
           }
         },
         {
@@ -38,7 +57,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Get Bottom Note From Center"
+            "pathName": "Get Center Note From Right"
           }
         },
         {
@@ -51,6 +70,18 @@
           "type": "path",
           "data": {
             "pathName": "Get Far Top Note from Center"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Get Outer Note From Center"
           }
         },
         {

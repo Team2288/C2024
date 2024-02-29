@@ -1,4 +1,5 @@
-package frc.robot;
+package frc.robot.sensors;
+
 import com.playingwithfusion.TimeOfFlight;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Lights;

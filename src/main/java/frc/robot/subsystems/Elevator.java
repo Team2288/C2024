@@ -10,35 +10,44 @@ import com.revrobotics.CANSparkMax;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.sensors.TOFSensor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.TOFSensor;
+
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import frc.robot.subsystems.Shooter;
+import frc.robot.sensors.BeamBreakSensor;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class Elevator extends SubsystemBase {
-    public CANSparkMax driveMotor;
     public double kP, kI, kD, kF, kMaxOutput, kMinOutput;
-    private TalonFX elevatorMotor;
+    private TalonFX driveMotor, elevatorMotor;
     public ArrayList<String[]> loggingData;
     private CurrentLimitsConfigs currentConfigs;
     final MotionMagicVoltage motMag;
-    TOFSensor sensor;
+    BeamBreakSensor sensor;
 
     public Elevator() {
         super();
 
         // Initialize motors, motor controllers, and settings
+        /*
         driveMotor = new CANSparkMax(Constants.Elevator.DRIVE_MOTOR_ID, MotorType.kBrushless);
         driveMotor.setClosedLoopRampRate(.3);
         driveMotor.setSmartCurrentLimit(15);
+        */
+        driveMotor = new TalonFX(Constants.Elevator.DRIVE_MOTOR_ID);
         elevatorMotor = new TalonFX(Constants.Elevator.POSITION_MOTOR_ID);
-    
+<<<<<<< HEAD
+        sensor = new BeamBreakSensor(Constants.Elevator.SENSOR_ID);
 
+=======
+    
+>>>>>>> 922c7fa22c2757df497c24f8d302690d3f82c006
         motMag = new MotionMagicVoltage(0);
         motMag.Slot = 0;
         var talonFXConfigs = new TalonFXConfiguration();
@@ -46,10 +55,10 @@ public class Elevator extends SubsystemBase {
         currentConfigs.StatorCurrentLimit = 80;
         currentConfigs.StatorCurrentLimitEnable = true;
 
+        driveMotor.getConfigurator().apply(new TalonFXConfiguration()); // set factory default
         elevatorMotor.getConfigurator().apply(new TalonFXConfiguration()); // set factory default
 
         talonFXConfigs.Slot0.kV = Constants.Elevator.ELEVATOR_KV;
-
         talonFXConfigs.Slot0.kP = Constants.Elevator.ELEVATOR_KP; 
         talonFXConfigs.Slot0.kI = Constants.Elevator.ELEVATOR_KI;
         talonFXConfigs.Slot0.kD = Constants.Elevator.ELEVATOR_KD;
@@ -63,7 +72,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public void setElevatorSpeed(double speed) {
-        driveMotor.set(speed);
+        driveMotor.set(-speed);
     }
 
     public double getPosition() {
@@ -80,34 +89,36 @@ public class Elevator extends SubsystemBase {
 
     public Command getElevatorAmpRoutineCommand(Shooter s_Shooter, Intake s_Intake) {
         return new SequentialCommandGroup(
-            new FunctionalCommand( // on init, set both shooter and intake speed and move to get the note
+            new FunctionalCommand( // on init, run everything
                 () -> s_Intake.setDriveIntakeSpeed(Constants.Intake.SPEED),
-                () -> { // on exec
-                    this.setElevatorPosition(Constants.Elevator.UP1);
+                () -> { // on exec, go up to the amp
+                    this.setElevatorPosition(Constants.Elevator.UP);
+                },
+                interrupted -> { // when its interrupted we know the elevator is at the amp, therefore we run the shooter and elevator to pass the note
                     s_Shooter.setSpeed(0.09 * 1.5);
                     this.setElevatorSpeed(Constants.Elevator.SPEED * 1.5);
-                },
-                interrupted -> {
-                    this.setElevatorSpeed(0.0); 
-                    s_Shooter.setSpeed(0.0);
-                    s_Intake.setDriveIntakeSpeed(0.0);
-                }, // ended -> shut off shooter, intake, and elevator
-                () -> Math.abs(this.getPosition() - Constants.Elevator.UP1) < 4 && this.sensor.getNoteDetected(), // shut down if we're at the shooter AND the sensor has a note
-                            // I changed the error to 3 rotations, 12 is way too much -mo
+                }, 
+                () -> Math.abs(this.getPosition() - Constants.Elevator.UP) < 4,
                 this,
                 s_Shooter,
                 s_Intake
             ),
-            getElevatorPositionCommand(Constants.Elevator.UP2), // go to the amp
-            new FunctionalCommand( // run intake, when note is not there anymore set speed to 0 and return to default position
-                () -> this.setElevatorSpeed(Constants.Elevator.SPEED),
-                () -> {},
-                interrupted -> {this.setElevatorSpeed(0.0); this.setElevatorPosition(Constants.Elevator.DOWN);},
-                () -> !this.sensor.getNoteDetected(),
-                this
+            new WaitCommand(2),
+            new InstantCommand( // Shut everything off, bring elevator back down
+                () -> {
+                    this.setElevatorSpeed(0.0); 
+                    s_Shooter.setSpeed(0.0);
+                    s_Intake.setDriveIntakeSpeed(0.0);
+                    this.setElevatorPosition(Constants.Elevator.UP);
+                },
+                
+                this,
+                s_Shooter,
+                s_Intake
             )
         );
     }
+    
 
     public Command getElevatorPositionCommand(double rotations) {
         return new FunctionalCommand(
@@ -117,6 +128,10 @@ public class Elevator extends SubsystemBase {
             () -> Math.abs(getPosition() - rotations) < 4,
             this
         );
+    }
+
+    public void setElevatorPositionVoltage(double volt) {
+        this.elevatorMotor.set(volt);
     }
 
     @Override

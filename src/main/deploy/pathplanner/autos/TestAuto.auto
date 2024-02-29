@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3656518741608918,
-      "y": 5.511956166769477
+      "x": 1.204397837367104,
+      "y": 5.599912914111543
     },
     "rotation": 0
   },
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Get Bottom Note From Center"
+            "pathName": "New Path"
           }
         }
       ]
