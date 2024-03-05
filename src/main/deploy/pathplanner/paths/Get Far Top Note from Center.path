@@ -3,12 +3,12 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.4944301317174067,
+        "x": 2.421132842265685,
         "y": 5.585253456221199
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5677274211691286,
+        "x": 2.4944301317174067,
         "y": 5.541275082550166
       },
       "isLocked": false,
@@ -65,7 +65,7 @@
   "eventMarkers": [
     {
       "name": "IntakeRoutine",
-      "waypointRelativePos": 0.6000000000000001,
+      "waypointRelativePos": 0.5,
       "command": {
         "type": "parallel",
         "data": {
@@ -83,7 +83,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 9.0,
+    "maxAcceleration": 8.0,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 360.0
   },

@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -27,13 +28,14 @@ public class Elevator extends SubsystemBase {
     public double kP, kI, kD, kF, kMaxOutput, kMinOutput;
     BeamBreakSensor sensor;
     public ArrayList<String[]> loggingData;
+    TalonFXConfiguration talonFXConfigs;
 
     public Elevator() {
         super();
         // Initialize motors, motor controllers, and settings
         driveMotor = new TalonFX(Constants.Elevator.DRIVE_MOTOR_ID);
         elevatorMotor = new TalonFX(Constants.Elevator.POSITION_MOTOR_ID);
-        sensor = new BeamBreakSensor(Constants.Elevator.SENSOR_ID);
+       // sensor = new BeamBreakSensor(Constants.Elevator.SENSOR_ID);
 
         motMag = new MotionMagicVoltage(0);
         motMag.Slot = 0;
@@ -43,7 +45,7 @@ public class Elevator extends SubsystemBase {
         elevatorMotor.getConfigurator().apply(new TalonFXConfiguration());
 
         // Create and implement current limiter in configs
-        var talonFXConfigs = new TalonFXConfiguration();
+        talonFXConfigs = new TalonFXConfiguration();
         currentConfigs = new CurrentLimitsConfigs();
         currentConfigs.StatorCurrentLimit = 80;
         currentConfigs.StatorCurrentLimitEnable = true;
@@ -55,8 +57,8 @@ public class Elevator extends SubsystemBase {
         talonFXConfigs.Slot0.kI = Constants.Elevator.ELEVATOR_KI;
         talonFXConfigs.Slot0.kD = Constants.Elevator.ELEVATOR_KD;
 
-        talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.Elevator.MOTMAGMAXVEL; // rps cruise velocity
-        talonFXConfigs.MotionMagic.MotionMagicAcceleration = Constants.Elevator.MOTMAGMAXACCEL; // rps/s acceleration 
+        talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.Elevator.MOTMAGMAXVELDOWN; // rps cruise velocity
+        talonFXConfigs.MotionMagic.MotionMagicAcceleration = Constants.Elevator.MOTMAGMAXACCELDOWN; // rps/s acceleration 
         talonFXConfigs.MotionMagic.MotionMagicJerk = 3200; // rps/s^2 jerk 
         
         elevatorMotor.getConfigurator().apply(talonFXConfigs, 0.050);
@@ -71,12 +73,28 @@ public class Elevator extends SubsystemBase {
     }
 
     public void setElevatorPosition(double rotations) {
+
+        if(rotations < 5) {
+            talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.Elevator.MOTMAGMAXVELDOWN;
+            talonFXConfigs.MotionMagic.MotionMagicAcceleration = Constants.Elevator.MOTMAGMAXACCELDOWN;
+        } else {
+            talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.Elevator.MOTMAGMAXVELUP;
+            talonFXConfigs.MotionMagic.MotionMagicAcceleration = Constants.Elevator.MOTMAGMAXACCELUP;
+        }
+
+        elevatorMotor.getConfigurator().apply(talonFXConfigs, 0.050);
+
         elevatorMotor.setControl(motMag.withPosition(rotations));
+    }
+    
+    public void resetElevator() {
+        
     }
     
     public void SmartDashboard() {
         SmartDashboard.putNumber("Position", elevatorMotor.getPosition().getValue());
     }
+
 
     /*
         public Command getElevatorAmpRoutineCommand(Shooter s_Shooter, Intake s_Intake) {

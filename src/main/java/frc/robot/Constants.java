@@ -18,7 +18,7 @@ import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
     /* Deadband on the joystick */
-    public static final double stickDeadband = 0.1;
+    public static final double stickDeadband = 0.10;
 
     /* Climber Constants */
     public static final class Climber {
@@ -41,24 +41,26 @@ public final class Constants {
     public static final class Elevator {
         /* Elevator CAN IDs */
         public static final int DRIVE_MOTOR_ID = 17;
-        public static final int POSITION_MOTOR_ID = 1;
-        public static final int SENSOR_ID = 0;
+        public static final int POSITION_MOTOR_ID = 18;
+       // public static final int SENSOR_ID = 0;
     
         /* Elevator PID values */
-        public static final int MOTMAGMAXACCEL = 150; //19240
-        public static final int MOTMAGMAXVEL = 15; //1924        
-        public static final double ELEVATOR_KP = 0.04; //0.00909488172
-        public static final double ELEVATOR_KI = 0.0008;
-        public static final double ELEVATOR_KD = 0.0;
-        public static final double ELEVATOR_KV = 0.05; //0.05011894428
+        public static final int MOTMAGMAXACCELUP = 500;
+        public static final int MOTMAGMAXVELUP = 50;
+        public static final int MOTMAGMAXACCELDOWN = 200; //19240
+        public static final int MOTMAGMAXVELDOWN = 20; //1924        
+        public static final double ELEVATOR_KP = 0.024; //0.00909488172
+        public static final double ELEVATOR_KI = 0.0018;
+        public static final double ELEVATOR_KD = 0.0001;
+        public static final double ELEVATOR_KV = 0.125; //0.05011894428
 
         /* Elevator Positions (rotations) */
-        public static final int UP1 = -38;
-        public static final int UP2 = -277;
-        public static final int DOWN = 0;
+        public static final int UP_AMP = 31; // rotations
+        public static final int UP_CLIMB = 65; // rotations - 68 max
+        public static final int DOWN = 5;
     
         /* Elevator Speed */
-        public static final double SPEED = -0.3;
+        public static final double SPEED = 0.32;
     }
 
     /* Intake Constants */
@@ -100,11 +102,13 @@ public final class Constants {
     /* Lights Constants (Used in Lights.java) */
     public final class Lights {
         /* Light states (console commands) */
-        public static final String LIGHT_STATE_OFF =  "{'on':false}";
+        public static final String LIGHT_STATE_OFF = "{'on': false}";
         public static final String LIGHT_STATE_ON =  "{'on':true}";
         public static final String LIGHT_STATES_CHANGE_COLOR_YELLOW= "{'seg':[{'col': [[255, 200, 59, 0], [0, 0, 0, 0], [0, 0, 0, 0]]}]}";
-        public static final String LIGHT_STATES_CHANGE_COLOR_PURPLE= "{'seg':[{'col': [[255, 0, 255, 0], [0, 0, 0, 0], [0, 0, 0, 0]]}]}";
-        public static final String LIGHT_STATES_CHANGE_COLOR_ORANGE= "{'seg':[{'col': [[255, 129, 10, 0],[0, 0, 0, 0], [0, 0, 0, 0]]}]}";
+        //public static final String LIGHT_STATES_CHANGE_COLOR_PURPLE= "{'seg':[{'col': [[255, 0, 255, 0], [0, 0, 0, 0], [0, 0, 0, 0]]}]}";
+        public static final String LIGHT_STATES_CHANGE_COLOR_PURPLE = "{\"on\":true,\"bri\":8,\"transition\":2,\"mainseg\":3,\"seg\":[{\"id\":0,\"start\":0,\"stop\":4,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":true,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg1\",\"col\":[[255,0,255],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":1,\"start\":4,\"stop\":8,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":true,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg2\",\"col\":[[255,0,255],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":2,\"start\":8,\"stop\":12,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":true,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg3\",\"col\":[[255,0,255],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":3,\"start\":12,\"stop\":16,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":true,\"frz\":false,\"bri\":84,\"cct\":127,\"set\":0,\"n\":\"Seg4\",\"col\":[[255,0,255],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0}]}";
+        //public static final String LIGHT_STATES_CHANGE_COLOR_ORANGE= "{'seg':[{'col': [[255, 129, 10, 0],[0, 0, 0, 0], [0, 0, 0, 0]]}]}";
+        public static final String LIGHT_STATES_CHANGE_COLOR_ORANGE = "{\"on\":true,\"bri\":8,\"transition\":2,\"mainseg\":3,\"seg\":[{\"id\":0,\"start\":0,\"stop\":4,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":true,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg1\",\"col\":[[255,129,10],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":1,\"start\":4,\"stop\":8,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":true,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg2\",\"col\":[[255,129,10],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":2,\"start\":8,\"stop\":12,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":true,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg3\",\"col\":[[255,129,10],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":3,\"start\":12,\"stop\":16,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":true,\"frz\":false,\"bri\":84,\"cct\":127,\"set\":0,\"n\":\"Seg4\",\"col\":[[255,129,10],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0}]}";
         public static final String LIGHT_STATES_SEG1 = "{\"on\":true,\"bri\":8,\"transition\":2,\"mainseg\":3,\"seg\":[{\"id\":0,\"start\":0,\"stop\":4,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":true,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg1\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":1,\"start\":4,\"stop\":8,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":false,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg2\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":2,\"start\":8,\"stop\":12,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":false,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg3\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":3,\"start\":12,\"stop\":16,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":false,\"frz\":false,\"bri\":84,\"cct\":127,\"set\":0,\"n\":\"Seg4\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0}]}";
         public static final String LIGHT_STATES_SEG2 = "{\"on\":true,\"bri\":8,\"transition\":2,\"mainseg\":3,\"seg\":[{\"id\":0,\"start\":0,\"stop\":4,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":false,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg1\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":1,\"start\":4,\"stop\":8,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":true,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg2\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":2,\"start\":8,\"stop\":12,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":false,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg3\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":3,\"start\":12,\"stop\":16,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":false,\"frz\":false,\"bri\":84,\"cct\":127,\"set\":0,\"n\":\"Seg4\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0}]}";
         public static final String LIGHT_STATES_SEG3 = "{\"on\":true,\"bri\":8,\"transition\":2,\"mainseg\":3,\"seg\":[{\"id\":0,\"start\":0,\"stop\":4,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":false,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg1\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":1,\"start\":4,\"stop\":8,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":false,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg2\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":2,\"start\":8,\"stop\":12,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":true,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg3\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":3,\"start\":12,\"stop\":16,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":false,\"frz\":false,\"bri\":84,\"cct\":127,\"set\":0,\"n\":\"Seg4\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0}]}";
@@ -257,7 +261,7 @@ public final class Constants {
 
     /* Autonomous Constants */
     public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
-        public static final double kMaxSpeedMetersPerSecond = 3;
+        public static final double kMaxSpeedMetersPerSecond = 4.5;
         public static final double kMaxAccelerationMetersPerSecondSquared = 8;
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI * 2;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI * 2;

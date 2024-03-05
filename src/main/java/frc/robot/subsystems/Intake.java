@@ -13,11 +13,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import frc.robot.Constants;
+import frc.robot.Constants.Lights.LightStates;
 import frc.robot.sensors.TOFSensor;
 
 public class Intake extends SubsystemBase {
@@ -114,7 +116,7 @@ public class Intake extends SubsystemBase {
             interrupted -> stopEverything(),
             () -> isCommandDone(position),
             this
-        ).withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
+        );
     }
 
     public Command getShootCommandNoRamp() {
@@ -139,7 +141,7 @@ public class Intake extends SubsystemBase {
         seqgroup.addCommands(this.getIntakeDriveCommand(0.0));
 
         seqgroup.addRequirements(this);
-        return seqgroup.withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
+        return seqgroup;
 
     }
 
@@ -150,7 +152,7 @@ public class Intake extends SubsystemBase {
             interrupted -> {System.out.println("Ended drive cmd whose speed was: " + speed);},
             () -> (true),
             this
-        ).withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
+        );
     }
 
     public Command getIntakeDriveCommandNeedsNote(double speed) {
@@ -173,11 +175,20 @@ public class Intake extends SubsystemBase {
         );
     }
 
+    public Command getAutoIntakeRoutineCommand() {
+        return new SequentialCommandGroup(
+            getPositionCommand(Constants.Intake.UP_POSITION),
+            getPosAndRunIntakeCommand(Constants.Intake.DOWN_POSITION, Constants.Intake.SPEED),
+            getPosAndRunIntakeCommand(Constants.Intake.UP_POSITION, 0.0)
+
+        );
+    }
+
     public Command getIntakeRoutineCommand() {
         return new SequentialCommandGroup(
             getPosAndRunIntakeCommand(Constants.Intake.DOWN_POSITION, Constants.Intake.SPEED),
             getPosAndRunIntakeCommand(Constants.Intake.UP_POSITION, 0.0)
-        ).withInterruptBehavior(InterruptionBehavior.kCancelIncoming);
+        );
     }
 
     @Override

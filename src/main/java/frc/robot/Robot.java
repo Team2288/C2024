@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Constants.Lights.LightStates;
 
 /* 
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -21,7 +22,6 @@ public class Robot extends TimedRobot {
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  private XboxController controller = new XboxController(1);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -80,6 +80,11 @@ public class Robot extends TimedRobot {
     // this line or comment it out.
 
     m_robotContainer.s_Shooter.setSpeed(0.0);
+    m_robotContainer.s_Intake.getPosAndRunIntakeCommand(Constants.Intake.UP_POSITION, 0.0).schedule();
+    // m_robotContainer.s_Elevator.setElevatorPosition(48);
+   // m_robotContainer.s_Lights.setState(LightStates.PURPLE);
+
+  
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
@@ -102,23 +107,14 @@ public class Robot extends TimedRobot {
       m_robotContainer.s_Shooter.setSpeed(0.0);
     }
     */
-    if(controller.getBButton()) {
-      m_robotContainer.s_Climber.setSpeed(.2);
-    } else {
-      m_robotContainer.s_Climber.setSpeed(0.0);
-    }
-    if(controller.getYButton()) {
-      m_robotContainer.s_Climber.setSpeed(-.2);
-    } else {
-      m_robotContainer.s_Climber.setSpeed(0.0);
-    }
+    
   }
 
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
-  }
+  }  
 
   /** This function is called periodically during test mode. */
   @Override

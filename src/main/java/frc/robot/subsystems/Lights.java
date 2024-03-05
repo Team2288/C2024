@@ -5,14 +5,14 @@ import edu.wpi.first.wpilibj.SerialPort.Parity;
 import edu.wpi.first.wpilibj.SerialPort.StopBits;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 import frc.robot.Constants;
 
 public class Lights extends SubsystemBase {
     private SerialPort port;
-    private Limelight limelight;
 
-    public Lights(Limelight limelight) {
+    public Lights() {
         super();
 
         try {
@@ -20,7 +20,6 @@ public class Lights extends SubsystemBase {
         }catch(Exception e){
             System.err.println("Error setting up serial port, lights will probably not work");
         }
-        this.limelight = limelight;
     }
     
     // Set state until state is set otherwise
@@ -35,11 +34,9 @@ public class Lights extends SubsystemBase {
     }
 
     public FunctionalCommand getLightsCommand(Constants.Lights.LightStates state) {
-        return new FunctionalCommand(
-            () -> {this.off(); this.on();},
-            () -> this.setState(state),
-            interrupt -> this.off(),
-            () -> {return false;}
+        return new InstantCommand(
+            () -> {this.on(); this.setState(state);},
+            this
         );
     }
 
@@ -64,6 +61,7 @@ public class Lights extends SubsystemBase {
 
     @Override
     public void periodic() {
+        /* 
         if(limelight.distanceFromTarget() < 250 && limelight.distanceFromTarget() >= 200) {
             this.setState(Constants.Lights.LightStates.SEG1);
         } else if(limelight.distanceFromTarget() < 200 && limelight.distanceFromTarget() >= 150) {
@@ -75,5 +73,6 @@ public class Lights extends SubsystemBase {
         } else {
             this.setState(Constants.Lights.LightStates.OFF);
         }
+        */
     }
 }
