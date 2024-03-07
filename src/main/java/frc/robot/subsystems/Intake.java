@@ -177,10 +177,9 @@ public class Intake extends SubsystemBase {
 
     public Command getAutoIntakeRoutineCommand() {
         return new SequentialCommandGroup(
-            getPositionCommand(Constants.Intake.UP_POSITION),
+            getPosAndRunIntakeCommand(Constants.Intake.UP_POSITION, 0.0),
             getPosAndRunIntakeCommand(Constants.Intake.DOWN_POSITION, Constants.Intake.SPEED),
             getPosAndRunIntakeCommand(Constants.Intake.UP_POSITION, 0.0)
-
         );
     }
 

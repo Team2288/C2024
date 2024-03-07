@@ -160,8 +160,9 @@ public class RobotContainer {
         );
         
 
-        shootAmp.onTrue(
-            this.shootAmp()
+        shootAmp.whileTrue(
+            //this.shootAmp()
+            new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(0.80), this.s_Elevator)
         );
 
         

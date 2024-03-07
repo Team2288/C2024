@@ -20,12 +20,6 @@
                 "data": {
                   "name": "RampUp"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeUp"
-                }
               }
             ]
           }
@@ -69,7 +63,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Get Far Top Note from Center"
+            "pathName": "Make Better Path Yippee"
           }
         },
         {
