@@ -37,7 +37,7 @@ import frc.robot.subsystems.Lights;
 public class RobotContainer {
     /* Controllers */
     private final Joystick driver = new Joystick(0);
-    private final CommandXboxController codriver = new CommandXboxController(1); 
+    private final CommandXboxController codriver = new CommandXboxController(2); 
 
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
