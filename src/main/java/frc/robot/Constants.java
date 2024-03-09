@@ -18,8 +18,8 @@ import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
     /* Deadband on the joystick */
-    public static final double moveDeadband = 0.20;
-    public static final double rotateDeadband = 0.35;
+    public static final double moveDeadband = 0.05;
+    public static final double rotateDeadband = 0.05;
 
     /* Climber Constants */
     public static final class Climber {

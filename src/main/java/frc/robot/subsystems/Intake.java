@@ -9,6 +9,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
@@ -28,7 +29,7 @@ public class Intake extends SubsystemBase {
     final MotionMagicVoltage motMag;
     private CurrentLimitsConfigs currentLimits;
     boolean hasNote, isRunning;
-    public TOFSensor sensor; 
+    public DigitalInput sensor; 
 
     public Intake() {
         // Initialize motors, motor controllers, and motor settings
@@ -63,7 +64,7 @@ public class Intake extends SubsystemBase {
         swivelFalcon.getConfigurator().apply(talonFXConfigs, 0.050);
 
         // Initialize time of flight sensor
-        sensor = new TOFSensor(Constants.Intake.INTAKE_SENSOR_ID);
+        sensor = new DigitalInput(0);
 
         // Initialize subsystem states
         hasNote = false;
@@ -75,8 +76,9 @@ public class Intake extends SubsystemBase {
         driveNeo.set(speed); 
     }
 
-    public double getSensor() {
-        return this.sensor.getRangeDebugger();
+    // Returns true if the beam is broken (something is in the intake)
+    public boolean getSensor() {
+        return sensor.get();
     }
 
     public void testSwivel(double speed) {
@@ -99,7 +101,7 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean isCommandDone(double position) {
-        return ((Math.abs(getPosition() - position) < 4) && this.sensor.getNoteDetected());
+        return ((Math.abs(getPosition() - position) < 4) && sensor.get());
     }
 
     public boolean isCommandDonePositionOnly(double position) {
@@ -160,7 +162,7 @@ public class Intake extends SubsystemBase {
             () -> {System.out.println("Starting drive cmd needs note");},
             () -> setDriveIntakeSpeed(speed),
             interrupted -> {System.out.println("Ended drive cmd needs note");},
-            () -> (this.sensor.getNoteDetected()),
+            () -> (this.sensor.get()),
             this
         );
     }
@@ -192,7 +194,7 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("TOF Sensor", this.sensor.getRangeDebugger());
+        SmartDashboard.putBoolean("TOF Sensor", sensor.get());
         SmartDashboard.putNumber("Swivel Falcon Encoder", getPosition());
     }
 }
