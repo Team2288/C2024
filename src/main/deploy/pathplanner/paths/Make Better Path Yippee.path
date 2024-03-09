@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 2.0253274792263873,
-        "y": 7.007220871584601
+        "x": 2.450451758046374,
+        "y": 7.124496534707355
       },
       "prevControl": {
-        "x": 1.0254163562651912,
-        "y": 6.993888723278452
+        "x": 0.7792735585471178,
+        "y": 7.124496534707355
       },
       "nextControl": {
-        "x": 6.423164846329693,
-        "y": 7.065858703145978
+        "x": 4.898756781809238,
+        "y": 7.124496534707355
       },
       "isLocked": false,
       "linkedName": null
@@ -33,23 +33,34 @@
     {
       "anchor": {
         "x": 2.450451758046374,
-        "y": 5.541275082550166
+        "y": 6.5527776769839265
       },
       "prevControl": {
-        "x": 1.3656518741608918,
-        "y": 7.183134366268733
+        "x": 2.3771476698430707,
+        "y": 6.640728758254414
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.3,
+      "rotationDegrees": 0,
+      "rotateFast": true
+    },
+    {
+      "waypointRelativePos": 2,
+      "rotationDegrees": 19.983106521899902,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [
     {
       "name": "IntakeRoutine",
-      "waypointRelativePos": 0.55,
+      "waypointRelativePos": 0.4,
       "command": {
         "type": "parallel",
         "data": {
@@ -66,14 +77,14 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 8.0,
+    "maxVelocity": 4.5,
+    "maxAcceleration": 9.0,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 360.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": 22.24902365721228,
     "rotateFast": false
   },
   "reversed": false,
