@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.Constants.Lights.LightStates;
 import frc.robot.sensors.TOFSensor;
+import frc.robot.sensors.BeamBreakSensor;
 
 public class Intake extends SubsystemBase {
     CANSparkMax driveNeo; // motors
@@ -29,7 +30,7 @@ public class Intake extends SubsystemBase {
     final MotionMagicVoltage motMag;
     private CurrentLimitsConfigs currentLimits;
     boolean hasNote, isRunning;
-    public DigitalInput sensor; 
+    public BeamBreakSensor sensor; 
 
     public Intake() {
         // Initialize motors, motor controllers, and motor settings
@@ -64,8 +65,8 @@ public class Intake extends SubsystemBase {
         swivelFalcon.getConfigurator().apply(talonFXConfigs, 0.050);
 
         // Initialize time of flight sensor
-        sensor = new DigitalInput(0);
 
+        sensor = new BeamBreakSensor(0);
         // Initialize subsystem states
         hasNote = false;
         isRunning = false;
@@ -78,7 +79,7 @@ public class Intake extends SubsystemBase {
 
     // Returns true if the beam is broken (something is in the intake)
     public boolean getSensor() {
-        return sensor.get();
+        return sensor.getNoteDetected();
     }
 
     public void testSwivel(double speed) {
@@ -101,7 +102,7 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean isCommandDone(double position) {
-        return ((Math.abs(getPosition() - position) < 4) && sensor.get());
+        return ((Math.abs(getPosition() - position) < 4) && sensor.getNoteDetected());
     }
 
     public boolean isCommandDonePositionOnly(double position) {
@@ -162,7 +163,7 @@ public class Intake extends SubsystemBase {
             () -> {System.out.println("Starting drive cmd needs note");},
             () -> setDriveIntakeSpeed(speed),
             interrupted -> {System.out.println("Ended drive cmd needs note");},
-            () -> (this.sensor.get()),
+            () -> (this.sensor.getNoteDetected()),
             this
         );
     }
@@ -194,7 +195,7 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("TOF Sensor", sensor.get());
+        SmartDashboard.putBoolean("Sensor", sensor.getNoteDetected());
         SmartDashboard.putNumber("Swivel Falcon Encoder", getPosition());
     }
 }
