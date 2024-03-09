@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3509924162705473,
-      "y": 4.089988751406074
+      "x": 1.4389491636126137,
+      "y": 4.119307667186764
     },
     "rotation": 0
   },
@@ -69,7 +69,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Make Better Path Yippee"
+            "pathName": "Get Far Top Note from Center"
           }
         },
         {
@@ -88,18 +88,6 @@
           "type": "named",
           "data": {
             "name": "Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "TurnOffShooter"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "IntakeUp"
           }
         }
       ]
