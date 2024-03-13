@@ -37,7 +37,7 @@ import frc.robot.subsystems.Lights;
 public class RobotContainer {
     /* Controllers */
     private final Joystick driver = new Joystick(0);
-    private final CommandXboxController codriver = new CommandXboxController(2); 
+    private final CommandXboxController codriver = new CommandXboxController(1); 
 
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -147,7 +147,7 @@ public class RobotContainer {
 
 //        zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));            
 
-
+ 
         intake_on.onTrue(
             //new InstantCommand(() -> s_Elevator.setElevatorPosition(4), s_Elevator)
             this.s_Intake.getIntakeRoutineCommand()
