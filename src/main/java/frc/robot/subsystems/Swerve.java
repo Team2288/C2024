@@ -8,6 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
+import edu.wpi.first.wpilibj.Timer;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -17,24 +18,27 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.Command;
-import com.choreo.lib.*;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.wpilibj.DriverStation;
-
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import frc.robot.subsystems.Limelight;
+import edu.wpi.first.math.VecBuilder;
 
 public class Swerve extends SubsystemBase {
-    public SwerveDriveOdometry swerveOdometry;
+    public SwerveDrivePoseEstimator swerveOdometry;
+    //public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
+    public Limelight limelight;
 
-    public Swerve() {
+    public Swerve(Limelight limelight) {
         gyro = new Pigeon2(Constants.Swerve.pigeonID);
         gyro.getConfigurator().apply(new Pigeon2Configuration());
         gyro.setYaw(0);
+        this.limelight = limelight;
 
         mSwerveMods = new SwerveModule[] {
             new SwerveModule(0, Constants.Swerve.Mod0.constants),
@@ -43,7 +47,21 @@ public class Swerve extends SubsystemBase {
             new SwerveModule(3, Constants.Swerve.Mod3.constants)
         };
 
-        swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getGyroYaw(), getModulePositions());
+        /* 
+        swerveOdometry = new SwerveDrivePoseEstimator(
+            Constants.Swerve.swerveKinematics, 
+            getGyroYaw(), 
+            getModulePositions(),
+            new Pose2d()
+        );
+
+        */
+
+        swerveOdometry = new SwerveDrivePoseEstimator(
+            Constants.Swerve.swerveKinematics, 
+            getGyroYaw(), 
+            getModulePositions(),
+            new Pose2d());
 
         AutoBuilder.configureHolonomic(
             this::getPose, // Robot pose supplier
@@ -140,7 +158,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public Pose2d getPose() {
-        return swerveOdometry.getPoseMeters();
+        return swerveOdometry.getEstimatedPosition();
     }
 
     public void setPose(Pose2d pose) {
@@ -176,6 +194,20 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic(){
         swerveOdometry.update(getGyroYaw(), getModulePositions());
+        var tagMeasurement = this.limelight.getEstimatedAprilTagPose();
+
+        if (tagMeasurement.tagCount >= 2) {
+            swerveOdometry.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 99999));
+            swerveOdometry.addVisionMeasurement(
+                tagMeasurement.pose,
+                tagMeasurement.timestampSeconds
+            );
+        }
+
+       // swerveOdometry.addVisionMeasurement(
+       //     tagMeasurement,
+       //     Timer.getFPGATimestamp()
+       // );
 
         for(SwerveModule mod : mSwerveMods){
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
