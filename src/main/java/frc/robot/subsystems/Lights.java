@@ -11,26 +11,18 @@ import frc.robot.Constants;
 
 public class Lights extends SubsystemBase {
     private SerialPort port;
-
+      
     public Lights() {
         super();
 
-        try {
-            this.port = new SerialPort(115200, SerialPort.Port.kUSB1,8,Parity.kEven,StopBits.kOne);
-        }catch(Exception e){
-            System.err.println("Error setting up serial port, lights will probably not work");
-        }
+        this.port = new SerialPort(115200, SerialPort.Port.kOnboard,8,Parity.kEven,StopBits.kOne);
     }
     
     // Set state until state is set otherwise
     public void setState(Constants.Lights.LightStates state) {
-        try {
-            String command = Constants.Lights.HASHMAP_LIGHT_STATES.getOrDefault(state, Constants.Lights.DEFAULT_LIGHT_STATE);
-            this.port.writeString(command);
-            this.port.flush();
-        }catch(Exception e) {
-            System.err.println("error setting light state for state: " + state.toString());
-        }
+        String command = Constants.Lights.HASHMAP_LIGHT_STATES.getOrDefault(state, Constants.Lights.DEFAULT_LIGHT_STATE);
+        this.port.writeString(command);
+        this.port.flush();
     }
 
     public FunctionalCommand getLightsCommand(Constants.Lights.LightStates state) {

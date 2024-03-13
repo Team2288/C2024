@@ -37,7 +37,7 @@ import frc.robot.subsystems.Lights;
 public class RobotContainer {
     /* Controllers */
     private final Joystick driver = new Joystick(0);
-    private final CommandXboxController codriver = new CommandXboxController(2); 
+    private final CommandXboxController codriver = new CommandXboxController(1); 
 
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -65,13 +65,13 @@ public class RobotContainer {
     private final Trigger slowModeTrigger = new Trigger(() -> driver.getTrigger());
 
     /* Subsystems */
-    public final Swerve s_Swerve = new Swerve();
     public final Lights s_Lights = new Lights();
-    public final Intake s_Intake = new Intake();
+    public final Intake s_Intake = new Intake(s_Lights);
     public final Elevator s_Elevator = new Elevator();
     public final Shooter s_Shooter = new Shooter();
     public final Climber s_Climber = new Climber();
     public final Limelight s_Limelight = new Limelight();
+    public final Swerve s_Swerve = new Swerve(s_Limelight);
 
     /* Auto Chooser */
 
