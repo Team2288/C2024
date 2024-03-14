@@ -127,7 +127,7 @@ public final class Constants {
             SEG1,
             SEG2,
             SEG3,
-            SEG4
+            SEG4, GREEN
         }
         
         /* Lights hashmap */
@@ -264,8 +264,8 @@ public final class Constants {
     public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
         public static final double kMaxSpeedMetersPerSecond = 4.5;
         public static final double kMaxAccelerationMetersPerSecondSquared = 9;
-        public static final double kMaxAngularSpeedRadiansPerSecond = 10;
-        public static final double kMaxAngularSpeedRadiansPerSecondSquared = 10;
+        public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI * 2;
+        public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI * 2;
     
         public static final double kPXController = 1.2;
         public static final double kPYController = 1.2;
