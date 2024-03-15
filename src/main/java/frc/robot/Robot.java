@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -83,8 +86,6 @@ public class Robot extends TimedRobot {
     m_robotContainer.s_Intake.getPosAndRunIntakeCommand(Constants.Intake.UP_POSITION, 0.0).schedule();
     // m_robotContainer.s_Elevator.setElevatorPosition(48);
    // m_robotContainer.s_Lights.setState(LightStates.PURPLE);
-
-  
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();

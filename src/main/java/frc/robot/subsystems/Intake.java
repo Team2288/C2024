@@ -37,7 +37,7 @@ public class Intake extends SubsystemBase {
         // Initialize motors, motor controllers, and motor settings
         driveNeo = new CANSparkMax(Constants.Intake.DRIVE_MOTOR, MotorType.kBrushless);
         driveNeo.setIdleMode(IdleMode.kBrake);
-        driveNeo.setSmartCurrentLimit(40);
+        driveNeo.setSmartCurrentLimit(60);
 
         swivelFalcon = new TalonFX(Constants.Intake.SWIVEL_MOTOR);
         motMag = new MotionMagicVoltage(0);
