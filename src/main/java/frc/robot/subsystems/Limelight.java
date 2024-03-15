@@ -1,9 +1,5 @@
 package frc.robot.subsystems;
 
-import org.photonvision.PhotonCamera;
-import org.photonvision.common.hardware.VisionLEDMode;
-import org.photonvision.targeting.PhotonPipelineResult;
-
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -15,14 +11,11 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
-import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import java.util.Optional;
-import org.photonvision.EstimatedRobotPose;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class Limelight extends SubsystemBase {
@@ -33,9 +26,6 @@ public class Limelight extends SubsystemBase {
     double mountHeight, speakerTargetHeight, speakerGoalRange; //meters
 
     Transform3d robotToCam = new Transform3d(new Translation3d(0, 0.0254, 0.584), new Rotation3d(0, 0, 0));
-    PhotonCamera limelight;
-    PhotonPoseEstimator poseEstimator;
-    PhotonPipelineResult result;
     boolean hasTargets;
     AprilTagFieldLayout aprilTagFieldLayout;
 

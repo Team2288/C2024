@@ -67,9 +67,9 @@ public class RobotContainer {
 
     /* Subsystems */
     public final Intake s_Intake = new Intake();
-    public final Elevator s_Elevator = new Elevator();
     public final Shooter s_Shooter = new Shooter();
     public final Climber s_Climber = new Climber();
+    public final Elevator s_Elevator = new Elevator();
     public final Limelight s_Limelight = new Limelight();
     public final Swerve s_Swerve = new Swerve(s_Limelight);
 
@@ -93,6 +93,15 @@ public class RobotContainer {
                 )
             );        
         
+            s_Elevator.setDefaultCommand(
+                new FunctionalCommand(
+                    () -> System.out.println("Elevator default command initialized"),
+                    () -> s_Elevator.setElevatorPosition(Constants.Elevator.DOWN),
+                    interrupted -> System.out.println("Command schedule for elevator"),
+                    () -> (s_Elevator.getPosition() < 3 && s_Elevator.getPosition() > 1),
+                    s_Elevator
+                )
+            );
         
         /* 
 
@@ -161,7 +170,7 @@ public class RobotContainer {
         );
         
 
-        shootAmp.whileTrue(
+        shootAmp.onTrue(
             this.shootAmp()
             //new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(0.80), this.s_Elevator)
         );
@@ -266,7 +275,7 @@ public class RobotContainer {
     public Command shootAmp() {
         return new SequentialCommandGroup(
             new ParallelCommandGroup(
-                new InstantCommand(() -> s_Shooter.setSpeed(0.09 * 1.5), s_Shooter),
+                new InstantCommand(() -> s_Shooter.setSpeed(0.08), s_Shooter),
                 s_Elevator.getElevatorPositionCommand(Constants.Elevator.UP_AMP)
             ),
             new ParallelCommandGroup(

@@ -57,8 +57,8 @@ public class Elevator extends SubsystemBase {
         talonFXConfigs.Slot0.kI = Constants.Elevator.ELEVATOR_KI;
         talonFXConfigs.Slot0.kD = Constants.Elevator.ELEVATOR_KD;
 
-        talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.Elevator.MOTMAGMAXVELDOWN; // rps cruise velocity
-        talonFXConfigs.MotionMagic.MotionMagicAcceleration = Constants.Elevator.MOTMAGMAXACCELDOWN; // rps/s acceleration 
+        talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.Elevator.MOTMAGMAXVELUP; // rps cruise velocity
+        talonFXConfigs.MotionMagic.MotionMagicAcceleration = Constants.Elevator.MOTMAGMAXACCELUP; // rps/s acceleration 
         talonFXConfigs.MotionMagic.MotionMagicJerk = 3200; // rps/s^2 jerk 
         
         elevatorMotor.getConfigurator().apply(talonFXConfigs, 0.050);
@@ -73,17 +73,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public void setElevatorPosition(double rotations) {
-
-        if(rotations < 5) {
-            talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.Elevator.MOTMAGMAXVELDOWN;
-            talonFXConfigs.MotionMagic.MotionMagicAcceleration = Constants.Elevator.MOTMAGMAXACCELDOWN;
-        } else {
-            talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.Elevator.MOTMAGMAXVELUP;
-            talonFXConfigs.MotionMagic.MotionMagicAcceleration = Constants.Elevator.MOTMAGMAXACCELUP;
-        }
-
         elevatorMotor.getConfigurator().apply(talonFXConfigs, 0.050);
-
         elevatorMotor.setControl(motMag.withPosition(rotations));
     }
     
@@ -92,7 +82,9 @@ public class Elevator extends SubsystemBase {
     }
     
     public void SmartDashboard() {
-        SmartDashboard.putNumber("Position", elevatorMotor.getPosition().getValue());
+        SmartDashboard.putNumber("Elevator Position", elevatorMotor.getPosition().getValue());
+        SmartDashboard.putNumber("Elevator position graph", elevatorMotor.getPosition().getValue());
+        SmartDashboard.putNumber("elevator Roller speed", driveMotor.getVelocity().getValue());
     }
 
 
@@ -133,8 +125,8 @@ public class Elevator extends SubsystemBase {
         return new FunctionalCommand(
             () -> System.out.println("Running elevator"),
             () -> setElevatorPosition(rotations),
-            interrupted -> {},
-            () -> Math.abs(getPosition() - rotations) < 10,
+            interrupted -> {System.out.println("elevator interrupted");},
+            () -> Math.abs(getPosition() - rotations) < 6,
             this
         );
     }
