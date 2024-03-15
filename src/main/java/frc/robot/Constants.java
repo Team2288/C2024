@@ -50,13 +50,13 @@ public final class Constants {
         public static final int MOTMAGMAXVELUP = 50;
         public static final int MOTMAGMAXACCELDOWN = 200; //19240
         public static final int MOTMAGMAXVELDOWN = 20; //1924        
-        public static final double ELEVATOR_KP = 0.024; //0.00909488172
+        public static final double ELEVATOR_KP = 0.048; //0.00909488172
         public static final double ELEVATOR_KI = 0.0018;
         public static final double ELEVATOR_KD = 0.0001;
         public static final double ELEVATOR_KV = 0.125; //0.05011894428
 
         /* Elevator Positions (rotations) */
-        public static final int UP_AMP = 31; // rotations
+        public static final int UP_AMP = 31 * 2; // rotations
         public static final int UP_CLIMB = 65; // rotations - 68 max
         public static final int DOWN = 5;
     

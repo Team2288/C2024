@@ -80,7 +80,6 @@ public class Robot extends TimedRobot {
     // this line or comment it out.
 
     m_robotContainer.s_Shooter.setSpeed(0.0);
-    m_robotContainer.s_Lights.off();
     m_robotContainer.s_Intake.getPosAndRunIntakeCommand(Constants.Intake.UP_POSITION, 0.0).schedule();
     // m_robotContainer.s_Elevator.setElevatorPosition(48);
    // m_robotContainer.s_Lights.setState(LightStates.PURPLE);

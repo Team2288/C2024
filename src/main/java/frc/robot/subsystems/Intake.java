@@ -33,7 +33,7 @@ public class Intake extends SubsystemBase {
     boolean hasNote, isRunning;
     public BeamBreakSensor sensor; 
 
-    public Intake(Lights lights) {
+    public Intake() {
         // Initialize motors, motor controllers, and motor settings
         driveNeo = new CANSparkMax(Constants.Intake.DRIVE_MOTOR, MotorType.kBrushless);
         driveNeo.setIdleMode(IdleMode.kBrake);
@@ -67,7 +67,7 @@ public class Intake extends SubsystemBase {
 
         // Initialize time of flight sensor
 
-        sensor = new BeamBreakSensor(0, lights);
+        sensor = new BeamBreakSensor(0);
         // Initialize subsystem states
         hasNote = false;
         isRunning = false;

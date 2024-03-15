@@ -24,6 +24,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import frc.robot.subsystems.Limelight;
 import edu.wpi.first.math.VecBuilder;
 
@@ -47,7 +48,7 @@ public class Swerve extends SubsystemBase {
             new SwerveModule(3, Constants.Swerve.Mod3.constants)
         };
 
-        /* 
+        
         swerveOdometry = new SwerveDrivePoseEstimator(
             Constants.Swerve.swerveKinematics, 
             getGyroYaw(), 
@@ -55,13 +56,9 @@ public class Swerve extends SubsystemBase {
             new Pose2d()
         );
 
-        */
 
-        swerveOdometry = new SwerveDrivePoseEstimator(
-            Constants.Swerve.swerveKinematics, 
-            getGyroYaw(), 
-            getModulePositions(),
-            new Pose2d());
+       // swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getGyroYaw(), getModulePositions());
+  
 
         AutoBuilder.configureHolonomic(
             this::getPose, // Robot pose supplier
@@ -194,7 +191,10 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic(){
         swerveOdometry.update(getGyroYaw(), getModulePositions());
+
+        
         var tagMeasurement = this.limelight.getEstimatedAprilTagPose();
+
 
         if (tagMeasurement.tagCount >= 2) {
             swerveOdometry.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 99999));

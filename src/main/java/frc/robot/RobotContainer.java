@@ -58,15 +58,15 @@ public class RobotContainer {
     private final Trigger shoot = codriver.x(); //up
     private final Trigger intakeUp = codriver.y();
     private final Trigger spitNoteOut = codriver.b();
-    private final Trigger climber = codriver.rightBumper();
-    private final Trigger elevatorClimb = codriver.leftBumper();
+    private final Trigger climberUp = codriver.rightBumper();
+    private final Trigger climberDown = codriver.leftBumper();
     private final Trigger shootAmp = codriver.start();
+    private final Trigger stopClimber = codriver.rightTrigger();
     private final Trigger backUpShooter = codriver.back();
     private final Trigger slowModeTrigger = new Trigger(() -> driver.getTrigger());
 
     /* Subsystems */
-    public final Lights s_Lights = new Lights();
-    public final Intake s_Intake = new Intake(s_Lights);
+    public final Intake s_Intake = new Intake();
     public final Elevator s_Elevator = new Elevator();
     public final Shooter s_Shooter = new Shooter();
     public final Climber s_Climber = new Climber();
@@ -129,6 +129,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("IntakeUp", this.s_Intake.getPosAndRunIntakeCommand(Constants.Intake.UP_POSITION, 0.0));
         NamedCommands.registerCommand("RampUp", new SequentialCommandGroup(this.s_Shooter.rampVelocityPIDs(0.5), new WaitCommand(1)));
         NamedCommands.registerCommand("TurnOffShooter", new InstantCommand(() -> this.s_Shooter.setSpeed(0.0), this.s_Shooter));
+        
         // Auto Chooser
         auto = AutoBuilder.buildAuto("5NoteRight");
 
@@ -161,8 +162,8 @@ public class RobotContainer {
         
 
         shootAmp.whileTrue(
-            //this.shootAmp()
-            new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(0.80), this.s_Elevator)
+            this.shootAmp()
+            //new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(0.80), this.s_Elevator)
         );
 
         
@@ -175,16 +176,25 @@ public class RobotContainer {
             //new InstantCommand( () -> this.s_Shooter.setSpeed(0.5), s_Shooter)
         );
 
-        climber.whileTrue(
-            new InstantCommand(() -> this.s_Climber.setSpeed(-0.2), s_Climber)
+        climberUp.whileTrue(
+            new InstantCommand(() -> this.s_Climber.setSpeed(0.5), s_Climber)
         );
 
-        climber.whileFalse(
+        climberDown.whileTrue(
+            new InstantCommand(() -> this.s_Climber.setSpeed(-0.5), s_Climber)
+        );
+
+        stopClimber.whileTrue(
+            new InstantCommand(() -> this.s_Climber.setSpeed(0.0), s_Climber)
+        );
+
+        /* 
+        climberUp.whileFalse(
             new InstantCommand(() -> this.s_Climber.setSpeed(0.0), s_Climber)
         );
 
         
-        elevatorClimb.onTrue(
+        /*elevatorClimb.onTrue(
             new InstantCommand(() -> this.s_Elevator.setElevatorPosition(60), s_Elevator)
         );
 
@@ -264,7 +274,6 @@ public class RobotContainer {
                 new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(Constants.Intake.SPEED), s_Intake)
             ),
             new WaitCommand(2),
-            //this.s_Lights.getLightsCommand(LightStates.PURPLE),
             new ParallelCommandGroup(
                 new InstantCommand(() -> s_Elevator.setElevatorSpeed(0.0), s_Elevator),
                 new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(0.0), s_Intake),

@@ -134,7 +134,7 @@ public class Elevator extends SubsystemBase {
             () -> System.out.println("Running elevator"),
             () -> setElevatorPosition(rotations),
             interrupted -> {},
-            () -> Math.abs(getPosition() - rotations) < 4,
+            () -> Math.abs(getPosition() - rotations) < 10,
             this
         );
     }
