@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import frc.robot.commands.TeleopSwerve;
+import frc.robot.sensors.BeamBreakSensor;
 import frc.robot.Constants.Lights.LightStates;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.subsystems.Climber;
@@ -66,7 +67,8 @@ public class RobotContainer {
     private final Trigger slowModeTrigger = new Trigger(() -> driver.getTrigger());
 
     /* Subsystems */
-    public final Intake s_Intake = new Intake();
+    public final Lights s_Lights = new Lights();    
+    public final Intake s_Intake = new Intake(s_Lights);
     public final Shooter s_Shooter = new Shooter();
     public final Climber s_Climber = new Climber();
     public final Elevator s_Elevator = new Elevator();
@@ -98,10 +100,12 @@ public class RobotContainer {
                     () -> System.out.println("Elevator default command initialized"),
                     () -> s_Elevator.setElevatorPosition(Constants.Elevator.DOWN),
                     interrupted -> System.out.println("Command schedule for elevator"),
-                    () -> (s_Elevator.getPosition() < 3 && s_Elevator.getPosition() > 1),
+                    () -> /*(s_Elevator.getPosition() < 3 && s_Elevator.getPosition() > 1)*/false,
                     s_Elevator
                 )
             );
+
+            s_Lights.setState(Constants.Lights.LightStates.PURPLE);
         
         /* 
 
@@ -114,15 +118,14 @@ public class RobotContainer {
                 s_Intake
             )
         );
-        */
-        // s_Lights.setDefaultCommand(
-        //     new LightsCommand(
-        //         () -> s_Lights.off(),
-        //         null
-        //     )
-        // );
 
-        
+        s_Lights.setDefaultCommand(
+            new InstantCommand(
+                () -> s_Lights.setState(Constants.Lights.LightStates.PURPLE),
+                s_Lights
+            )
+        );
+
         /*
         s_Shooter.setDefaultCommand( // the default command is not to shoot lmao
             new InstantCommand(
@@ -309,10 +312,10 @@ public class RobotContainer {
              new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(Constants.Intake.SPEED), s_Intake),
              new WaitCommand(.7),
              new ParallelCommandGroup(
-                 new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(0), this.s_Elevator),
-                 new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(0.0), s_Intake),
-                 new InstantCommand(() -> s_Shooter.setSpeed(0), s_Shooter)
-                 //this.s_Lights.getLightsCommand(LightStates.PURPLE)
+                new InstantCommand(() -> s_Lights.setState(Constants.Lights.LightStates.PURPLE), s_Lights),
+                new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(0), this.s_Elevator),
+                new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(0.0), s_Intake),
+                new InstantCommand(() -> s_Shooter.setSpeed(0), s_Shooter)
              )
          );
  

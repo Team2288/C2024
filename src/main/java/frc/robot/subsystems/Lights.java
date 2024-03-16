@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.io.IOException;
+
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.SerialPort.Parity;
 import edu.wpi.first.wpilibj.SerialPort.StopBits;
@@ -8,18 +10,29 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 import frc.robot.Constants;
+import frc.robot.Constants.Lights.LightStates;
+import frc.robot.sensors.BeamBreakSensor;
 
 public class Lights extends SubsystemBase {
     private SerialPort port;
-      
+    private LightStates state = LightStates.ORANGE; 
     public Lights() {
         super();
-
-        this.port = new SerialPort(115200, SerialPort.Port.kOnboard,8,Parity.kEven,StopBits.kOne);
+        try {
+            Runtime.getRuntime().exec("chmod + rx /dev/ttyUSB0");
+            Runtime.getRuntime().exec("stty -F /dev/ttyUSB0 115200 -cstopb -parenb");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.port = new SerialPort(115200, SerialPort.Port.kUSB1,8,Parity.kEven,StopBits.kOne);
+        this.setState(Constants.Lights.LightStates.OFF);
     }
     
     // Set state until state is set otherwise
     public void setState(Constants.Lights.LightStates state) {
+        if (state == this.state) return;
+
+        this.state = state;
         String command = Constants.Lights.HASHMAP_LIGHT_STATES.getOrDefault(state, Constants.Lights.DEFAULT_LIGHT_STATE);
         this.port.writeString(command);
         this.port.flush();

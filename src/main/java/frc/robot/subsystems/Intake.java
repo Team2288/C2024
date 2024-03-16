@@ -9,6 +9,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,8 +33,9 @@ public class Intake extends SubsystemBase {
     private CurrentLimitsConfigs currentLimits;
     boolean hasNote, isRunning;
     public BeamBreakSensor sensor; 
+    Lights lights;
 
-    public Intake() {
+    public Intake(Lights lights) {
         // Initialize motors, motor controllers, and motor settings
         driveNeo = new CANSparkMax(Constants.Intake.DRIVE_MOTOR, MotorType.kBrushless);
         driveNeo.setIdleMode(IdleMode.kBrake);
@@ -66,8 +68,9 @@ public class Intake extends SubsystemBase {
         swivelFalcon.getConfigurator().apply(talonFXConfigs, 0.050);
 
         // Initialize time of flight sensor
-
         sensor = new BeamBreakSensor(0);
+
+        this.lights = lights;
         // Initialize subsystem states
         hasNote = false;
         isRunning = false;
@@ -103,7 +106,12 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean isCommandDone(double position) {
-        return ((Math.abs(getPosition() - position) < 4) && sensor.getNoteDetected());
+        if ((Math.abs(getPosition() - position) < 4) && sensor.getNoteDetected()) {
+            lights.setState(Constants.Lights.LightStates.ORANGE);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public boolean isCommandDonePositionOnly(double position) {
