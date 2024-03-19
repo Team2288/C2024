@@ -7,26 +7,24 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-
+import frc.robot.commands.AutoAlignSwerve;
 import frc.robot.commands.TeleopSwerve;
-import frc.robot.sensors.BeamBreakSensor;
-import frc.robot.Constants.Lights.LightStates;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.Limelight;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.Lights;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -37,7 +35,7 @@ import frc.robot.subsystems.Lights;
 
 public class RobotContainer {
     /* Controllers */
-    private final Joystick driver = new Joystick(0);
+    public final Joystick driver = new Joystick(0);
     private final CommandXboxController codriver = new CommandXboxController(1); 
 
     /* Drive Controls */
@@ -56,15 +54,16 @@ public class RobotContainer {
     //private final Trigger purpleLED = codriver.button(Constants.Buttons.LED_PURPLE);
 
     private final Trigger intake_on = codriver.a(); //down
-    private final Trigger shoot = codriver.x(); //up
+    private final Trigger revShooter = codriver.x(); //up
+    private final Trigger shoot = new Trigger(() -> driver.getRawButton(18));
     private final Trigger intakeUp = codriver.y();
     private final Trigger spitNoteOut = codriver.b();
-    private final Trigger climberUp = codriver.rightBumper();
-    private final Trigger climberDown = codriver.leftBumper();
+    private final Trigger climberUp = codriver.rightTrigger();
+    private final Trigger climberDown = codriver.leftTrigger();
     private final Trigger shootAmp = codriver.start();
-    private final Trigger stopClimber = codriver.rightTrigger();
+    private final Trigger zeroClimber = codriver.rightBumper();
     private final Trigger backUpShooter = codriver.back();
-    private final Trigger slowModeTrigger = new Trigger(() -> driver.getTrigger());
+    private boolean toggle = true;
 
     /* Subsystems */
     public final Lights s_Lights = new Lights();    
@@ -95,15 +94,16 @@ public class RobotContainer {
                 )
             );        
         
+/* 
             s_Elevator.setDefaultCommand(
                 new FunctionalCommand(
                     () -> System.out.println("Elevator default command initialized"),
                     () -> s_Elevator.setElevatorPosition(Constants.Elevator.DOWN),
                     interrupted -> System.out.println("Command schedule for elevator"),
-                    () -> /*(s_Elevator.getPosition() < 3 && s_Elevator.getPosition() > 1)*/false,
+                    () -> /*(s_Elevator.getPosition() < 3 && s_Elevator.getPosition() > 1)false,
                     s_Elevator
                 )
-            );
+            );*/
 
             s_Lights.setState(Constants.Lights.LightStates.PURPLE);
         
@@ -166,16 +166,20 @@ public class RobotContainer {
             this.s_Intake.getIntakeRoutineCommand()
         );
 
-        shoot.onTrue(
-            //new InstantCommand(() -> s_Elevator.setElevatorPosition(38), s_Elevator)
-            this.getShootCommand()
-            // new InstantCommand( () -> s_Shooter.setVelocity(5000))
-        );
-        
+        revShooter
+            .onTrue(
 
+                //new InstantCommand(() -> s_Elevator.setElevatorPosition(38), s_Elevator)
+                
+                this.rampCommand()
+
+                // new InstantCommand( () -> s_Shooter.setVelocity(5000))
+            );
+
+        shoot.onTrue(this.getShootCommand());
+        
         shootAmp.onTrue(
             this.shootAmp()
-            //new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(0.80), this.s_Elevator)
         );
 
         
@@ -189,15 +193,19 @@ public class RobotContainer {
         );
 
         climberUp.whileTrue(
-            new InstantCommand(() -> this.s_Climber.setSpeed(0.5), s_Climber)
+            new InstantCommand(() -> this.s_Climber.setPosition(Constants.Climber.UP_POSITION), s_Climber)
         );
 
         climberDown.whileTrue(
-            new InstantCommand(() -> this.s_Climber.setSpeed(-0.5), s_Climber)
+            new InstantCommand(() -> this.s_Climber.setPosition(Constants.Climber.DOWN_POSITION), s_Climber)
         );
 
-        stopClimber.whileTrue(
-            new InstantCommand(() -> this.s_Climber.setSpeed(0.0), s_Climber)
+        zeroClimber.whileTrue(
+            new InstantCommand(() -> this.s_Climber.setPosition(0), s_Climber)
+        );
+
+        backUpShooter.whileTrue(
+            new AutoAlignSwerve(s_Swerve, () -> -driver.getRawAxis(strafeAxis))
         );
 
         /* 
@@ -278,15 +286,16 @@ public class RobotContainer {
     public Command shootAmp() {
         return new SequentialCommandGroup(
             new ParallelCommandGroup(
-                new InstantCommand(() -> s_Shooter.setSpeed(0.08), s_Shooter),
+                new InstantCommand(() -> s_Shooter.setSpeed(0.05), s_Shooter),
                 s_Elevator.getElevatorPositionCommand(Constants.Elevator.UP_AMP)
             ),
             new ParallelCommandGroup(
                 new InstantCommand(() -> s_Elevator.setElevatorSpeed(Constants.Elevator.SPEED), s_Elevator),
                 new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(Constants.Intake.SPEED), s_Intake)
             ),
-            new WaitCommand(2),
+            new WaitCommand(1),
             new ParallelCommandGroup(
+                new InstantCommand(() -> s_Lights.setState(Constants.Lights.LightStates.PURPLE), s_Lights),
                 new InstantCommand(() -> s_Elevator.setElevatorSpeed(0.0), s_Elevator),
                 new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(0.0), s_Intake),
                 new InstantCommand(() -> s_Shooter.setSpeed(0), s_Shooter)
@@ -296,31 +305,41 @@ public class RobotContainer {
     }
 
     public Command rampCommand() {
-        return new SequentialCommandGroup(
-            this.s_Shooter.rampVelocityPIDs(0.5),
-            new WaitCommand(.7)
+        return new ConditionalCommand(
+            this.rampVelocityPIDsToggle(0.5, this.toggle),
+            this.rampVelocityPIDsToggle(0.0, this.toggle),
+            () -> {return this.toggle;}
+        );
+    }
+
+
+    public Command rampVelocityPIDsToggle(double pctspeed, boolean toggle) {
+        return new FunctionalCommand(
+            () -> {System.out.println("Ramping Shooter"); this.toggle = !this.toggle;},
+            () -> this.s_Shooter.setSpeed(pctspeed),
+            interrupted -> {},
+            () -> this.s_Shooter.isFinishedRamping(pctspeed), 
+            s_Shooter
         );
     }
 
     public Command getShootCommand() {
         return new SequentialCommandGroup(
             // this.s_Elevator.getElevatorPositionCommand(-120),
-             //new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(Constants.Elevator.SPEED * 1.5), this.s_Elevator),
-             //this.s_Shooter.rampVelocityPIDsDifferentSpeeds(0.15, 0.15), // bottom top,
-             this.s_Shooter.rampVelocityPIDs(0.5),
-             new WaitCommand(1.0),
-             new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(Constants.Intake.SPEED), s_Intake),
-             new WaitCommand(.7),
-             new ParallelCommandGroup(
+            //new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(Constants.Elevator.SPEED * 1.5), this.s_Elevator),
+            //this.s_Shooter.rampVelocityPIDsDifferentSpeeds(0.15, 0.15), // bottom top,
+            //this.s_Shooter.rampVelocityPIDs(0.5),
+            //new WaitCommand(1.0),
+            new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(Constants.Intake.SPEED), s_Intake),
+            new WaitCommand(.7),
+            new ParallelCommandGroup(
                 new InstantCommand(() -> s_Lights.setState(Constants.Lights.LightStates.PURPLE), s_Lights),
                 new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(0), this.s_Elevator),
                 new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(0.0), s_Intake),
                 new InstantCommand(() -> s_Shooter.setSpeed(0), s_Shooter)
-             )
-         );
- 
+            )
+        );
     }
-
 
 /*     * Use this to pass the autonomous command to the main {@link Robot} class.
      *

@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -107,7 +108,7 @@ public class Intake extends SubsystemBase {
 
     public boolean isCommandDone(double position) {
         if ((Math.abs(getPosition() - position) < 4) && sensor.getNoteDetected()) {
-            lights.setState(Constants.Lights.LightStates.ORANGE);
+            //lights.setState(Constants.Lights.LightStates.ORANGE);
             return true;
         } else {
             return false;
@@ -198,7 +199,10 @@ public class Intake extends SubsystemBase {
     public Command getIntakeRoutineCommand() {
         return new SequentialCommandGroup(
             getPosAndRunIntakeCommand(Constants.Intake.DOWN_POSITION, Constants.Intake.SPEED),
-            getPosAndRunIntakeCommand(Constants.Intake.UP_POSITION, 0.0)
+            new ParallelCommandGroup(
+                new InstantCommand(() -> lights.setState(Constants.Lights.LightStates.ORANGE), lights),
+                getPosAndRunIntakeCommand(Constants.Intake.UP_POSITION, 0.0)
+            )
         );
     }
 

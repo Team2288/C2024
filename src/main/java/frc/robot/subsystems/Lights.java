@@ -17,6 +17,7 @@ public class Lights extends SubsystemBase {
     private SerialPort port;
     private LightStates state = LightStates.ORANGE; 
     public Lights() {
+        
         super();
         try {
             Runtime.getRuntime().exec("chmod + rx /dev/ttyUSB0");
@@ -26,6 +27,7 @@ public class Lights extends SubsystemBase {
         }
         this.port = new SerialPort(115200, SerialPort.Port.kUSB1,8,Parity.kEven,StopBits.kOne);
         this.setState(Constants.Lights.LightStates.OFF);
+        
     }
     
     // Set state until state is set otherwise
@@ -36,6 +38,7 @@ public class Lights extends SubsystemBase {
         String command = Constants.Lights.HASHMAP_LIGHT_STATES.getOrDefault(state, Constants.Lights.DEFAULT_LIGHT_STATE);
         this.port.writeString(command);
         this.port.flush();
+        
     }
 
     public FunctionalCommand getLightsCommand(Constants.Lights.LightStates state) {

@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4389491636126137,
-      "y": 4.119307667186764
+      "x": 1.3509924162705473,
+      "y": 4.089988751406074
     },
     "rotation": 0
   },
@@ -31,6 +31,12 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Shoot Preloaded (Start Right)"
@@ -45,7 +51,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Get Bottom Note From Right"
+            "pathName": "Get Outer Bottom From Right"
           }
         },
         {
@@ -57,7 +63,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Get Center Note From Right"
+            "pathName": "Get 2nd Bottom Midline (Right)"
           }
         },
         {
@@ -67,27 +73,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Get Far Top Note from Center"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Get Outer Note From Center"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "TurnOffShooter"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeUp"
+                }
+              }
+            ]
           }
         }
       ]

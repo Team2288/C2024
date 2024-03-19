@@ -59,7 +59,7 @@ public class Elevator extends SubsystemBase {
 
         talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.Elevator.MOTMAGMAXVELUP; // rps cruise velocity
         talonFXConfigs.MotionMagic.MotionMagicAcceleration = Constants.Elevator.MOTMAGMAXACCELUP; // rps/s acceleration 
-        talonFXConfigs.MotionMagic.MotionMagicJerk = 3200; // rps/s^2 jerk 
+        talonFXConfigs.MotionMagic.MotionMagicJerk = 25000; // rps/s^2 jerk 
         
         elevatorMotor.getConfigurator().apply(talonFXConfigs, 0.050);
     }

@@ -195,6 +195,7 @@ public class Swerve extends SubsystemBase {
         
         var tagMeasurement = this.limelight.getEstimatedAprilTagPose();
 
+       
 
         if (tagMeasurement.tagCount >= 2) {
             swerveOdometry.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 99999));
@@ -203,6 +204,7 @@ public class Swerve extends SubsystemBase {
                 tagMeasurement.timestampSeconds
             );
         }
+        
 
        // swerveOdometry.addVisionMeasurement(
        //     tagMeasurement,
