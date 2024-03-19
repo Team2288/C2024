@@ -62,7 +62,7 @@ public class RobotContainer {
     private final Trigger climberDown = codriver.leftTrigger();
     private final Trigger shootAmp = codriver.start();
     private final Trigger zeroClimber = codriver.rightBumper();
-    private final Trigger backUpShooter = codriver.back();
+    private final Trigger aim = new Trigger(() -> driver.getRawButton(1));
     private boolean toggle = true;
 
     /* Subsystems */
@@ -204,7 +204,7 @@ public class RobotContainer {
             new InstantCommand(() -> this.s_Climber.setPosition(0), s_Climber)
         );
 
-        backUpShooter.whileTrue(
+        aim.whileTrue(
             new AutoAlignSwerve(s_Swerve, () -> -driver.getRawAxis(strafeAxis))
         );
 
