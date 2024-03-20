@@ -9,23 +9,28 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.Swerve;
+import edu.wpi.first.wpilibj.DriverStation;
 
-public class AutoAlignSwerve extends Command{
+public class SpeakerAlignSwerve extends Command{
     private Swerve s_Swerve;    
     private DoubleSupplier strafeSup;
+    private double prevErr;
 
-    public AutoAlignSwerve(Swerve s_Swerve, DoubleSupplier strafeSup) {
+    public SpeakerAlignSwerve(Swerve s_Swerve, DoubleSupplier strafeSup) {
         this.s_Swerve = s_Swerve;
         addRequirements(s_Swerve);
 
         this.strafeSup = strafeSup;
+        prevErr = 0.000001;
     }
 
-    private Double limelightAimKP() {    
+    private Double limelightAimKP() {  
         // if the robot never turns in the correct direction, kP should be inverted.
         double kP = 0.005;
+        double kD = 0.0000;
         double targetingAngularVelocity = 
-            LimelightHelpers.getTX("limelight-ironman") * kP;
+            LimelightHelpers.getTX("limelight-ironman") * kP +
+            derive(LimelightHelpers.getTX("limelight-ironman")) * kD;
         //invert since tx is positive when the target is to the right of the crosshair
         targetingAngularVelocity *= -1;
         return targetingAngularVelocity;
@@ -51,6 +56,12 @@ public class AutoAlignSwerve extends Command{
             false, 
             true
         );
+    }
+
+    private double derive(double currErr) {
+        double derErr = prevErr - currErr;
+        prevErr = currErr;
+        return derErr;
     }
 }
 

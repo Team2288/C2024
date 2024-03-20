@@ -3,6 +3,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -14,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.AutoAlignSwerve;
+import frc.robot.commands.SpeakerAlignSwerve;
 import frc.robot.commands.TeleopSwerve;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import frc.robot.subsystems.Climber;
@@ -205,7 +206,7 @@ public class RobotContainer {
         );
 
         aim.whileTrue(
-            new AutoAlignSwerve(s_Swerve, () -> -driver.getRawAxis(strafeAxis))
+            new SpeakerAlignSwerve(s_Swerve, () -> -driver.getRawAxis(strafeAxis))
         );
 
         /* 
