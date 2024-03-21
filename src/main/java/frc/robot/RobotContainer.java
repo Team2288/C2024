@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.AmpAlignSwerve;
 import frc.robot.commands.SpeakerAlignSwerve;
 import frc.robot.commands.TeleopSwerve;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -63,7 +64,8 @@ public class RobotContainer {
     private final Trigger climberDown = codriver.leftTrigger();
     private final Trigger shootAmp = codriver.start();
     private final Trigger zeroClimber = codriver.rightBumper();
-    private final Trigger aim = new Trigger(() -> driver.getRawButton(1));
+    private final Trigger aimSpeaker = new Trigger(() -> driver.getRawButton(1));
+    private final Trigger aimAmp = new Trigger(() -> driver.getRawButton(2));
     private boolean toggle = true;
 
     /* Subsystems */
@@ -205,8 +207,22 @@ public class RobotContainer {
             new InstantCommand(() -> this.s_Climber.setPosition(0), s_Climber)
         );
 
-        aim.whileTrue(
-            new SpeakerAlignSwerve(s_Swerve, () -> -driver.getRawAxis(strafeAxis))
+        aimSpeaker.whileTrue(
+            new SpeakerAlignSwerve(
+                s_Swerve,
+                () -> -driver.getRawAxis(translationAxis),
+                () -> -driver.getRawAxis(strafeAxis),
+                () -> -driver.getRawAxis(rotationAxis)
+            )
+        );
+
+        aimAmp.whileTrue(
+            new AmpAlignSwerve(
+                    s_Swerve, 
+                    () -> -driver.getRawAxis(translationAxis), 
+                    () -> -driver.getRawAxis(strafeAxis), 
+                    () -> -driver.getRawAxis(rotationAxis)
+            )
         );
 
         /* 

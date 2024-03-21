@@ -55,7 +55,6 @@ public class Limelight extends SubsystemBase {
 
     @Override
     public void periodic() {
-        
         x = tx.getDouble(0.0);
         y = ty.getDouble(0.0);
         latency = tl.getDouble(0.0);

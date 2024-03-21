@@ -4,53 +4,50 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
-
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.Swerve;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
-public class SpeakerAlignSwerve extends Command{
+public class AmpAlignSwerve extends Command{
     private Swerve s_Swerve;    
     private DoubleSupplier translationSup, strafeSup, rotationSup;
-    private double prevErr;
     private int priorityTag;
 
-    public SpeakerAlignSwerve(Swerve s_Swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup) {
+    public AmpAlignSwerve(Swerve s_Swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup) {
         this.s_Swerve = s_Swerve;
         addRequirements(s_Swerve);
 
         this.translationSup = translationSup;
         this.strafeSup = strafeSup;
         this.rotationSup = rotationSup;
-        prevErr = 0.000001;
 
         if(DriverStation.getAlliance().get() == Alliance.Red) {
-            priorityTag = 4;
+            priorityTag = 5;
         } else { 
-            priorityTag = 7;
+            priorityTag = 6;
         }
         LimelightHelpers.setPriorityTagID("limelight-ironman", priorityTag);
     }
 
-    private Double limelightAimKP() {  
+    private Double limelightStrafeVal() {  
         // if the robot never turns in the correct direction, kP should be inverted.
         double kP = 0.005;
-        double kD = 0.0000;
-        double targetingAngularVelocity = 
-            LimelightHelpers.getTX("limelight-ironman") * kP +
-            derive(LimelightHelpers.getTX("limelight-ironman")) * kD;
+        double targetingStrafeVelocity = 
+            LimelightHelpers.getTX("limelight-ironman") * kP;
         //invert since tx is positive when the target is to the right of the crosshair
-        targetingAngularVelocity *= -1;
-        return targetingAngularVelocity;
+        targetingStrafeVelocity *= -1;
+        return targetingStrafeVelocity;
     }
-    private Double limelightRangeProportional() {    
-        double kP = .4;
-        double targetingForwardSpeed = LimelightHelpers.getTY("limelight-ironman") * kP;
-        //targetingForwardSpeed = -targetingForwardSpeed;
-        return targetingForwardSpeed;
+    private Double limelightRotationVal() {    
+        double kP = .0001;
+        double targetRot = 90.0; // check if same for red/blue alliance
+        double[] pose = LimelightHelpers.getBotPose_wpiBlue("limelight-ironman");
+        double currRot = pose[5];
+        return (targetRot - currRot) * kP;
+        // targetRot - currRot = error
     }
 
     @Override
@@ -61,8 +58,8 @@ public class SpeakerAlignSwerve extends Command{
         double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.moveDeadband);
 
         if(LimelightHelpers.getFiducialID("limelight-ironman") == priorityTag) {
-            translationVal = limelightRangeProportional();
-            rotationVal = limelightAimKP();
+            strafeVal = limelightStrafeVal();
+            rotationVal = limelightRotationVal();
         }
 
         /* Drive */
@@ -74,10 +71,4 @@ public class SpeakerAlignSwerve extends Command{
         );
     }
 
-    private double derive(double currErr) {
-        double derErr = prevErr - currErr;
-        prevErr = currErr;
-        return derErr;
-    }
 }
-
