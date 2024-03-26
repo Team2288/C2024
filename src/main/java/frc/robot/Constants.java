@@ -26,19 +26,19 @@ public final class Constants {
         public static final int MOTOR_ID = 30;
 
         /* Climber PID Values No Load */
-        public static final double kP = 0.0005;
+        public static final double kP = 0.02;
         public static final double kI = 0;
         public static final double kD = 0;
         public static final double kF = 0;
 
-        public static final double lkP = 0.0005;
+        public static final double lkP = 0.02;
         public static final double lkI = 0;
         public static final double lkD = 0;
         public static final double lkF = 0.0;
 
         /* Climber positions */
-        public static final int UP_POSITION = -21429;
-        public static final int DOWN_POSITION = 2857;
+        public static final int UP_POSITION = -182;
+        public static final int DOWN_POSITION = 34;
     }
 
     /* Elevator Constants */
@@ -263,7 +263,7 @@ public final class Constants {
     /* Autonomous Constants */
     public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
         public static final double kMaxSpeedMetersPerSecond = 4.5;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 9;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 7;
         public static final double kMaxAngularSpeedRadiansPerSecond = 10;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = 10;
     

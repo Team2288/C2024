@@ -84,6 +84,7 @@ public class RobotContainer {
     private boolean slowMode = false;
 
     /* The container for the robot. Contains subsystems, OI devices, and commands. */
+    // red: translation and strafe positive, blue: translation and strafe negative
     public RobotContainer() {
         // Subsystems
 
@@ -146,10 +147,10 @@ public class RobotContainer {
         NamedCommands.registerCommand("TurnOffShooter", new InstantCommand(() -> this.s_Shooter.setSpeed(0.0), this.s_Shooter));
         
         // Auto Chooser
-        auto = AutoBuilder.buildAuto("5NoteRight");
+        auto = AutoBuilder.buildAuto("4NoteOuterRingsRight");
 
         // Configure the button bindings
-        configureButtonBindings();
+        configureButtonBindings(); 
     }
 
     /**
@@ -180,12 +181,17 @@ public class RobotContainer {
             );
 
         shoot.onTrue(this.getShootCommand());
-        
+
+        /* 
         shootAmp.onTrue(
             this.shootAmp()
         );
+        */
 
-        
+        shootAmp.whileTrue(
+            new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(0.8), s_Elevator)
+        );
+
         intakeUp.onTrue(
             this.s_Intake.getPosAndRunIntakeCommand(Constants.Intake.UP_POSITION, 0.0)
         );
@@ -195,16 +201,21 @@ public class RobotContainer {
             //new InstantCommand( () -> this.s_Shooter.setSpeed(0.5), s_Shooter)
         );
 
-        climberUp.whileTrue(
-            new InstantCommand(() -> this.s_Climber.setPosition(Constants.Climber.UP_POSITION), s_Climber)
+        climberUp.onTrue(
+           // new InstantCommand(() -> this.s_Climber.setPosition(Constants.Climber.UP_POSITION), s_Climber)
+            new InstantCommand(() -> this.s_Climber.setSpeed(-0.2), s_Climber)
         );
 
-        climberDown.whileTrue(
-            new InstantCommand(() -> this.s_Climber.setPosition(Constants.Climber.DOWN_POSITION), s_Climber)
+        climberDown.onTrue(
+          //  new InstantCommand(() -> this.s_Climber.setPosition(Constants.Climber.DOWN_POSITION), s_Climber)
+            new InstantCommand(() -> this.s_Climber.setSpeed(0.2), s_Climber)
+
         );
 
-        zeroClimber.whileTrue(
-            new InstantCommand(() -> this.s_Climber.setPosition(0), s_Climber)
+        zeroClimber.onTrue(
+          //  new InstantCommand(() -> this.s_Climber.setPosition(0), s_Climber)
+            new InstantCommand(() -> this.s_Climber.setSpeed(0.0), s_Climber)
+
         );
 
         aimSpeaker.whileTrue(
@@ -218,12 +229,13 @@ public class RobotContainer {
 
         aimAmp.whileTrue(
             new AmpAlignSwerve(
-                    s_Swerve, 
-                    () -> -driver.getRawAxis(translationAxis), 
-                    () -> -driver.getRawAxis(strafeAxis), 
-                    () -> -driver.getRawAxis(rotationAxis)
+                s_Swerve,
+                () -> -driver.getRawAxis(translationAxis),
+                () -> -driver.getRawAxis(strafeAxis),
+                () -> -driver.getRawAxis(rotationAxis)
             )
-        );
+        );        
+ 
 
         /* 
         climberUp.whileFalse(
@@ -300,6 +312,7 @@ public class RobotContainer {
             this.s_Intake.getIntakeRoutineCommand()
         );
     }
+
     public Command shootAmp() {
         return new SequentialCommandGroup(
             new ParallelCommandGroup(
@@ -351,9 +364,9 @@ public class RobotContainer {
             new WaitCommand(.7),
             new ParallelCommandGroup(
                 new InstantCommand(() -> s_Lights.setState(Constants.Lights.LightStates.PURPLE), s_Lights),
-                new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(0), this.s_Elevator),
-                new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(0.0), s_Intake),
-                new InstantCommand(() -> s_Shooter.setSpeed(0), s_Shooter)
+                //new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(0), this.s_Elevator),
+                new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(0.0), s_Intake)
+               // new InstantCommand(() -> s_Shooter.setSpeed(0), s_Shooter)
             )
         );
     }

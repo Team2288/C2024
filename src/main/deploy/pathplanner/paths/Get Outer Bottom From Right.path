@@ -16,32 +16,32 @@
     },
     {
       "anchor": {
-        "x": 6.71635400413658,
-        "y": 0.7622918102979067
+        "x": 6.78802246493382,
+        "y": 0.4845765247086051
       },
       "prevControl": {
-        "x": 2.6556841685111943,
-        "y": 0.8795674734206621
+        "x": 2.7273526293084345,
+        "y": 0.6018521878313605
       },
       "nextControl": {
-        "x": 7.830104847984057,
-        "y": 0.7301257209449108
+        "x": 7.901773308781297,
+        "y": 0.4524104353556092
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.592764614100657,
-        "y": 0.7622918102979067
+        "x": 9.666977111732002,
+        "y": 0.4845765247086051
       },
       "prevControl": {
-        "x": 8.477067382706194,
-        "y": 0.747632352407562
+        "x": 9.551279880337539,
+        "y": 0.4699170668182604
       },
       "nextControl": {
-        "x": 8.70846184549512,
-        "y": 0.7769512681882514
+        "x": 9.782674343126466,
+        "y": 0.49923598259894986
       },
       "isLocked": false,
       "linkedName": null
@@ -52,8 +52,24 @@
         "y": 3.97
       },
       "prevControl": {
-        "x": 2.904894952647049,
-        "y": 1.0847998838854824
+        "x": 3.3949766010593603,
+        "y": -0.044616864898299635
+      },
+      "nextControl": {
+        "x": 1.7997347105805326,
+        "y": 4.0476392063895235
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.83,
+        "y": 3.97
+      },
+      "prevControl": {
+        "x": 1.7997347105805326,
+        "y": 4.0476392063895235
       },
       "nextControl": null,
       "isLocked": false,
@@ -76,7 +92,7 @@
   "eventMarkers": [
     {
       "name": "IntakeRoutine",
-      "waypointRelativePos": 0.75,
+      "waypointRelativePos": 0.8999999999999999,
       "command": {
         "type": "parallel",
         "data": {
@@ -94,19 +110,19 @@
   ],
   "globalConstraints": {
     "maxVelocity": 4.5,
-    "maxAcceleration": 9.0,
+    "maxAcceleration": 7.0,
     "maxAngularVelocity": 573.0,
     "maxAngularAcceleration": 573.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -32.00999999999999,
+    "rotation": -38.59003815703344,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": -31.429565614838527,
+    "rotation": -30.32723706665786,
     "velocity": 0
   },
   "useDefaultConstraints": true

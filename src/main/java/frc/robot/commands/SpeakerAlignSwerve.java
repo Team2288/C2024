@@ -27,12 +27,15 @@ public class SpeakerAlignSwerve extends Command{
         this.rotationSup = rotationSup;
         prevErr = 0.000001;
 
-        if(DriverStation.getAlliance().get() == Alliance.Red) {
+        //priorityTag = 4;
+        /*
+        if(DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
             priorityTag = 4;
         } else { 
             priorityTag = 7;
         }
         LimelightHelpers.setPriorityTagID("limelight-ironman", priorityTag);
+        */
     }
 
     private Double limelightAimKP() {  
@@ -47,7 +50,7 @@ public class SpeakerAlignSwerve extends Command{
         return targetingAngularVelocity;
     }
     private Double limelightRangeProportional() {    
-        double kP = .4;
+        double kP = .5;
         double targetingForwardSpeed = LimelightHelpers.getTY("limelight-ironman") * kP;
         //targetingForwardSpeed = -targetingForwardSpeed;
         return targetingForwardSpeed;
@@ -56,18 +59,13 @@ public class SpeakerAlignSwerve extends Command{
     @Override
     public void execute() {
         /* Get Values, Deadband*/
-        double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.moveDeadband);
-        double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.moveDeadband);
-        double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.moveDeadband);
-
-        if(LimelightHelpers.getFiducialID("limelight-ironman") == priorityTag) {
-            translationVal = limelightRangeProportional();
-            rotationVal = limelightAimKP();
-        }
+        double translationVal = limelightRangeProportional();
+        double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.moveDeadband) * 4.5;
+        double rotationVal = limelightAimKP();
 
         /* Drive */
         s_Swerve.drive(
-            new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed), 
+            new Translation2d(translationVal, strafeVal), 
             rotationVal * Constants.Swerve.maxAngularVelocity, 
             false, 
             true

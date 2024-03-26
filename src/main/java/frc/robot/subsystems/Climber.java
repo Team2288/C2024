@@ -23,7 +23,9 @@ public class Climber extends SubsystemBase {
         motorEncoder = motor.getEncoder();
         motorController = motor.getPIDController();
 
-        motorEncoder.setPosition(0); // !!! Delete after climber calibration
+        motor.setIdleMode(IdleMode.kBrake);
+
+       // motorEncoder.setPosition(0); // !!! Delete after climber calibration
 
         // Set PID Controller Values
         motorController.setP(Constants.Climber.kP, 0); 

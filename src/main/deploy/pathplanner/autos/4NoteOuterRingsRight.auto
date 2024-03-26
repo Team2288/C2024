@@ -31,12 +31,6 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 3.0
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Shoot Preloaded (Start Right)"
@@ -73,22 +67,15 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "TurnOffShooter"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeUp"
-                }
-              }
-            ]
+            "name": "TurnOffShooter"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeUp"
           }
         }
       ]

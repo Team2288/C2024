@@ -25,7 +25,7 @@ public class Lights extends SubsystemBase {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.port = new SerialPort(115200, SerialPort.Port.kUSB1,8,Parity.kEven,StopBits.kOne);
+        //this.port = new SerialPort(115200, SerialPort.Port.kUSB,8,Parity.kEven,StopBits.kOne);
         this.setState(Constants.Lights.LightStates.OFF);
         
     }
@@ -36,8 +36,8 @@ public class Lights extends SubsystemBase {
 
         this.state = state;
         String command = Constants.Lights.HASHMAP_LIGHT_STATES.getOrDefault(state, Constants.Lights.DEFAULT_LIGHT_STATE);
-        this.port.writeString(command);
-        this.port.flush();
+        //this.port.writeString(command);
+        //this.port.flush();
         
     }
 
