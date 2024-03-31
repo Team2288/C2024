@@ -36,7 +36,7 @@ public class Swerve extends SubsystemBase {
     public Limelight limelight;
 
     public Swerve(Limelight limelight) {
-        gyro = new Pigeon2(Constants.Swerve.pigeonID);
+        gyro = new Pigeon2(Constants.Swerve.pigeonID, "Drivetrain");
         gyro.getConfigurator().apply(new Pigeon2Configuration());
         gyro.setYaw(0);
         this.limelight = limelight;
@@ -192,11 +192,7 @@ public class Swerve extends SubsystemBase {
     public void periodic(){
         swerveOdometry.update(getGyroYaw(), getModulePositions());
 
-        
         var tagMeasurement = this.limelight.getEstimatedAprilTagPose();
-
-       
-
         if (tagMeasurement.tagCount >= 2) {
             swerveOdometry.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 99999));
             swerveOdometry.addVisionMeasurement(
@@ -204,17 +200,17 @@ public class Swerve extends SubsystemBase {
                 tagMeasurement.timestampSeconds
             );
         }
-        
-
        // swerveOdometry.addVisionMeasurement(
        //     tagMeasurement,
        //     Timer.getFPGATimestamp()
        // );
 
+       /*
         for(SwerveModule mod : mSwerveMods){
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
         }
+        */
     }
 }

@@ -4,19 +4,20 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Swerve;
 
 public class AmpAlignSwerve extends Command{
-    private Swerve s_Swerve;    
+    private Swerve s_Swerve;  
+    private Limelight s_Limelight;  
     private DoubleSupplier translationSup, strafeSup, rotationSup;
-    private int priorityTag;
 
-    public AmpAlignSwerve(Swerve s_Swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup) {
+    public AmpAlignSwerve(Limelight s_Limelight, Swerve s_Swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup) {
+        this.s_Limelight = s_Limelight;
         this.s_Swerve = s_Swerve;
         addRequirements(s_Swerve);
 
@@ -28,9 +29,7 @@ public class AmpAlignSwerve extends Command{
     private Double limelightStrafeVal() {  
         double kP = 0.04;
         double targetingStrafeVelocity = 
-            LimelightHelpers.getTX("limelight-ironman") * kP;
-        //invert since tx is positive when the target is to the right of the crosshair
-        //targetingStrafeVelocity *= -1;
+            s_Limelight.getTX() * kP;
         return targetingStrafeVelocity;
     }
 
@@ -47,8 +46,7 @@ public class AmpAlignSwerve extends Command{
     @Override
     public void execute() {
         /* Get Values, Deadband*/
-        //double translationVal =  limelightStrafeVal();
-        double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.moveDeadband) * 4.5;
+        double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.moveDeadband) * Constants.Swerve.maxSpeed;
         double strafeVal = limelightStrafeVal();
         double rotationVal = limelightRotationVal();
 
@@ -56,7 +54,7 @@ public class AmpAlignSwerve extends Command{
         s_Swerve.drive(
             new Translation2d(translationVal, strafeVal), 
             rotationVal * Constants.Swerve.maxAngularVelocity, 
-            true, 
+            false, 
             true
         );
     }

@@ -52,16 +52,38 @@ public class Elevator extends SubsystemBase {
         talonFXConfigs.CurrentLimits = currentConfigs;
 
         // Set motion control settings
-        talonFXConfigs.Slot0.kV = Constants.Elevator.ELEVATOR_KV;
-        talonFXConfigs.Slot0.kP = Constants.Elevator.ELEVATOR_KP; 
-        talonFXConfigs.Slot0.kI = Constants.Elevator.ELEVATOR_KI;
-        talonFXConfigs.Slot0.kD = Constants.Elevator.ELEVATOR_KD;
+        talonFXConfigs.Slot0.kV = Constants.Elevator.ELEVATOR_KV_UP;
+        talonFXConfigs.Slot0.kP = Constants.Elevator.ELEVATOR_KP_UP; 
+        talonFXConfigs.Slot0.kI = Constants.Elevator.ELEVATOR_KI_UP;
+        talonFXConfigs.Slot0.kD = Constants.Elevator.ELEVATOR_KD_UP;
+        talonFXConfigs.Slot1.kV = Constants.Elevator.ELEVATOR_KV_DOWN;
+        talonFXConfigs.Slot1.kP = Constants.Elevator.ELEVATOR_KP_DOWN; 
+        talonFXConfigs.Slot1.kI = Constants.Elevator.ELEVATOR_KI_DOWN;
+        talonFXConfigs.Slot1.kD = Constants.Elevator.ELEVATOR_KD_DOWN;
 
         talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.Elevator.MOTMAGMAXVELUP; // rps cruise velocity
         talonFXConfigs.MotionMagic.MotionMagicAcceleration = Constants.Elevator.MOTMAGMAXACCELUP; // rps/s acceleration 
         talonFXConfigs.MotionMagic.MotionMagicJerk = 25000; // rps/s^2 jerk 
         
         elevatorMotor.getConfigurator().apply(talonFXConfigs, 0.050);
+
+        // Initialize beam break sensor
+        sensor = new BeamBreakSensor(0);
+    }
+
+    // Returns true if the beam is broken (something is in the intake)
+    public boolean getSensor() {
+        return sensor.getNoteDetected();
+    }
+
+    public Command feedNoteTrap(double speed) {
+        return new FunctionalCommand(
+            () -> {System.out.println("Feeding note for trap");},
+            () -> setElevatorSpeed(speed),
+            interrupted -> {System.out.println("Ended trap note feed");},
+            () -> (this.sensor.getNoteDetected()),
+            this
+        );
     }
 
     public void setElevatorSpeed(double speed) {
@@ -73,7 +95,15 @@ public class Elevator extends SubsystemBase {
     }
 
     public void setElevatorPosition(double rotations) {
-        elevatorMotor.getConfigurator().apply(talonFXConfigs, 0.050);
+        if(rotations <= 5) {
+            talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.Elevator.MOTMAGMAXVELDOWN;
+            talonFXConfigs.MotionMagic.MotionMagicAcceleration = Constants.Elevator.MOTMAGMAXACCELDOWN;
+            elevatorMotor.getConfigurator().apply(talonFXConfigs.Slot1, 0.050);
+        } else {
+            talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.Elevator.MOTMAGMAXVELUP;
+            talonFXConfigs.MotionMagic.MotionMagicAcceleration = Constants.Elevator.MOTMAGMAXACCELUP;
+            elevatorMotor.getConfigurator().apply(talonFXConfigs.Slot0, 0.050);
+        }
         elevatorMotor.setControl(motMag.withPosition(rotations));
     }
     
@@ -85,6 +115,7 @@ public class Elevator extends SubsystemBase {
         SmartDashboard.putNumber("Elevator Position", elevatorMotor.getPosition().getValue());
         SmartDashboard.putNumber("Elevator position graph", elevatorMotor.getPosition().getValue());
         SmartDashboard.putNumber("elevator Roller speed", driveMotor.getVelocity().getValue());
+        SmartDashboard.putBoolean("Beambroken?", getSensor());
     }
 
 

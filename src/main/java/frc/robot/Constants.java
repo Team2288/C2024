@@ -23,13 +23,18 @@ public final class Constants {
     /* Climber Constants */
     public static final class Climber {
         /* Climber CAN IDs */
-        public static final int MOTOR_ID = 30;
+        public static final int MOTOR_ID = 20;
+
+        /* Motion Magic */
+        public static final int MOTMAGMAXACCEL = 20480;
+        public static final int MOTMAGMAXVEL = 2048;
 
         /* Climber PID Values No Load */
-        public static final double kP = 0.02;
+        public static final double kV = 0.02;
+        public static final double kP = 0.08;
         public static final double kI = 0;
         public static final double kD = 0;
-        public static final double kF = 0;
+        public static final double kF = 0.02;
 
         public static final double lkP = 0.02;
         public static final double lkI = 0;
@@ -37,8 +42,8 @@ public final class Constants {
         public static final double lkF = 0.0;
 
         /* Climber positions */
-        public static final int UP_POSITION = -182;
-        public static final int DOWN_POSITION = 34;
+        public static final int UP_POSITION = -7;
+        public static final int DOWN_POSITION = 240;
     }
 
     /* Elevator Constants */
@@ -49,15 +54,23 @@ public final class Constants {
        // public static final int SENSOR_ID = 0;
     
         /* Elevator PID values */
-        public static final int MOTMAGMAXACCELUP = 5000;
-        public static final int MOTMAGMAXVELUP = 500;
-        public static final double ELEVATOR_KP = 0.051; //0.00909488172
-        public static final double ELEVATOR_KI = 0.0014;
-        public static final double ELEVATOR_KD = 0.000;
-        public static final double ELEVATOR_KV = 0.117; //0.05011894428
+        public static final int MOTMAGMAXACCELUP = 1000;
+        public static final int MOTMAGMAXVELUP = 100;
+        public static final double ELEVATOR_KP_UP = 0.057;
+        public static final double ELEVATOR_KI_UP = 0.0014;
+        public static final double ELEVATOR_KD_UP = 0.000;
+        public static final double ELEVATOR_KV_UP = 0.117;
+
+        public static final int MOTMAGMAXACCELDOWN = 500;
+        public static final int MOTMAGMAXVELDOWN = 50;
+        public static final double ELEVATOR_KP_DOWN = 0.053;
+        public static final double ELEVATOR_KI_DOWN = 0.0014;
+        public static final double ELEVATOR_KD_DOWN = 0.000;
+        public static final double ELEVATOR_KV_DOWN = 0.115;
 
         /* Elevator Positions (rotations) */
-        public static final int UP_AMP = 30; // rotations - 68 max
+        public static final int UP_AMP = 27; // rotations - 68 max
+        public static final int UP_TRAP = 90;
         public static final int DOWN = 2;
     
         /* Elevator Speed */
@@ -67,8 +80,8 @@ public final class Constants {
     /* Intake Constants */
     public static final class Intake {
         /* Intake CAN IDs */
-        public static final int DRIVE_MOTOR = 33;
-        public static final int SWIVEL_MOTOR = 34;
+        public static final int DRIVE_MOTOR = 21;
+        public static final int SWIVEL_MOTOR = 19;
         public static final int INTAKE_SENSOR_ID = 0;
 
         /* Intake PID Values */
@@ -84,7 +97,7 @@ public final class Constants {
         public static final double UP_POSITION = 0;
 
         /* Intake Speed */
-        public static final double SPEED = 0.8;    
+        public static final double SPEED = 0.8; //.25    
     }
 
     /* Shooter Constants */

@@ -1,5 +1,7 @@
 package frc.robot;
 
+import javax.management.InstanceNotFoundException;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -62,11 +64,17 @@ public class RobotContainer {
     private final Trigger spitNoteOut = codriver.b();
     private final Trigger climberUp = codriver.rightTrigger();
     private final Trigger climberDown = codriver.leftTrigger();
-    private final Trigger shootAmp = codriver.start();
+    private final Trigger shootAmp = codriver.start(); //start rollers
+    private final Trigger trap = codriver.back(); //end rollers
     private final Trigger zeroClimber = codriver.rightBumper();
     private final Trigger aimSpeaker = new Trigger(() -> driver.getRawButton(1));
     private final Trigger aimAmp = new Trigger(() -> driver.getRawButton(2));
     private boolean toggle = true;
+
+    private final Trigger elevatorZero = new Trigger(() -> driver.getRawButton(5));
+    private final Trigger elevatorAmp = new Trigger(() -> driver.getRawButton(6));
+    private final Trigger elevatorTrap = new Trigger(() -> driver.getRawButton(7));
+
 
     /* Subsystems */
     public final Lights s_Lights = new Lights();    
@@ -96,8 +104,7 @@ public class RobotContainer {
                     () -> -driver.getRawAxis(rotationAxis), 
                     () -> false // robotCentric.getAsBoolean()
                 )
-            );        
-        
+            );   
 /* 
             s_Elevator.setDefaultCommand(
                 new FunctionalCommand(
@@ -188,38 +195,57 @@ public class RobotContainer {
         );
         */
 
-        shootAmp.whileTrue(
-            new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(0.8), s_Elevator)
+        shootAmp.onTrue(
+            //new InstantCommand(() -> this.s_Elevator.setElevatorPosition(0), s_Elevator)
+            this.shootAmp()
+            //new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(.8), s_Elevator)
+        );
+
+        trap.onTrue(
+            //this.trap()
+            new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(0), s_Elevator)
+        );
+
+        elevatorAmp.onTrue(
+            new InstantCommand(() -> this.s_Elevator.setElevatorPosition(Constants.Elevator.UP_AMP), s_Elevator)
+        );
+        elevatorTrap.onTrue(
+            new InstantCommand(() -> this.s_Elevator.setElevatorPosition(Constants.Elevator.UP_TRAP), s_Elevator)           
+        );
+        elevatorZero.onTrue(
+            new InstantCommand(() -> this.s_Elevator.setElevatorPosition(Constants.Elevator.DOWN), s_Elevator)           
         );
 
         intakeUp.onTrue(
+            //new InstantCommand(() -> this.s_Elevator.setElevatorPosition(2), s_Elevator)
             this.s_Intake.getPosAndRunIntakeCommand(Constants.Intake.UP_POSITION, 0.0)
         );
 
         spitNoteOut.whileTrue(
-            this.s_Intake.getIntakeDriveCommand(-0.8)
+            this.s_Intake.getIntakeDriveCommand(-0.25)
             //new InstantCommand( () -> this.s_Shooter.setSpeed(0.5), s_Shooter)
         );
 
         climberUp.onTrue(
-           // new InstantCommand(() -> this.s_Climber.setPosition(Constants.Climber.UP_POSITION), s_Climber)
-            new InstantCommand(() -> this.s_Climber.setSpeed(-0.2), s_Climber)
+            //new InstantCommand(() -> this.s_Climber.setPosition(Constants.Climber.UP_POSITION), s_Climber)
+            new InstantCommand(() -> this.s_Climber.setSpeed(-0.1), s_Climber)
         );
 
         climberDown.onTrue(
-          //  new InstantCommand(() -> this.s_Climber.setPosition(Constants.Climber.DOWN_POSITION), s_Climber)
-            new InstantCommand(() -> this.s_Climber.setSpeed(0.2), s_Climber)
+            //new InstantCommand(() -> this.s_Climber.setPosition(Constants.Climber.DOWN_POSITION), s_Climber)
+            new InstantCommand(() -> this.s_Climber.setSpeed(0.1), s_Climber)
 
         );
 
         zeroClimber.onTrue(
-          //  new InstantCommand(() -> this.s_Climber.setPosition(0), s_Climber)
+            //new InstantCommand(() -> this.s_Climber.setPosition(150), s_Climber)
             new InstantCommand(() -> this.s_Climber.setSpeed(0.0), s_Climber)
 
         );
 
         aimSpeaker.whileTrue(
             new SpeakerAlignSwerve(
+                s_Limelight,
                 s_Swerve,
                 () -> -driver.getRawAxis(translationAxis),
                 () -> -driver.getRawAxis(strafeAxis),
@@ -229,6 +255,7 @@ public class RobotContainer {
 
         aimAmp.whileTrue(
             new AmpAlignSwerve(
+                s_Limelight,
                 s_Swerve,
                 () -> -driver.getRawAxis(translationAxis),
                 () -> -driver.getRawAxis(strafeAxis),
@@ -331,6 +358,31 @@ public class RobotContainer {
                 new InstantCommand(() -> s_Shooter.setSpeed(0), s_Shooter)
             ),
             s_Elevator.getElevatorPositionCommand(Constants.Elevator.DOWN)
+        );
+    }
+
+    public Command trap() {
+        return new SequentialCommandGroup(
+            new ParallelCommandGroup(
+                new InstantCommand(() -> s_Shooter.setSpeed(0.05), s_Shooter)
+                //s_Elevator.getElevatorPositionCommand(Constants.Elevator.UP_AMP)
+            ),
+            new SequentialCommandGroup(
+                new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(Constants.Intake.SPEED), s_Intake),
+                s_Elevator.feedNoteTrap(0.2),
+                new InstantCommand(() -> s_Elevator.setElevatorSpeed(0.0), s_Elevator)
+            ),
+            new ParallelCommandGroup(          
+                new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(0.0), s_Intake),
+                new InstantCommand(() -> s_Shooter.setSpeed(0), s_Shooter)
+                //new InstantCommand(() -> s_Elevator.setElevatorPosition(Constants.Elevator.UP_TRAP), s_Elevator)
+            ),
+            new InstantCommand(() -> s_Elevator.setElevatorSpeed(0.2), s_Elevator),
+            new WaitCommand(1),
+            new ParallelCommandGroup(
+                new InstantCommand(() -> s_Lights.setState(Constants.Lights.LightStates.PURPLE), s_Lights),
+                new InstantCommand(() -> s_Elevator.setElevatorSpeed(0.0), s_Elevator)
+            )
         );
     }
 

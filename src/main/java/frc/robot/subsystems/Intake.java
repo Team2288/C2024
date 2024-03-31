@@ -28,8 +28,7 @@ import frc.robot.sensors.BeamBreakSensor;
 import frc.robot.subsystems.Lights;
 
 public class Intake extends SubsystemBase {
-    CANSparkMax driveNeo; // motors
-    TalonFX swivelFalcon;
+    TalonFX swivelFalcon, drive;
     final MotionMagicVoltage motMag;
     private CurrentLimitsConfigs currentLimits;
     boolean hasNote, isRunning;
@@ -38,9 +37,7 @@ public class Intake extends SubsystemBase {
 
     public Intake(Lights lights) {
         // Initialize motors, motor controllers, and motor settings
-        driveNeo = new CANSparkMax(Constants.Intake.DRIVE_MOTOR, MotorType.kBrushless);
-        driveNeo.setIdleMode(IdleMode.kBrake);
-        driveNeo.setSmartCurrentLimit(60);
+        drive = new TalonFX(Constants.Intake.DRIVE_MOTOR);
 
         swivelFalcon = new TalonFX(Constants.Intake.SWIVEL_MOTOR);
         motMag = new MotionMagicVoltage(0);
@@ -67,9 +64,17 @@ public class Intake extends SubsystemBase {
         talonFXConfigs.MotionMagic.MotionMagicJerk = 3200; // rps/s^2 jerk 
         
         swivelFalcon.getConfigurator().apply(talonFXConfigs, 0.050);
+        
+        var drivecurrentLimits = new CurrentLimitsConfigs();
+        drivecurrentLimits.StatorCurrentLimit = 90;
+        drivecurrentLimits.StatorCurrentLimitEnable = true;
+        var drivetalonFXConfigs = new TalonFXConfiguration();
+        drivetalonFXConfigs.CurrentLimits = drivecurrentLimits;
 
-        // Initialize time of flight sensor
-        sensor = new BeamBreakSensor(0);
+        drive.getConfigurator().apply(drivetalonFXConfigs, 0.050);
+
+        // Initialize beam break sensor
+        sensor = new BeamBreakSensor(1);
 
         this.lights = lights;
         // Initialize subsystem states
@@ -79,7 +84,7 @@ public class Intake extends SubsystemBase {
 
     public void setDriveIntakeSpeed(double speed) {
         if (speed > 0.01) {this.isRunning = true;} else {this.isRunning = false;}
-        driveNeo.set(speed); 
+        drive.set(speed); 
     }
 
     // Returns true if the beam is broken (something is in the intake)
@@ -93,6 +98,10 @@ public class Intake extends SubsystemBase {
 
     public void setPosition(double position) {
         swivelFalcon.setControl(motMag.withPosition(position));
+    }
+
+    public double getVelocity() {
+        return drive.getVelocity().getValueAsDouble();
     }
 
     public double getPosition() { // returns rotations
@@ -211,5 +220,7 @@ public class Intake extends SubsystemBase {
         this.sensor.getNoteDetected();
         SmartDashboard.putBoolean("Sensor", sensor.getNoteDetected());
         SmartDashboard.putNumber("Swivel Falcon Encoder", getPosition());
+        SmartDashboard.putNumber("Intake Velocity", getVelocity());
+
     }
 }

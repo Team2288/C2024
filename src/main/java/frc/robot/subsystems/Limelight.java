@@ -29,6 +29,7 @@ public class Limelight extends SubsystemBase {
     boolean hasTargets;
     AprilTagFieldLayout aprilTagFieldLayout;
 
+    String limelight = "limelight-ironman";
     LimelightHelpers.PoseEstimate pose;
 
     public Limelight() {
@@ -49,8 +50,7 @@ public class Limelight extends SubsystemBase {
         speakerGoalRange = Units.inchesToMeters(.0);
         aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
-        //poseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, limelight, robotToCam);
-        pose = LimelightHelpers.getBotPoseEstimate_wpiBlue("ironman");
+        pose = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelight);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class Limelight extends SubsystemBase {
         area = ta.getDouble(0.0);
         SmartDashboard(); 
         
-        pose = LimelightHelpers.getBotPoseEstimate_wpiBlue("ironman");
+        pose = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelight);
         //result = limelight.getLatestResult();
         //hasTargets = result.hasTargets();
     }
@@ -74,6 +74,12 @@ public class Limelight extends SubsystemBase {
 
     public LimelightHelpers.PoseEstimate getEstimatedAprilTagPose() {
         return this.pose;
+    }
+    public double getTX() {
+        return LimelightHelpers.getTX(limelight);
+    }
+    public double getTY() {
+        return LimelightHelpers.getTY(limelight);
     }
 
     // Find the horizontal distance(meters) from the speaker given

@@ -83,8 +83,8 @@ public class Robot extends TimedRobot {
     // this line or comment it out.
 
     m_robotContainer.s_Shooter.setSpeed(0.0);
-    m_robotContainer.s_Intake.getPosAndRunIntakeCommand(Constants.Intake.UP_POSITION, 0.0).schedule();
-    m_robotContainer.s_Elevator.getElevatorPositionCommand(Constants.Elevator.DOWN).schedule();
+    //m_robotContainer.s_Intake.getPosAndRunIntakeCommand(Constants.Intake.UP_POSITION, 0.0).schedule();
+    //m_robotContainer.s_Elevator.getElevatorPositionCommand(Constants.Elevator.DOWN).schedule();
     //m_robotContainer.s_Climber.setPosition(Constants.Climber.DOWN_POSITION);
 
     //m_robotContainer.s_Elevator.setElevatorPosition(48);
@@ -101,9 +101,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     // System.out.println(m_robotContainer.s_Intake.getSensor());
-    
+ // m_robotContainer.s_Intake.setDriveIntakeSpeed(0.50);
     //m_robotContainer.s_Elevator.SmartDashboard();
-    //m_robotContainer.s_Elevator.setElevatorSpeed(-0.3);
+   // m_robotContainer.s_Elevator.setElevatorSpeed(0.4);
     /*
     if(controller.getBButton()) {
       m_robotContainer.s_Shooter.shootWhenClose(m_robotContainer.s_Limelight, .3);
