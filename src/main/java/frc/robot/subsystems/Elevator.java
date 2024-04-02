@@ -26,7 +26,7 @@ public class Elevator extends SubsystemBase {
     private CurrentLimitsConfigs currentConfigs;
     final MotionMagicVoltage motMag;
     public double kP, kI, kD, kF, kMaxOutput, kMinOutput;
-    BeamBreakSensor sensor;
+    TOFSensor sensor;
     public ArrayList<String[]> loggingData;
     TalonFXConfiguration talonFXConfigs;
 
@@ -67,11 +67,10 @@ public class Elevator extends SubsystemBase {
         
         elevatorMotor.getConfigurator().apply(talonFXConfigs, 0.050);
 
-        // Initialize beam break sensor
-        sensor = new BeamBreakSensor(0);
+        // Initialize TOF sensor
+        sensor = new TOFSensor(0);
     }
 
-    // Returns true if the beam is broken (something is in the intake)
     public boolean getSensor() {
         return sensor.getNoteDetected();
     }

@@ -47,7 +47,6 @@ public class RobotContainer {
     private final int strafeAxis = XboxController.Axis.kLeftX.value;
     private final int rotationAxis = 2;
  
-
     /* Driver Buttons */
 //  private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
 //  private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
@@ -74,7 +73,7 @@ public class RobotContainer {
     private final Trigger elevatorZero = new Trigger(() -> driver.getRawButton(5));
     private final Trigger elevatorAmp = new Trigger(() -> driver.getRawButton(6));
     private final Trigger elevatorTrap = new Trigger(() -> driver.getRawButton(7));
-
+    private final Trigger shuttle = new Trigger(() -> driver.getRawButton(8));
 
     /* Subsystems */
     public final Lights s_Lights = new Lights();    
@@ -150,9 +149,9 @@ public class RobotContainer {
         NamedCommands.registerCommand("IntakeRoutine", this.s_Intake.getIntakeRoutineCommand()); // s_Intake.getIntakeRoutineCommand()
         NamedCommands.registerCommand("Shoot", this.s_Intake.getShootCommandNoRamp()); // s_Shooter.getShooterCommand()
         NamedCommands.registerCommand("IntakeUp", this.s_Intake.getPosAndRunIntakeCommand(Constants.Intake.UP_POSITION, 0.0));
-        NamedCommands.registerCommand("RampUp", new SequentialCommandGroup(this.s_Shooter.rampVelocityPIDs(0.5), new WaitCommand(1)));
+        NamedCommands.registerCommand("RampUp", new SequentialCommandGroup(this.s_Shooter.rampVelocityPIDs(0.5), new WaitCommand(1.0)));
         NamedCommands.registerCommand("TurnOffShooter", new InstantCommand(() -> this.s_Shooter.setSpeed(0.0), this.s_Shooter));
-        
+
         // Auto Chooser
         auto = AutoBuilder.buildAuto("4NoteOuterRingsRight");
 
@@ -171,6 +170,9 @@ public class RobotContainer {
 
 //        zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));            
 
+        shuttle.onTrue(
+            this.getShuttleCommand() 
+        );
  
         intake_on.onTrue(
             //new InstantCommand(() -> s_Elevator.setElevatorPosition(4), s_Elevator)
@@ -203,8 +205,14 @@ public class RobotContainer {
 
         trap.onTrue(
             //this.trap()
+            new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(.35), s_Elevator)
+        );
+
+        trap.onFalse(
+            //this.trap()
             new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(0), s_Elevator)
         );
+
 
         elevatorAmp.onTrue(
             new InstantCommand(() -> this.s_Elevator.setElevatorPosition(Constants.Elevator.UP_AMP), s_Elevator)
@@ -227,19 +235,19 @@ public class RobotContainer {
         );
 
         climberUp.onTrue(
-            //new InstantCommand(() -> this.s_Climber.setPosition(Constants.Climber.UP_POSITION), s_Climber)
-            new InstantCommand(() -> this.s_Climber.setSpeed(-0.1), s_Climber)
+            new InstantCommand(() -> this.s_Climber.setPosition(Constants.Climber.UP_POSITION), s_Climber)
+           // new InstantCommand(() -> this.s_Climber.setSpeed(-0.1), s_Climber)
         );
 
         climberDown.onTrue(
-            //new InstantCommand(() -> this.s_Climber.setPosition(Constants.Climber.DOWN_POSITION), s_Climber)
-            new InstantCommand(() -> this.s_Climber.setSpeed(0.1), s_Climber)
+            new InstantCommand(() -> this.s_Climber.setPosition(Constants.Climber.DOWN_POSITION), s_Climber)
+           // new InstantCommand(() -> this.s_Climber.setSpeed(0.1), s_Climber)
 
         );
 
         zeroClimber.onTrue(
-            //new InstantCommand(() -> this.s_Climber.setPosition(150), s_Climber)
-            new InstantCommand(() -> this.s_Climber.setSpeed(0.0), s_Climber)
+            new InstantCommand(() -> this.s_Climber.setPosition(0), s_Climber)
+           // new InstantCommand(() -> this.s_Climber.setSpeed(0.0), s_Climber)
 
         );
 
@@ -343,8 +351,8 @@ public class RobotContainer {
     public Command shootAmp() {
         return new SequentialCommandGroup(
             new ParallelCommandGroup(
-                new InstantCommand(() -> s_Shooter.setSpeed(0.05), s_Shooter),
-                s_Elevator.getElevatorPositionCommand(Constants.Elevator.UP_AMP)
+                new InstantCommand(() -> s_Shooter.setSpeed(0.05), s_Shooter)
+               // s_Elevator.getElevatorPositionCommand(Constants.Elevator.UP_AMP)
             ),
             new ParallelCommandGroup(
                 new InstantCommand(() -> s_Elevator.setElevatorSpeed(Constants.Elevator.SPEED), s_Elevator),
@@ -356,8 +364,8 @@ public class RobotContainer {
                 new InstantCommand(() -> s_Elevator.setElevatorSpeed(0.0), s_Elevator),
                 new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(0.0), s_Intake),
                 new InstantCommand(() -> s_Shooter.setSpeed(0), s_Shooter)
-            ),
-            s_Elevator.getElevatorPositionCommand(Constants.Elevator.DOWN)
+            )
+           // s_Elevator.getElevatorPositionCommand(Constants.Elevator.DOWN)
         );
     }
 
@@ -404,6 +412,26 @@ public class RobotContainer {
             s_Shooter
         );
     }
+
+    public Command getShuttleCommand() {
+        return new SequentialCommandGroup(
+            // this.s_Elevator.getElevatorPositionCommand(-120),
+            //new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(Constants.Elevator.SPEED * 1.5), this.s_Elevator),
+            //this.s_Shooter.rampVelocityPIDsDifferentSpeeds(0.15, 0.15), // bottom top,
+            this.s_Shooter.rampVelocityPIDs(0.33),
+            new WaitCommand(.7),
+            new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(Constants.Intake.SPEED), s_Intake),
+            new WaitCommand(.4),
+            new ParallelCommandGroup(
+                new InstantCommand(() -> s_Lights.setState(Constants.Lights.LightStates.PURPLE), s_Lights),
+                //new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(0), this.s_Elevator),
+                new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(0.0), s_Intake),
+                new InstantCommand(() -> s_Shooter.setSpeed(0), s_Shooter)
+            )
+        );
+
+    }
+
 
     public Command getShootCommand() {
         return new SequentialCommandGroup(

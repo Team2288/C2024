@@ -26,24 +26,19 @@ public final class Constants {
         public static final int MOTOR_ID = 20;
 
         /* Motion Magic */
-        public static final int MOTMAGMAXACCEL = 20480;
-        public static final int MOTMAGMAXVEL = 2048;
+        public static final int MOTMAGMAXACCEL = 20480 * 16;
+        public static final int MOTMAGMAXVEL = 2048 * 16;
 
         /* Climber PID Values No Load */
-        public static final double kV = 0.02;
-        public static final double kP = 0.08;
+        public static final double kV = 0.0;
+        public static final double kP = 0.06;
         public static final double kI = 0;
         public static final double kD = 0;
-        public static final double kF = 0.02;
-
-        public static final double lkP = 0.02;
-        public static final double lkI = 0;
-        public static final double lkD = 0;
-        public static final double lkF = 0.0;
+        public static final double kF = 0.0;
 
         /* Climber positions */
-        public static final int UP_POSITION = -7;
-        public static final int DOWN_POSITION = 240;
+        public static final int UP_POSITION = -135;
+        public static final int DOWN_POSITION = 120;
     }
 
     /* Elevator Constants */
@@ -69,12 +64,12 @@ public final class Constants {
         public static final double ELEVATOR_KV_DOWN = 0.115;
 
         /* Elevator Positions (rotations) */
-        public static final int UP_AMP = 27; // rotations - 68 max
-        public static final int UP_TRAP = 90;
+        public static final int UP_AMP = 30; // 27 rotations - 68 max
+        public static final int UP_TRAP = 106;
         public static final int DOWN = 2;
     
         /* Elevator Speed */
-        public static final double SPEED = 0.40;
+        public static final double SPEED = 0.4;
     }
 
     /* Intake Constants */
@@ -85,15 +80,15 @@ public final class Constants {
         public static final int INTAKE_SENSOR_ID = 0;
 
         /* Intake PID Values */
-        public static final double MOTMAGMAXACCEL = 34130 * 3; //6827
-        public static final double MOTMAGMAXVEL = 34130 * 6; //34133        
-        public static final double SWIVEL_KP = 0.04;
+        public static final double MOTMAGMAXACCEL = 34130 * 10; //6827
+        public static final double MOTMAGMAXVEL = 34130 * 8; //34133        
+        public static final double SWIVEL_KP = 0.11;
         public static final double SWIVEL_KI = 0;
         public static final double SWIVEL_KD = 0;
         public static final double SWIVEL_KV = 0.058252;
 
         /* Intake Positions */
-        public static final double DOWN_POSITION = 16.6; 
+        public static final double DOWN_POSITION = 17.8; 
         public static final double UP_POSITION = 0;
 
         /* Intake Speed */
@@ -276,7 +271,7 @@ public final class Constants {
     /* Autonomous Constants */
     public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
         public static final double kMaxSpeedMetersPerSecond = 4.5;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 7;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 5;
         public static final double kMaxAngularSpeedRadiansPerSecond = 10;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = 10;
     

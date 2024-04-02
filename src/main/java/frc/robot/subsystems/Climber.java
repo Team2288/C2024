@@ -14,6 +14,7 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class Climber extends SubsystemBase {
     TalonFX motor;
@@ -22,6 +23,7 @@ public class Climber extends SubsystemBase {
     public Climber() {
         // Initialize motor, motor controller, and settings
         motor = new TalonFX(Constants.Climber.MOTOR_ID);
+        motor.setNeutralMode(NeutralModeValue.Brake);
 
         motMag = new MotionMagicVoltage(0);
         motMag.Slot = 0;
@@ -30,6 +32,7 @@ public class Climber extends SubsystemBase {
 
         var talonFXConfigs = new TalonFXConfiguration();
 
+        talonFXConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         talonFXConfigs.CurrentLimits.StatorCurrentLimit = 60;
 
         talonFXConfigs.Slot0.kV = Constants.Climber.kV * 2048 / 1023;
@@ -37,11 +40,11 @@ public class Climber extends SubsystemBase {
         talonFXConfigs.Slot0.kI = Constants.Climber.kI * 2048 / 1023 * 1000;
         talonFXConfigs.Slot0.kD = Constants.Climber.kD * 2048 / 1023 / 1000;
 
-        talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.Intake.MOTMAGMAXVEL / 2048 * 10; // rps cruise velocity
-        talonFXConfigs.MotionMagic.MotionMagicAcceleration = Constants.Intake.MOTMAGMAXACCEL / 2048 * 10; // rps/s acceleration 
-        talonFXConfigs.MotionMagic.MotionMagicJerk = 3200; // rps/s^2 jerk 
-
-
+        talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.Climber.MOTMAGMAXVEL / 2048 * 10; // rps cruise velocity
+        talonFXConfigs.MotionMagic.MotionMagicAcceleration = Constants.Climber.MOTMAGMAXACCEL / 2048 * 10; // rps/s acceleration 
+        talonFXConfigs.MotionMagic.MotionMagicJerk = 12000; // rps/s^2 jerk 
+        
+        motor.getConfigurator().apply(talonFXConfigs);
        // motorEncoder.setPosition(0); // !!! Delete after climber calibration
     }
 
@@ -51,11 +54,7 @@ public class Climber extends SubsystemBase {
     }
 
     public void setPosition(double rotations) {
-        if (Math.abs(rotations - Constants.Climber.DOWN_POSITION) < .5) {
-            motor.setControl(motMag.withPosition(rotations));
-        } else {
-            motor.setControl(motMag.withPosition(rotations));
-        }
+        motor.setControl(motMag.withPosition(rotations));
     }
 
     // Return the current encoder position 

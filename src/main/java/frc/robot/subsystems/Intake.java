@@ -61,7 +61,7 @@ public class Intake extends SubsystemBase {
 
         talonFXConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.Intake.MOTMAGMAXVEL / 2048 * 10; // rps cruise velocity
         talonFXConfigs.MotionMagic.MotionMagicAcceleration = Constants.Intake.MOTMAGMAXACCEL / 2048 * 10; // rps/s acceleration 
-        talonFXConfigs.MotionMagic.MotionMagicJerk = 3200; // rps/s^2 jerk 
+        talonFXConfigs.MotionMagic.MotionMagicJerk = 5000; // rps/s^2 jerk 
         
         swivelFalcon.getConfigurator().apply(talonFXConfigs, 0.050);
         
@@ -74,7 +74,7 @@ public class Intake extends SubsystemBase {
         drive.getConfigurator().apply(drivetalonFXConfigs, 0.050);
 
         // Initialize beam break sensor
-        sensor = new BeamBreakSensor(1);
+        sensor = new BeamBreakSensor(0);
 
         this.lights = lights;
         // Initialize subsystem states
@@ -146,7 +146,7 @@ public class Intake extends SubsystemBase {
 
         seqgroup.addCommands(
             this.getIntakeDriveCommand(Constants.Intake.SPEED),
-            new WaitCommand(.7)
+            new WaitCommand(.4)
         );
 
         /* 
