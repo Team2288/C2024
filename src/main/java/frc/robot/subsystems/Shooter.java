@@ -1,22 +1,19 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.Lights;
-import frc.robot.Constants.Lights.LightStates;
+
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 
 import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
-
     private TalonFX motorRight, motorLeft;
     final VelocityVoltage velControl;
     private CurrentLimitsConfigs currentLimits;
@@ -51,6 +48,7 @@ public class Shooter extends SubsystemBase {
         return Math.abs(this.motorRight.getVelocity().getValueAsDouble() - (pctspeed * 1200 / 60)) < 300;
     }
 
+    /*
     public void shootWhenClose(Limelight limelight, double pctspeed) {
         if(limelight.distanceFromTarget() < 250 && !(Math.abs(limelight.distanceFromTarget() - 113.8275) < 0.01)) {
             //Second condition added because 113.8275 is the default distance due to the mount angle of the limelight
@@ -61,6 +59,7 @@ public class Shooter extends SubsystemBase {
             setSpeed(0.0);
         }
     }
+    */
 
     public Command rampVelocityPIDs(double pctspeed) {
         return new FunctionalCommand(
@@ -72,25 +71,8 @@ public class Shooter extends SubsystemBase {
         );
     }
 
-    public Command rampVelocityPIDsDifferentSpeeds(double pctspeedright, double pctspeedleft) {
-        return new FunctionalCommand(
-            () -> System.out.println("Ramping Shooter"),
-            () -> {this.motorLeft.set(pctspeedleft); this.motorRight.set(pctspeedright);},
-            interrupted -> {},
-            () -> isFinishedRamping(pctspeedright), // 
-            this
-        );
-    }
-
     public void setSpeed(double pctspeed) {
         this.motorLeft.set(pctspeed);
-    }
-
-    public void setVelocity(double rpm) {
-        if (rpm > 0) {is_running = true;} else {is_running = false;}
-
-
-        motorLeft.setControl(velControl.withVelocity(rpm));
     }
 
     @Override

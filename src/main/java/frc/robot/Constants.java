@@ -32,13 +32,13 @@ public final class Constants {
         /* Climber PID Values No Load */
         public static final double kV = 0.0;
         public static final double kP = 0.06;
-        public static final double kI = 0;
+        public static final double kI = 0.000;
         public static final double kD = 0;
         public static final double kF = 0.0;
 
         /* Climber positions */
-        public static final int UP_POSITION = -135;
-        public static final int DOWN_POSITION = 120;
+        public static final int UP_POSITION = -125;
+        public static final int DOWN_POSITION = 143;
     }
 
     /* Elevator Constants */
@@ -64,12 +64,18 @@ public final class Constants {
         public static final double ELEVATOR_KV_DOWN = 0.115;
 
         /* Elevator Positions (rotations) */
-        public static final int UP_AMP = 30; // 27 rotations - 68 max
-        public static final int UP_TRAP = 106;
+        public static final int UP_AMP = 20; // 27 rotations
+        public static final int UP_TRAP = 99;
         public static final int DOWN = 2;
     
         /* Elevator Speed */
         public static final double SPEED = 0.4;
+
+        /* Trap flap positions (degrees based on pulse width) */
+        public static final int RIGHT_FLAP_IN = 60;
+        public static final int RIGHT_FLAP_OUT = 0;
+        public static final int LEFT_FLAP_IN = 0;
+        public static final int LEFT_FLAP_OUT = 60;
     }
 
     /* Intake Constants */
@@ -111,46 +117,30 @@ public final class Constants {
     /* Lights Constants (Used in Lights.java) */
     public final class Lights {
         /* Light states (console commands) */
-        public static final String LIGHT_STATE_OFF = "{'on': false}";
-        public static final String LIGHT_STATE_ON =  "{'on':true}";
-        public static final String LIGHT_STATES_CHANGE_COLOR_YELLOW= "{'seg':[{'col': [[255, 200, 59, 0], [0, 0, 0, 0], [0, 0, 0, 0]]}]}";
-        //public static final String LIGHT_STATES_CHANGE_COLOR_PURPLE= "{'seg':[{'col': [[255, 0, 255, 0], [0, 0, 0, 0], [0, 0, 0, 0]]}]}";
-        public static final String LIGHT_STATES_CHANGE_COLOR_PURPLE = "{\"on\":true,\"bri\":100,\"transition\":2,\"mainseg\":3,\"seg\":[{\"id\":0,\"start\":0,\"stop\":4,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":true,\"frz\":false,\"bri\":100,\"cct\":127,\"set\":0,\"n\":\"Seg1\",\"col\":[[255,0,255],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":1,\"start\":4,\"stop\":8,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":true,\"frz\":false,\"bri\":100,\"cct\":127,\"set\":0,\"n\":\"Seg2\",\"col\":[[255,0,255],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":2,\"start\":8,\"stop\":12,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":true,\"frz\":false,\"bri\":100,\"cct\":127,\"set\":0,\"n\":\"Seg3\",\"col\":[[255,0,255],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":3,\"start\":12,\"stop\":16,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":true,\"frz\":false,\"bri\":100,\"cct\":127,\"set\":0,\"n\":\"Seg4\",\"col\":[[255,0,255],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0}]}";
-        //public static final String LIGHT_STATES_CHANGE_COLOR_ORANGE= "{'seg':[{'col': [[255, 129, 10, 0],[0, 0, 0, 0], [0, 0, 0, 0]]}]}";
-        public static final String LIGHT_STATES_CHANGE_COLOR_ORANGE = "{\"on\":true,\"bri\":100,\"transition\":2,\"mainseg\":3,\"seg\":[{\"id\":0,\"start\":0,\"stop\":4,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":true,\"frz\":false,\"bri\":100,\"cct\":127,\"set\":0,\"n\":\"Seg1\",\"col\":[[255,129,10],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":1,\"start\":4,\"stop\":8,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":true,\"frz\":false,\"bri\":100,\"cct\":127,\"set\":0,\"n\":\"Seg2\",\"col\":[[255,129,10],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":2,\"start\":8,\"stop\":12,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":true,\"frz\":false,\"bri\":100,\"cct\":127,\"set\":0,\"n\":\"Seg3\",\"col\":[[255,129,10],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":3,\"start\":12,\"stop\":16,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":true,\"frz\":false,\"bri\":100,\"cct\":127,\"set\":0,\"n\":\"Seg4\",\"col\":[[255,129,10],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0}]}";
-        public static final String LIGHT_STATES_SEG1 = "{\"on\":true,\"bri\":8,\"transition\":2,\"mainseg\":3,\"seg\":[{\"id\":0,\"start\":0,\"stop\":4,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":true,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg1\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":1,\"start\":4,\"stop\":8,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":false,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg2\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":2,\"start\":8,\"stop\":12,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":false,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg3\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":3,\"start\":12,\"stop\":16,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":false,\"frz\":false,\"bri\":84,\"cct\":127,\"set\":0,\"n\":\"Seg4\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0}]}";
-        public static final String LIGHT_STATES_SEG2 = "{\"on\":true,\"bri\":8,\"transition\":2,\"mainseg\":3,\"seg\":[{\"id\":0,\"start\":0,\"stop\":4,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":false,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg1\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":1,\"start\":4,\"stop\":8,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":true,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg2\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":2,\"start\":8,\"stop\":12,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":false,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg3\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":3,\"start\":12,\"stop\":16,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":false,\"frz\":false,\"bri\":84,\"cct\":127,\"set\":0,\"n\":\"Seg4\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0}]}";
-        public static final String LIGHT_STATES_SEG3 = "{\"on\":true,\"bri\":8,\"transition\":2,\"mainseg\":3,\"seg\":[{\"id\":0,\"start\":0,\"stop\":4,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":false,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg1\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":1,\"start\":4,\"stop\":8,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":false,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg2\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":2,\"start\":8,\"stop\":12,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":true,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg3\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":3,\"start\":12,\"stop\":16,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":false,\"frz\":false,\"bri\":84,\"cct\":127,\"set\":0,\"n\":\"Seg4\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0}]}";
-        public static final String LIGHT_STATES_SEG4 = "{\"on\":true,\"bri\":8,\"transition\":2,\"mainseg\":3,\"seg\":[{\"id\":0,\"start\":0,\"stop\":4,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":false,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg1\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":1,\"start\":4,\"stop\":8,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":false,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg2\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":2,\"start\":8,\"stop\":12,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":false,\"frz\":false,\"bri\":255,\"cct\":127,\"set\":0,\"n\":\"Seg3\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"id\":3,\"start\":12,\"stop\":16,\"startY\":0,\"stopY\":8,\"grp\":1,\"spc\":0,\"of\":0,\"on\":true,\"frz\":false,\"bri\":84,\"cct\":127,\"set\":0,\"n\":\"Seg4\",\"col\":[[47,255,0],[0,0,0],[0,0,0]],\"fx\":0,\"sx\":128,\"ix\":128,\"pal\":0,\"c1\":128,\"c2\":128,\"c3\":16,\"sel\":true,\"rev\":false,\"mi\":false,\"rY\":false,\"mY\":false,\"tp\":false,\"o1\":false,\"o2\":false,\"o3\":false,\"si\":0,\"m12\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0},{\"stop\":0}]}";
-        public static final String DEFAULT_LIGHT_STATE = LIGHT_STATES_CHANGE_COLOR_PURPLE;
-        public static final Map<LightStates,String> HASHMAP_LIGHT_STATES;
+        public static final double LIGHTS_OFF = 0.0;
+        public static final double PURPLE = 0.90;
+        public static final double ORANGE = 0.62;
+        public static final double GREEN = 0.75; 
+        public static final double DEFAULT_LIGHT_STATE = PURPLE;
+        //public static final Map<LightStates,Double> HASHMAP_LIGHT_STATES;
 
-        /* States to be used to interface with Hashmap */
+        /* States to be used to interface with Hashmap *
         public enum LightStates {
             OFF,
-            ON,
-            YELLOW,
             PURPLE, 
             ORANGE,
-            SEG1,
-            SEG2,
-            SEG3,
-            SEG4
+            GREEN
         }
         
-        /* Lights hashmap */
+        /* Lights hashmap *
         static {
             HASHMAP_LIGHT_STATES = new HashMap<>();
-            HASHMAP_LIGHT_STATES.put(LightStates.OFF,LIGHT_STATE_OFF);
-            HASHMAP_LIGHT_STATES.put(LightStates.ON, LIGHT_STATE_ON);
-            HASHMAP_LIGHT_STATES.put(LightStates.ORANGE, LIGHT_STATES_CHANGE_COLOR_ORANGE);
-            HASHMAP_LIGHT_STATES.put(LightStates.YELLOW, LIGHT_STATES_CHANGE_COLOR_YELLOW);
+            HASHMAP_LIGHT_STATES.put(LightStates.OFF, LIGHT_STATE_OFF);
             HASHMAP_LIGHT_STATES.put(LightStates.PURPLE, LIGHT_STATES_CHANGE_COLOR_PURPLE);
-            HASHMAP_LIGHT_STATES.put(LightStates.SEG1, LIGHT_STATES_SEG1);
-            HASHMAP_LIGHT_STATES.put(LightStates.SEG2, LIGHT_STATES_SEG2);
-            HASHMAP_LIGHT_STATES.put(LightStates.SEG3, LIGHT_STATES_SEG3);
-            HASHMAP_LIGHT_STATES.put(LightStates.SEG4, LIGHT_STATES_SEG4);
+            HASHMAP_LIGHT_STATES.put(LightStates.ORANGE, LIGHT_STATES_CHANGE_COLOR_ORANGE);
+            HASHMAP_LIGHT_STATES.put(LightStates.GREEN, LIGHT_STATES_CHANGE_COLOR_GREEN);
         }
+        */
     }
 
     /* Swerve Constants */
@@ -271,7 +261,7 @@ public final class Constants {
     /* Autonomous Constants */
     public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
         public static final double kMaxSpeedMetersPerSecond = 4.5;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 5;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 7.0;
         public static final double kMaxAngularSpeedRadiansPerSecond = 10;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = 10;
     

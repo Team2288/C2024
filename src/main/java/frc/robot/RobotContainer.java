@@ -68,12 +68,14 @@ public class RobotContainer {
     private final Trigger zeroClimber = codriver.rightBumper();
     private final Trigger aimSpeaker = new Trigger(() -> driver.getRawButton(1));
     private final Trigger aimAmp = new Trigger(() -> driver.getRawButton(2));
+    private final Trigger shootTrap = codriver.leftBumper();
     private boolean toggle = true;
+    private boolean toggleShuttle = true;
 
     private final Trigger elevatorZero = new Trigger(() -> driver.getRawButton(5));
     private final Trigger elevatorAmp = new Trigger(() -> driver.getRawButton(6));
     private final Trigger elevatorTrap = new Trigger(() -> driver.getRawButton(7));
-    private final Trigger shuttle = new Trigger(() -> driver.getRawButton(8));
+    private final Trigger shuttle = new Trigger(() -> driver.getRawButton(4));
 
     /* Subsystems */
     public final Lights s_Lights = new Lights();    
@@ -115,7 +117,7 @@ public class RobotContainer {
                 )
             );*/
 
-            s_Lights.setState(Constants.Lights.LightStates.PURPLE);
+            s_Lights.setState(Constants.Lights.DEFAULT_LIGHT_STATE);
         
         /* 
 
@@ -153,7 +155,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("TurnOffShooter", new InstantCommand(() -> this.s_Shooter.setSpeed(0.0), this.s_Shooter));
 
         // Auto Chooser
-        auto = AutoBuilder.buildAuto("4NoteOuterRingsRight");
+        auto = AutoBuilder.buildAuto("5NoteRight");
 
         // Configure the button bindings
         configureButtonBindings(); 
@@ -191,6 +193,13 @@ public class RobotContainer {
 
         shoot.onTrue(this.getShootCommand());
 
+        shootTrap.onTrue(
+            new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(0.5), s_Elevator)
+        );
+        shootTrap.onFalse(
+            new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(0.0), s_Elevator)
+        );
+
         /* 
         shootAmp.onTrue(
             this.shootAmp()
@@ -204,14 +213,17 @@ public class RobotContainer {
         );
 
         trap.onTrue(
-            //this.trap()
-            new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(.35), s_Elevator)
+            this.trap()
+            //new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(.4), s_Elevator)
         );
+
+        /* 
 
         trap.onFalse(
             //this.trap()
             new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(0), s_Elevator)
         );
+        */
 
 
         elevatorAmp.onTrue(
@@ -236,7 +248,7 @@ public class RobotContainer {
 
         climberUp.onTrue(
             new InstantCommand(() -> this.s_Climber.setPosition(Constants.Climber.UP_POSITION), s_Climber)
-           // new InstantCommand(() -> this.s_Climber.setSpeed(-0.1), s_Climber)
+        //  new InstantCommand(() -> this.s_Climber.setSpeed(-0.1), s_Climber)
         );
 
         climberDown.onTrue(
@@ -248,13 +260,13 @@ public class RobotContainer {
         zeroClimber.onTrue(
             new InstantCommand(() -> this.s_Climber.setPosition(0), s_Climber)
            // new InstantCommand(() -> this.s_Climber.setSpeed(0.0), s_Climber)
-
         );
 
         aimSpeaker.whileTrue(
             new SpeakerAlignSwerve(
                 s_Limelight,
                 s_Swerve,
+                s_Lights,
                 () -> -driver.getRawAxis(translationAxis),
                 () -> -driver.getRawAxis(strafeAxis),
                 () -> -driver.getRawAxis(rotationAxis)
@@ -351,8 +363,8 @@ public class RobotContainer {
     public Command shootAmp() {
         return new SequentialCommandGroup(
             new ParallelCommandGroup(
-                new InstantCommand(() -> s_Shooter.setSpeed(0.05), s_Shooter)
-               // s_Elevator.getElevatorPositionCommand(Constants.Elevator.UP_AMP)
+                new InstantCommand(() -> s_Shooter.setSpeed(0.05), s_Shooter),
+                s_Elevator.getElevatorPositionCommand(Constants.Elevator.UP_AMP)
             ),
             new ParallelCommandGroup(
                 new InstantCommand(() -> s_Elevator.setElevatorSpeed(Constants.Elevator.SPEED), s_Elevator),
@@ -360,37 +372,36 @@ public class RobotContainer {
             ),
             new WaitCommand(1),
             new ParallelCommandGroup(
-                new InstantCommand(() -> s_Lights.setState(Constants.Lights.LightStates.PURPLE), s_Lights),
+                new InstantCommand(() -> s_Lights.setState(Constants.Lights.PURPLE), s_Lights),
                 new InstantCommand(() -> s_Elevator.setElevatorSpeed(0.0), s_Elevator),
                 new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(0.0), s_Intake),
                 new InstantCommand(() -> s_Shooter.setSpeed(0), s_Shooter)
-            )
-           // s_Elevator.getElevatorPositionCommand(Constants.Elevator.DOWN)
+            ),
+            s_Elevator.getElevatorPositionCommand(Constants.Elevator.DOWN)
         );
     }
 
     public Command trap() {
         return new SequentialCommandGroup(
-            new ParallelCommandGroup(
-                new InstantCommand(() -> s_Shooter.setSpeed(0.05), s_Shooter)
-                //s_Elevator.getElevatorPositionCommand(Constants.Elevator.UP_AMP)
-            ),
             new SequentialCommandGroup(
-                new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(Constants.Intake.SPEED), s_Intake),
+                s_Elevator.getElevatorPositionCommand(Constants.Elevator.UP_AMP),
+                new InstantCommand(() -> s_Shooter.setSpeed(0.05), s_Shooter)
+            ),
+            new ParallelCommandGroup(                
                 s_Elevator.feedNoteTrap(0.2),
-                new InstantCommand(() -> s_Elevator.setElevatorSpeed(0.0), s_Elevator)
+                new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(Constants.Intake.SPEED), s_Intake)
             ),
             new ParallelCommandGroup(          
                 new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(0.0), s_Intake),
-                new InstantCommand(() -> s_Shooter.setSpeed(0), s_Shooter)
-                //new InstantCommand(() -> s_Elevator.setElevatorPosition(Constants.Elevator.UP_TRAP), s_Elevator)
+                new InstantCommand(() -> s_Shooter.setSpeed(0), s_Shooter),
+                new InstantCommand(() -> s_Elevator.setElevatorPosition(Constants.Elevator.UP_TRAP), s_Elevator)
             ),
-            new InstantCommand(() -> s_Elevator.setElevatorSpeed(0.2), s_Elevator),
-            new WaitCommand(1),
             new ParallelCommandGroup(
-                new InstantCommand(() -> s_Lights.setState(Constants.Lights.LightStates.PURPLE), s_Lights),
+                new InstantCommand(() -> s_Lights.setState(Constants.Lights.PURPLE), s_Lights),
                 new InstantCommand(() -> s_Elevator.setElevatorSpeed(0.0), s_Elevator)
-            )
+            ),
+            new WaitCommand(1),
+            s_Elevator.getFlapsCommand(Constants.Elevator.RIGHT_FLAP_OUT, Constants.Elevator.LEFT_FLAP_OUT)
         );
     }
 
@@ -401,7 +412,6 @@ public class RobotContainer {
             () -> {return this.toggle;}
         );
     }
-
 
     public Command rampVelocityPIDsToggle(double pctspeed, boolean toggle) {
         return new FunctionalCommand(
@@ -414,22 +424,11 @@ public class RobotContainer {
     }
 
     public Command getShuttleCommand() {
-        return new SequentialCommandGroup(
-            // this.s_Elevator.getElevatorPositionCommand(-120),
-            //new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(Constants.Elevator.SPEED * 1.5), this.s_Elevator),
-            //this.s_Shooter.rampVelocityPIDsDifferentSpeeds(0.15, 0.15), // bottom top,
-            this.s_Shooter.rampVelocityPIDs(0.33),
-            new WaitCommand(.7),
-            new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(Constants.Intake.SPEED), s_Intake),
-            new WaitCommand(.4),
-            new ParallelCommandGroup(
-                new InstantCommand(() -> s_Lights.setState(Constants.Lights.LightStates.PURPLE), s_Lights),
-                //new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(0), this.s_Elevator),
-                new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(0.0), s_Intake),
-                new InstantCommand(() -> s_Shooter.setSpeed(0), s_Shooter)
-            )
+        return new ConditionalCommand(
+            this.rampVelocityPIDsToggle(0.3, this.toggle),
+            this.rampVelocityPIDsToggle(0.0, this.toggle),
+            () -> {return this.toggle;}
         );
-
     }
 
 
@@ -443,7 +442,7 @@ public class RobotContainer {
             new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(Constants.Intake.SPEED), s_Intake),
             new WaitCommand(.7),
             new ParallelCommandGroup(
-                new InstantCommand(() -> s_Lights.setState(Constants.Lights.LightStates.PURPLE), s_Lights),
+                new InstantCommand(() -> s_Lights.setState(Constants.Lights.PURPLE), s_Lights),
                 //new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(0), this.s_Elevator),
                 new InstantCommand(() -> s_Intake.setDriveIntakeSpeed(0.0), s_Intake)
                // new InstantCommand(() -> s_Shooter.setSpeed(0), s_Shooter)
