@@ -10,20 +10,21 @@ public class Lights extends SubsystemBase {
     private double state;
     public static double DEFAULT;
     public Lights() {
-        controller = new Spark(9);
+        //controller = new Spark(9);
+        
         //state = 0.0;
     }
 
     public void setState(double state) {
-        this.state = state;
+        /*this.state = state;
         if(state == Constants.Lights.PURPLE || state == Constants.Lights.ORANGE) {
             this.DEFAULT = state;
-        }
+        }*/
     }
 
     @Override
     public void periodic() {
-        controller.set(state);
-        this.state = this.DEFAULT;
+        //controller.set(state);
+        //this.state = this.DEFAULT;
     }
 }

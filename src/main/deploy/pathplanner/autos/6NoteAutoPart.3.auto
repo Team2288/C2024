@@ -33,7 +33,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Shoot Preloaded (Start Right)"
+            "pathName": "Preloaded-Sean"
           }
         },
         {
@@ -45,7 +45,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Get Outer Bottom From Right"
+            "pathName": "BottomNote-Sean"
           }
         },
         {
@@ -57,7 +57,43 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Get 2nd Bottom Midline (Right)"
+            "pathName": "GetMiddleNote-Sean"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GetTopNoteRight-Sean"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GetOuterTopNote-Sean"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GetOuterNoteLeft-Sean"
           }
         },
         {

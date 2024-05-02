@@ -32,15 +32,15 @@
     },
     {
       "anchor": {
-        "x": 9.120505098153053,
+        "x": 9.296418592837187,
         "y": 0.3078486156972321
       },
       "prevControl": {
-        "x": 9.00480786675859,
+        "x": 9.180721361442723,
         "y": 0.29318915780688737
       },
       "nextControl": {
-        "x": 9.236202329547517,
+        "x": 9.41211582423165,
         "y": 0.3225080735875768
       },
       "isLocked": false,
@@ -64,11 +64,11 @@
     },
     {
       "anchor": {
-        "x": 1.1604194636960707,
+        "x": 1.83,
         "y": 3.97
       },
       "prevControl": {
-        "x": 1.1301541742766033,
+        "x": 1.7997347105805326,
         "y": 4.047639206389524
       },
       "nextControl": null,
@@ -106,6 +106,23 @@
           ]
         }
       }
+    },
+    {
+      "name": "Failsafe",
+      "waypointRelativePos": 2.5,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "IntakeUp"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "globalConstraints": {
@@ -116,7 +133,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -50.527540151656275,
+    "rotation": -41.23559975839989,
     "rotateFast": false
   },
   "reversed": false,

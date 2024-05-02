@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -50,6 +51,7 @@ public class Elevator extends SubsystemBase {
         talonFXConfigs.CurrentLimits = currentConfigs;
 
         // Set motion control settings
+        elevatorMotor.setNeutralMode(NeutralModeValue.Brake);
         talonFXConfigs.Slot0.kV = Constants.Elevator.ELEVATOR_KV_UP;
         talonFXConfigs.Slot0.kP = Constants.Elevator.ELEVATOR_KP_UP; 
         talonFXConfigs.Slot0.kI = Constants.Elevator.ELEVATOR_KI_UP;
@@ -107,7 +109,7 @@ public class Elevator extends SubsystemBase {
             () -> System.out.println("Running elevator"),
             () -> setElevatorPosition(rotations),
             interrupted -> {System.out.println("elevator interrupted");},
-            () -> Math.abs(getPosition() - rotations) < 6,
+            () -> Math.abs(getPosition() - rotations) < 2,
             this
         );
     }
@@ -115,8 +117,6 @@ public class Elevator extends SubsystemBase {
     public void setFlapAngles(double rightSideAngle, double leftSideAngle) {
         rightFlap.setAngle(rightSideAngle);
         leftFlap.setAngle(leftSideAngle);
-        System.out.println("left pulse" + leftFlap.getPulseTimeMicroseconds() + " right pulse" + rightFlap.getPulseTimeMicroseconds());
-        System.out.println("right angle: " + rightFlap.getAngle() + ". Left angle: " + leftFlap.getAngle());
     }
     public Command getFlapsCommand(double rightSideAngle, double leftSideAngle) {
         return new InstantCommand(() -> setFlapAngles(rightSideAngle, leftSideAngle), this);

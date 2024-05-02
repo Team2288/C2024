@@ -68,7 +68,6 @@ public class Limelight extends SubsystemBase {
         result = limelight.getLatestResult();
         hasTargets = result.hasTargets();
         */
-        
         pose = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelight);
     }
 
@@ -77,9 +76,22 @@ public class Limelight extends SubsystemBase {
     }
     public double getTX() {
         return LimelightHelpers.getTX(limelight);
+        
+
     }
     public double getTY() {
-        return LimelightHelpers.getTY(limelight);
+        //System.out.println(table.getEntry("ty").getDouble(0.0));
+        return table.getEntry("ty").getDouble(0.0);
+        //return LimelightHelpers.getTY(limelight);
+    }
+    public void blinkLED() {
+        LimelightHelpers.setLEDMode_ForceBlink(limelight);
+    }
+    public void onLED() {
+        LimelightHelpers.setLEDMode_ForceOn(limelight);
+    }
+    public void offLED() {
+        LimelightHelpers.setLEDMode_ForceOff(limelight);
     }
 
     // Find the horizontal distance(meters) from the speaker given

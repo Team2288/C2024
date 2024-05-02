@@ -90,6 +90,23 @@
           ]
         }
       }
+    },
+    {
+      "name": "Failsafe",
+      "waypointRelativePos": 2.45,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "IntakeUp"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "globalConstraints": {

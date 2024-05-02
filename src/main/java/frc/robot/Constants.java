@@ -31,14 +31,14 @@ public final class Constants {
 
         /* Climber PID Values No Load */
         public static final double kV = 0.0;
-        public static final double kP = 0.06;
+        public static final double kP = 0.08;
         public static final double kI = 0.000;
         public static final double kD = 0;
         public static final double kF = 0.0;
 
         /* Climber positions */
         public static final int UP_POSITION = -125;
-        public static final int DOWN_POSITION = 143;
+        public static final int DOWN_POSITION = 147;
     }
 
     /* Elevator Constants */
@@ -51,10 +51,10 @@ public final class Constants {
         /* Elevator PID values */
         public static final int MOTMAGMAXACCELUP = 1000;
         public static final int MOTMAGMAXVELUP = 100;
-        public static final double ELEVATOR_KP_UP = 0.057;
-        public static final double ELEVATOR_KI_UP = 0.0014;
-        public static final double ELEVATOR_KD_UP = 0.000;
-        public static final double ELEVATOR_KV_UP = 0.117;
+        public static final double ELEVATOR_KP_UP = 4;
+        public static final double ELEVATOR_KI_UP = 0.0;
+        public static final double ELEVATOR_KD_UP = 0.0;
+        public static final double ELEVATOR_KV_UP = 0.0;
 
         public static final int MOTMAGMAXACCELDOWN = 500;
         public static final int MOTMAGMAXVELDOWN = 50;
@@ -64,18 +64,18 @@ public final class Constants {
         public static final double ELEVATOR_KV_DOWN = 0.115;
 
         /* Elevator Positions (rotations) */
-        public static final int UP_AMP = 20; // 27 rotations
+        public static final double UP_AMP = 16.7; // 27 rotations
         public static final int UP_TRAP = 99;
         public static final int DOWN = 2;
     
         /* Elevator Speed */
-        public static final double SPEED = 0.4;
+        public static final double SPEED = 0.40;
 
         /* Trap flap positions (degrees based on pulse width) */
         public static final int RIGHT_FLAP_IN = 60;
         public static final int RIGHT_FLAP_OUT = 0;
         public static final int LEFT_FLAP_IN = 0;
-        public static final int LEFT_FLAP_OUT = 60;
+        public static final int LEFT_FLAP_OUT = 63;
     }
 
     /* Intake Constants */

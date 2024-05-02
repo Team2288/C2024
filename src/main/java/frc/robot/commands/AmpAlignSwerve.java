@@ -12,6 +12,7 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Swerve;
 
 public class AmpAlignSwerve extends Command{
+    /*
     private Swerve s_Swerve;  
     private Limelight s_Limelight;  
     private DoubleSupplier translationSup, strafeSup, rotationSup;
@@ -27,7 +28,7 @@ public class AmpAlignSwerve extends Command{
     }
 
     private Double limelightStrafeVal() {  
-        double kP = 0.04;
+        double kP = 0.06;
         double targetingStrafeVelocity = 
             s_Limelight.getTX() * kP;
         return targetingStrafeVelocity;
@@ -45,12 +46,12 @@ public class AmpAlignSwerve extends Command{
 
     @Override
     public void execute() {
-        /* Get Values, Deadband*/
+        /* Get Values, Deadband*
         double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.moveDeadband) * Constants.Swerve.maxSpeed;
         double strafeVal = limelightStrafeVal();
         double rotationVal = limelightRotationVal();
 
-        /* Drive */
+        /* Drive *
         s_Swerve.drive(
             new Translation2d(translationVal, strafeVal), 
             rotationVal * Constants.Swerve.maxAngularVelocity, 
@@ -58,5 +59,5 @@ public class AmpAlignSwerve extends Command{
             true
         );
     }
-
+    */
 }

@@ -78,12 +78,12 @@ public class RobotContainer {
     private final Trigger shuttle = new Trigger(() -> driver.getRawButton(4));
 
     /* Subsystems */
+    public final Limelight s_Limelight = new Limelight();
     public final Lights s_Lights = new Lights();    
-    public final Intake s_Intake = new Intake(s_Lights);
+    public final Intake s_Intake = new Intake(s_Lights, s_Limelight);
     public final Shooter s_Shooter = new Shooter();
     public final Climber s_Climber = new Climber();
     public final Elevator s_Elevator = new Elevator();
-    public final Limelight s_Limelight = new Limelight();
     public final Swerve s_Swerve = new Swerve(s_Limelight);
 
     /* Auto Chooser */
@@ -100,8 +100,8 @@ public class RobotContainer {
             s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
                     s_Swerve, 
-                    () -> -driver.getRawAxis(translationAxis), 
-                    () -> -driver.getRawAxis(strafeAxis), 
+                    () -> driver.getRawAxis(translationAxis), 
+                    () -> driver.getRawAxis(strafeAxis), 
                     () -> -driver.getRawAxis(rotationAxis), 
                     () -> false // robotCentric.getAsBoolean()
                 )
@@ -155,7 +155,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("TurnOffShooter", new InstantCommand(() -> this.s_Shooter.setSpeed(0.0), this.s_Shooter));
 
         // Auto Chooser
-        auto = AutoBuilder.buildAuto("5NoteRight");
+        auto = AutoBuilder.buildAuto("6NoteAuto");
 
         // Configure the button bindings
         configureButtonBindings(); 
@@ -194,7 +194,7 @@ public class RobotContainer {
         shoot.onTrue(this.getShootCommand());
 
         shootTrap.onTrue(
-            new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(0.5), s_Elevator)
+            new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(0.6), s_Elevator)
         );
         shootTrap.onFalse(
             new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(0.0), s_Elevator)
@@ -207,14 +207,14 @@ public class RobotContainer {
         */
 
         shootAmp.onTrue(
-            //new InstantCommand(() -> this.s_Elevator.setElevatorPosition(0), s_Elevator)
+            //new InstantCommand(() -> this.s_Elevator.setElevatorPosition(20), s_Elevator)
             this.shootAmp()
             //new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(.8), s_Elevator)
         );
 
         trap.onTrue(
             this.trap()
-            //new InstantCommand(() -> this.s_Elevator.setElevatorSpeed(.4), s_Elevator)
+            //new InstantCommand(() -> this.s_Elevator.setElevatorPosition(2), s_Elevator)
         );
 
         /* 
@@ -242,24 +242,24 @@ public class RobotContainer {
         );
 
         spitNoteOut.whileTrue(
-            this.s_Intake.getIntakeDriveCommand(-0.25)
+            this.s_Intake.getIntakeDriveCommand(-0.8)
             //new InstantCommand( () -> this.s_Shooter.setSpeed(0.5), s_Shooter)
         );
 
         climberUp.onTrue(
             new InstantCommand(() -> this.s_Climber.setPosition(Constants.Climber.UP_POSITION), s_Climber)
-        //  new InstantCommand(() -> this.s_Climber.setSpeed(-0.1), s_Climber)
+           // new InstantCommand(() -> this.s_Climber.setSpeed(-0.2), s_Climber)
         );
 
         climberDown.onTrue(
             new InstantCommand(() -> this.s_Climber.setPosition(Constants.Climber.DOWN_POSITION), s_Climber)
-           // new InstantCommand(() -> this.s_Climber.setSpeed(0.1), s_Climber)
+           // new InstantCommand(() -> this.s_Climber.setSpeed(0.2), s_Climber)
 
         );
 
         zeroClimber.onTrue(
             new InstantCommand(() -> this.s_Climber.setPosition(0), s_Climber)
-           // new InstantCommand(() -> this.s_Climber.setSpeed(0.0), s_Climber)
+          // new InstantCommand(() -> this.s_Climber.setSpeed(0.0), s_Climber)
         );
 
         aimSpeaker.whileTrue(
@@ -267,22 +267,22 @@ public class RobotContainer {
                 s_Limelight,
                 s_Swerve,
                 s_Lights,
-                () -> -driver.getRawAxis(translationAxis),
-                () -> -driver.getRawAxis(strafeAxis),
+                () -> driver.getRawAxis(translationAxis),
+                () -> driver.getRawAxis(strafeAxis),
                 () -> -driver.getRawAxis(rotationAxis)
             )
         );
-
+/*
         aimAmp.whileTrue(
             new AmpAlignSwerve(
                 s_Limelight,
                 s_Swerve,
-                () -> -driver.getRawAxis(translationAxis),
-                () -> -driver.getRawAxis(strafeAxis),
+                () -> driver.getRawAxis(translationAxis),
+                () -> driver.getRawAxis(strafeAxis),
                 () -> -driver.getRawAxis(rotationAxis)
             )
         );        
- 
+*/
 
         /* 
         climberUp.whileFalse(

@@ -36,7 +36,7 @@ public class SpeakerAlignSwerve extends Command{
         return -targetingAngularVelocity;
     }
     private Double limelightRangeProportional() {    
-        double kP = .5;
+        double kP = .6;
         double targetingForwardSpeed = s_Limelight.getTY() * kP;
         return targetingForwardSpeed;
     }
@@ -47,10 +47,12 @@ public class SpeakerAlignSwerve extends Command{
         double translationVal = limelightRangeProportional();
         double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.moveDeadband) * Constants.Swerve.maxSpeed;
         double rotationVal = limelightAimKP();
-        if(Math.abs(s_Limelight.getTY()) < 3.5 && Math.abs(s_Limelight.getTX()) < 2) {
-            lights.setState(Constants.Lights.GREEN);
+        if(Math.abs(s_Limelight.getTY()) < 4 && Math.abs(s_Limelight.getTX()) < 2) {
+            //lights.setState(Constants.Lights.GREEN);
+            //s_Limelight.onLED();
         } else {
-            lights.setState(Lights.DEFAULT);
+            //lights.setState(Lights.DEFAULT);
+            //s_Limelight.offLED();
         }
 
         /* Drive */

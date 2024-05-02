@@ -24,8 +24,9 @@ public class Intake extends SubsystemBase {
     public boolean hasNote, isRunning;
     public BeamBreakSensor sensor; 
     private Lights lights;
+    private Limelight limelight;
 
-    public Intake(Lights lights) {
+    public Intake(Lights lights, Limelight limelight) {
         // Initialize motors, motor controllers, and motor settings
         drive = new TalonFX(Constants.Intake.DRIVE_MOTOR);
         swivel = new TalonFX(Constants.Intake.SWIVEL_MOTOR);
@@ -66,6 +67,7 @@ public class Intake extends SubsystemBase {
         sensor = new BeamBreakSensor(0);
         // Initialize lights
         this.lights = lights;
+        this.limelight = limelight;
         // Initialize subsystem states
         hasNote = false;
         isRunning = false;
@@ -166,9 +168,11 @@ public class Intake extends SubsystemBase {
         return new SequentialCommandGroup(
             getPosAndRunIntakeCommand(Constants.Intake.DOWN_POSITION, Constants.Intake.SPEED),
             new ParallelCommandGroup(
-                new InstantCommand(() -> lights.setState(Constants.Lights.ORANGE), lights),
+                //new InstantCommand(() -> lights.setState(Constants.Lights.ORANGE), lights),
+                new InstantCommand(() -> limelight.blinkLED(), limelight),
                 getPosAndRunIntakeCommand(Constants.Intake.UP_POSITION, 0.0)
-            )
+            ),
+            new InstantCommand(() -> limelight.offLED(), limelight)
         );
     }
     public Command getAutoIntakeRoutineCommand() {

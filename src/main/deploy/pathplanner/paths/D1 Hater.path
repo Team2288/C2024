@@ -1,0 +1,235 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.5431941974995065,
+        "y": 4.090395958569695
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.543194197499505,
+        "y": 4.090395958569695
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.8971580165382558,
+        "y": 4.090395958569695
+      },
+      "prevControl": {
+        "x": 1.8971580165382647,
+        "y": 4.090395958569695
+      },
+      "nextControl": {
+        "x": 4.122851579036492,
+        "y": 4.090395958569695
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.870995964214151,
+        "y": 5.529873281968787
+      },
+      "prevControl": {
+        "x": 0.595299008456162,
+        "y": 5.5145034391283305
+      },
+      "nextControl": {
+        "x": 3.0539327745322162,
+        "y": 5.54412553269551
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.8971580165382558,
+        "y": 5.529873281968787
+      },
+      "prevControl": {
+        "x": 2.369824739649479,
+        "y": 5.515621031242063
+      },
+      "nextControl": {
+        "x": 3.496303076723748,
+        "y": 5.5460663917035316
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.870995964214151,
+        "y": 6.898089351734259
+      },
+      "prevControl": {
+        "x": 2.1481034628735927,
+        "y": 6.800080433494202
+      },
+      "nextControl": {
+        "x": 1.5938884655547092,
+        "y": 6.996098269974317
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.8971580165382558,
+        "y": 7.012107357548048
+      },
+      "prevControl": {
+        "x": 2.7657303925718963,
+        "y": 7.025481189851267
+      },
+      "nextControl": {
+        "x": 3.028585640504615,
+        "y": 6.9987335252448295
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.8971580165382558,
+        "y": 5.529873281968787
+      },
+      "prevControl": {
+        "x": 2.9486195777947115,
+        "y": 5.523186365817177
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "GrabNote1",
+      "waypointRelativePos": 0.6000000000000001,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "IntakeRoutine"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "ShootNote1",
+      "waypointRelativePos": 1.7,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Shoot"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "GrabNote2",
+      "waypointRelativePos": 2.1999999999999997,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "IntakeRoutine"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Shoot Note 2",
+      "waypointRelativePos": 3.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Shoot"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "GrabNote3",
+      "waypointRelativePos": 4.199999999999999,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "IntakeRoutine"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "ShootNote3",
+      "waypointRelativePos": 6.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Shoot"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.5,
+    "maxAcceleration": 7.0,
+    "maxAngularVelocity": 573.0,
+    "maxAngularAcceleration": 573.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

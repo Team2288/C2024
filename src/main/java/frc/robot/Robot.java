@@ -85,7 +85,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.s_Elevator.setFlapAngles(Constants.Elevator.RIGHT_FLAP_IN, Constants.Elevator.LEFT_FLAP_IN);
     m_robotContainer.s_Shooter.setSpeed(0.0);
     m_robotContainer.s_Intake.getPosAndRunIntakeCommand(Constants.Intake.UP_POSITION, 0.0).schedule();
-    //m_robotContainer.s_Elevator.getElevatorPositionCommand(Constants.Elevator.DOWN).schedule();
+    m_robotContainer.s_Elevator.getElevatorPositionCommand(Constants.Elevator.DOWN).schedule();
     //m_robotContainer.s_Climber.setPosition(Constants.Climber.DOWN_POSITION);
 
     //m_robotContainer.s_Elevator.setElevatorPosition(48);
