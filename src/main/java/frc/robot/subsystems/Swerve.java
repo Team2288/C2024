@@ -36,7 +36,7 @@ public class Swerve extends SubsystemBase {
     public Limelight limelight;
 
     public Swerve(Limelight limelight) {
-        gyro = new Pigeon2(Constants.Swerve.pigeonID);
+        gyro = new Pigeon2(Constants.Swerve.pigeonID, "Drivetrain");
         gyro.getConfigurator().apply(new Pigeon2Configuration());
         gyro.setYaw(0);
         this.limelight = limelight;
@@ -192,29 +192,28 @@ public class Swerve extends SubsystemBase {
     public void periodic(){
         swerveOdometry.update(getGyroYaw(), getModulePositions());
 
-        
+        /* 
+        // add filter to throw out vision measurements that suggest a pose greater than 1m away from current calculated poses
         var tagMeasurement = this.limelight.getEstimatedAprilTagPose();
-
-       
-
-        if (tagMeasurement.tagCount >= 2) {
+        if (tagMeasurement.tagCount >= 2) { // Change around standard deviations for vision 
             swerveOdometry.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 99999));
             swerveOdometry.addVisionMeasurement(
                 tagMeasurement.pose,
                 tagMeasurement.timestampSeconds
             );
         }
-        
-
+        */
        // swerveOdometry.addVisionMeasurement(
        //     tagMeasurement,
-       //     Timer.getFPGATimestamp()
+       //     Timer.getFPGATimestamp() // THIS IS BAD!!! RETURNS SECONDS INSTEAD OF MILLISECONDS
        // );
 
+       /*
         for(SwerveModule mod : mSwerveMods){
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
         }
+        */
     }
 }

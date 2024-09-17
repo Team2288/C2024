@@ -12,7 +12,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.Constants.Lights.LightStates;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 /* 
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -81,10 +82,10 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-
+    m_robotContainer.s_Elevator.setFlapAngles(Constants.Elevator.RIGHT_FLAP_IN, Constants.Elevator.LEFT_FLAP_IN);
     m_robotContainer.s_Shooter.setSpeed(0.0);
     m_robotContainer.s_Intake.getPosAndRunIntakeCommand(Constants.Intake.UP_POSITION, 0.0).schedule();
-    m_robotContainer.s_Elevator.getElevatorPositionCommand(Constants.Elevator.DOWN).schedule();
+    //m_robotContainer.s_Elevator.getElevatorPositionCommand(Constants.Elevator.DOWN).schedule();
     //m_robotContainer.s_Climber.setPosition(Constants.Climber.DOWN_POSITION);
 
     //m_robotContainer.s_Elevator.setElevatorPosition(48);
@@ -100,10 +101,11 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    //m_robotContainer.s_Elevator.setFlapAngles(60, 0);
     // System.out.println(m_robotContainer.s_Intake.getSensor());
-    
+ // m_robotContainer.s_Intake.setDriveIntakeSpeed(0.50);
     //m_robotContainer.s_Elevator.SmartDashboard();
-    //m_robotContainer.s_Elevator.setElevatorSpeed(-0.3);
+   // m_robotContainer.s_Elevator.setElevatorSpeed(0.4);
     /*
     if(controller.getBButton()) {
       m_robotContainer.s_Shooter.shootWhenClose(m_robotContainer.s_Limelight, .3);
