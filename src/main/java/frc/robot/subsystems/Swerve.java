@@ -192,17 +192,17 @@ public class Swerve extends SubsystemBase {
     public void periodic(){
         swerveOdometry.update(getGyroYaw(), getModulePositions());
 
-        /* 
+         
         // add filter to throw out vision measurements that suggest a pose greater than 1m away from current calculated poses
         var tagMeasurement = this.limelight.getEstimatedAprilTagPose();
         if (tagMeasurement.tagCount >= 2) { // Change around standard deviations for vision 
-            swerveOdometry.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 99999));
+            swerveOdometry.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 0.9));
             swerveOdometry.addVisionMeasurement(
                 tagMeasurement.pose,
                 tagMeasurement.timestampSeconds
             );
         }
-        */
+        
        // swerveOdometry.addVisionMeasurement(
        //     tagMeasurement,
        //     Timer.getFPGATimestamp() // THIS IS BAD!!! RETURNS SECONDS INSTEAD OF MILLISECONDS
